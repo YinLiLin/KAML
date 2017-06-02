@@ -4,7 +4,7 @@
 
 ## Contents
 * [Getting started](#getting-started)
-  - [Installation](#installation)
+  - [Installation](#installation)
 * [INPUT](#input)
   - [Phenotype file](#phenotype-file)
   - [Covariate file](#covariate-file)
