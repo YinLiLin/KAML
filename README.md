@@ -11,7 +11,6 @@
 * [USAGE](#usage)
 * [OUTPUT](#output)
 * [FAQ and Hints](#faq-and-hints)
-* [Connect](#connect)
 
 ## Getting started
 `KAMBLUP` is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We highly recommend **MRO** instead of **R** for running `KAMBLUP`. **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
@@ -65,9 +64,6 @@ KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test", cfile="./testCV.txt", kfile
 
 ## OUTPUT
 
-## FAQ and Hints :arrow_right:
+## FAQ and Hints
+ :arrow_right:
 
-## Contact
-Questions, suggestions, and bug reports are welcome and appreciated.
-- **Author:** Lilin Yin<ylilin@163.com>
-- **Institution:** [*Huazhong agricultural university*](http://www.hzau.edu.cn/2014/ch/)
