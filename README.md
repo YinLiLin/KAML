@@ -12,6 +12,7 @@
 * [OUTPUT](#output)
 * [FAQ and Hints](#faq-and-hints)
 
+---
 ## Getting started
 `KAMBLUP` is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We highly recommend **MRO** instead of **R** for running `KAMBLUP`. **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
@@ -23,7 +24,7 @@ devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAMBLUP/")
 ```
-
+---
 ## INPUT
 ### Phenotype file
 > `test.txt`
@@ -54,6 +55,7 @@ KAMBLUP.Data(bfile="", out="test")
 KAMBLUP.Data(numfile="", mapfile="", out="test")
 ```
 
+---
 ## USAGE
 ```r
 KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test")
@@ -62,8 +64,10 @@ KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test")
 KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test", cfile="./testCV.txt", kfile="./testKin.txt")
 ```
 
+---
 ## OUTPUT
 
+---
 ## FAQ and Hints
  :arrow_right:
 
