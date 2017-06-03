@@ -10,7 +10,7 @@
   - [Genotype file](#genotype-file)
 * [USAGE](#usage)
 * [OUTPUT](#output)
-* [FAQ and Hints](#faq-and-hints)
+* [FAQ AND HINTS](#faq-and-hints)
 
 ---
 ## GETTING STARTED
