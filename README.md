@@ -9,8 +9,8 @@
   - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file)
   - [Genotype file](#genotype-file)
 * [USAGE](#usage)
-  - [Basic](#basic)
-  - [Advanced](#advanced)
+  - [Basic](#basic)
+  - [Advanced](#advanced)
 * [OUTPUT](#output)
 * [FAQ AND HINTS](#faq-and-hints)
 
