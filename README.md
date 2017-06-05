@@ -9,6 +9,8 @@
   - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file)
   - [Genotype file](#genotype-file)
 * [USAGE](#usage)
+  - [Basic](#basic)
+  - [Advanced](#advanced)
 * [OUTPUT](#output)
 * [FAQ AND HINTS](#faq-and-hints)
 
@@ -69,13 +71,14 @@ KAMBLUP.Data(numfile="", mapfile="", out="testGeno")
 
 ---
 ## USAGE
+### Basic
 ```r
 KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno")
 ```
 ```r
 KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.txt", kfile="./testKin.txt")
 ```
-
+### Advanced
 <p align="center">
 <a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/Manhattan_Fpro.jpg">
 <img src="/Manhattan_Fpro.jpg" height="250px" width="800px">
