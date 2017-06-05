@@ -76,6 +76,12 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno")
 KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.txt", kfile="./testKin.txt")
 ```
 
+<p align="center">
+<a href="https://raw.githubusercontent.com/YinLiLin/R-CMplot/master/Figure/Rectangular-Manhattan.Fat percentage.jpg">
+<img src="Figure/Rectangular-Manhattan.Fat percentage.jpg" height="300px" width="900px">
+</a>
+</p>
+
 ---
 ## OUTPUT
 
