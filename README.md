@@ -77,8 +77,8 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 ```
 
 <p align="center">
-<a href="https://raw.githubusercontent.com/YinLiLin/R-CMplot/master/Figure/Rectangular-Manhattan.Fat percentage.jpg">
-<img src="Figure/Rectangular-Manhattan.Fat percentage.jpg" height="300px" width="900px">
+<a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/Manhattan_Fpro.jpg">
+<img src="/Manhattan_Fpro.jpg" height="250px" width="800px">
 </a>
 </p>
 
