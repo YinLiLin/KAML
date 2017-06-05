@@ -20,8 +20,8 @@
 `KAMBLUP` is not available on CRAN, but can be installed using the R package **"devtools"**. There are two packages should be installed beforehand, **"snpStats"** and **"rfunctions"**. `KAMBLUP` can be installed with the following R code:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
-devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_version('RcppEigen', version = "0.3.2.9.0")
+devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAMBLUP/")
 ```
