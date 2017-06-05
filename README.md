@@ -28,7 +28,7 @@ devtools::install_github("YinLiLin/R-KAMBLUP/")
 ---
 ## INPUT
 ### Phenotype file
-> `test.txt`
+> `testPheno.txt`
 
 | Trait1 | Trait2 | Trait3 | ... | TraitN |
 | :---: | :---: |  :---: |  :---: |  :---: |
@@ -58,22 +58,22 @@ devtools::install_github("YinLiLin/R-KAMBLUP/")
 ### Genotype file
 > `test.geno.desc, test.geno.bin`
 ```r
-KAMBLUP.Data(hfile="", out="test")
+KAMBLUP.Data(hfile="", out="testGeno")
 ```
 ```r
-KAMBLUP.Data(bfile="", out="test")
+KAMBLUP.Data(bfile="", out="testGeno")
 ```
 ```r
-KAMBLUP.Data(numfile="", mapfile="", out="test")
+KAMBLUP.Data(numfile="", mapfile="", out="testGeno")
 ```
 
 ---
 ## USAGE
 ```r
-KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test")
+KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno")
 ```
 ```r
-KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test", cfile="./testCV.txt", kfile="./testKin.txt")
+KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.txt", kfile="./testKin.txt")
 ```
 
 ---
@@ -81,5 +81,17 @@ KAMBLUP(pfile="./test.txt", pheno=1, gfile="./test", cfile="./testCV.txt", kfile
 
 ---
 ## FAQ and Hints
+ **Question1:** When installing packages from Github with "devtools", there is a error:
+ 
+ ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
+ 
+ how to fix it?
+
+ **Answer:** Please type the following codes and than try agian
+```r
+library(httr)
+set_config(config(ssl_verifypeer = 0L))
+```
+
  :arrow_right:
 
