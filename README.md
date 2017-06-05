@@ -82,7 +82,7 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 ---
 ## FAQ and Hints
 
-:tired_face: **Question1:** Failing to install "devtools":
+:sos: **Question1:** Failing to install "devtools":
 
 ***ERROR: configuration failed for package ‘git2r’***
 
@@ -97,7 +97,7 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 apt-get install libssl-dev/unstable
 ```
 ---
-:tired_face: **Question2:** When installing packages from Github with "devtools", there is a error:
+:sos: **Question2:** When installing packages from Github with "devtools", there is a error:
  
  ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
  
