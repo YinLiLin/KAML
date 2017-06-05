@@ -1,4 +1,4 @@
-# KAMBLUP [![](https://img.shields.io/badge/Issues-1%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAMBLUP/issues) [![](https://img.shields.io/badge/Release-v1.0.1-blue.svg)](https://github.com/YinLiLin/R-KAMBLUP/commits/master)
+# KAMBLUP [![](https://img.shields.io/badge/Issues-1%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAMBLUP/issues) [![](https://img.shields.io/badge/Release-v1.0.1-ff69b4.svg)](https://github.com/YinLiLin/R-KAMBLUP/commits/master)
 
 ## Kinship Adjusted Multi-locus Best Linear Unbiased Prediction
 
@@ -82,8 +82,8 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 ---
 ## FAQ and Hints
 
- **Question1:** Failing to install "devtools":
- 
+:tired_face: **Question1:** Failing to install "devtools":
+
 ***ERROR: configuration failed for package ‘git2r’***
 
 ***removing ‘/Users/acer/R/3.4/library/git2r’***
@@ -92,16 +92,16 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 
 ***removing ‘/Users/acer/R/3.4/library/devtools’***
 
- **Answer:** Please type the following codes in terminal.
+:simple_smile: **Answer:** Please type the following codes in terminal.
 ```ssh
 apt-get install libssl-dev/unstable
 ```
 
- **Question2:** When installing packages from Github with "devtools", there is a error:
+:tired_face: **Question2:** When installing packages from Github with "devtools", there is a error:
  
  ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
  
- **Answer:** Please type the following codes and than try agian.
+:simple_smile: **Answer:** Please type the following codes and than try agian.
 ```r
 library(httr)
 set_config(config(ssl_verifypeer = 0L))
