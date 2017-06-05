@@ -81,17 +81,31 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 
 ---
 ## FAQ and Hints
- **Question1:** When installing packages from Github with "devtools", there is a error:
+
+ **Question1:** Failing to install "devtools":
+ 
+***ERROR: configuration failed for package ‘git2r’***
+
+***removing ‘/Users/acer/R/3.4/library/git2r’***
+
+***ERROR: dependency ‘git2r’ is not available for package ‘devtools’***
+
+***removing ‘/Users/acer/R/3.4/library/devtools’***
+
+ **Answer:** Please type the following codes in terminal.
+```ssh
+apt-get install libssl-dev/unstable
+```
+
+ **Question2:** When installing packages from Github with "devtools", there is a error:
  
  ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
  
- how to fix it?
-
- **Answer:** Please type the following codes and than try agian
+ **Answer:** Please type the following codes and than try agian.
 ```r
 library(httr)
 set_config(config(ssl_verifypeer = 0L))
 ```
 
- :arrow_right:
+**Questions, suggestions, and bug reports are welcome and appreciated.** [:arrow_right:](https://github.com/YinLiLin/R-KAMBLUP/issues)
 
