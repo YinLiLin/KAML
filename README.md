@@ -92,7 +92,7 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 
 ***removing ‘/Users/acer/R/3.4/library/devtools’***
 
-:simple_smile: **Answer:** Please type the following codes in terminal.
+:yum: **Answer:** Please type the following codes in terminal.
 ```ssh
 apt-get install libssl-dev/unstable
 ```
@@ -101,7 +101,7 @@ apt-get install libssl-dev/unstable
  
  ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
  
-:simple_smile: **Answer:** Please type the following codes and than try agian.
+:yum: **Answer:** Please type the following codes and than try agian.
 ```r
 library(httr)
 set_config(config(ssl_verifypeer = 0L))
