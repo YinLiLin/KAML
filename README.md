@@ -60,7 +60,9 @@ devtools::install_github("YinLiLin/R-KAMBLUP")
 | female | group3 | 1 | ... | 80 |
 
 ### Kinship file
-`KAMBLUP` requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(***"scale"***, ***"center"***, ***"vanraden"***), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
+`KAMBLUP` requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
+***"scale","center","vanraden"***
+), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
 > `testKin.txt`
 
 ### Genotype file
