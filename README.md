@@ -65,6 +65,15 @@ devtools::install_github("YinLiLin/R-KAMBLUP")
 ), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
 > `testKin.txt`
 
+| female | group1 | 1 | ... | 55 |
+| :---: | :---: |  :---: |  :---: |  :---: |
+| female | group2 | 1| ... | 57 |
+| male | group2 | 2 | ... | 62 |
+| male | group3 | 2| ... | 75 |
+| male | group2 | 2| ... | 45 |
+| ... | ... | ... | ... | ... |
+| female | group3 | 1 | ... | 80 |
+
 ### Genotype file
 is a n×n matrix, where each row and each column corresponds to individuals in the same order as in the
 
