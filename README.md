@@ -50,20 +50,23 @@ devtools::install_github("YinLiLin/R-KAMBLUP")
 ### Covariate file
 > `testCV.txt`
 
-| female | 168 | 1 | ... | 55 |
+| female | group1 | 1 | ... | 55 |
 | :---: | :---: |  :---: |  :---: |  :---: |
-| female | 178 | 2| ... | 57 |
-| male | 187 | 2 | ... | 62 |
-| male | 156 | 1| ... | 75 |
-| male | 148 | 1| ... | 45 |
+| female | group2 | 1| ... | 57 |
+| male | group2 | 2 | ... | 62 |
+| male | group3 | 2| ... | 75 |
+| male | group2 | 2| ... | 45 |
 | ... | ... | ... | ... | ... |
-| female | 150 | 1 | ... | 80 |
+| female | group3 | 1 | ... | 80 |
 
 ### Kinship file
+`KAMBLUP` requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms("scale", "center", "vanraden"), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
 > `testKin.txt`
 
 ### Genotype file
-> `test.geno.desc, test.geno.bin`
+is a n×n matrix, where each row and each column corresponds to individuals in the same order as in the
+
+> `test.map, test.geno.desc, test.geno.bin`
 
 #### Hapmap
 | rs | alleles | chrom | pos | strand | assembly | center | protLSID | assayLSID | panel | QCcode | Ind1 | Ind2 | Ind3 | Ind4 | Ind5 |
