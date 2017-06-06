@@ -6,8 +6,13 @@
 * [GETTING STARTED](#getting-started)
   - [Installation](#installation)
 * [INPUT](#input)
-  - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file)
+  - [Phenotype file](#phenotype-file) 
+  - [Covariate file](#covariate-file) 
+  - [Kinship file](#kinship-file) 
   - [Genotype file](#genotype-file)
+    * [Hapmap](#hapmap) 
+    * [PLINK Binary](#plink-binary) 
+    * [Numeric](#numeric) 
 * [USAGE](#usage)
   - [Basic](#basic)
   - [Advanced](#advanced)
@@ -59,12 +64,26 @@ devtools::install_github("YinLiLin/R-KAMBLUP")
 
 ### Genotype file
 > `test.geno.desc, test.geno.bin`
+
+#### Hapmap
+| rs | alleles | chrom | pos | strand | assembly | center | protLSID | assayLSID | panel | QCcode | Ind1 | Ind2 | Ind3 | Ind4 | Ind5 |
+| :---: | :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |
+| PZB00859.1 | A/C | 1 | 157104 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | CC | CC | CC | CC | AA | 
+| PZA01271.1 | C/G | 1 | 1947984 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | CC | GG | CC | GG | CC | 
+| PZA03613.2 | G/T | 1 | 2914066 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | GG | GG | GG | GG | GG | 
+| PZA03613.1 | A/T | 1 | 2914171 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | TT | TT | TT | TT | TT | 
+| PZA03614.2 | A/G | 1 | 2915078 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | GG | GG | GG | GG | GG | 
+
 ```r
 KAMBLUP.Data(hfile="", out="testGeno")
 ```
+
+#### PLINK Binary
 ```r
 KAMBLUP.Data(bfile="", out="testGeno")
 ```
+
+#### Numeric
 ```r
 KAMBLUP.Data(numfile="", mapfile="", out="testGeno")
 ```
