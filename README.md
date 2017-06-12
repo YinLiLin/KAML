@@ -32,7 +32,7 @@ devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAMBLUP/KAMBLUP")
 ```
-After installed successfully, `KAMBLUP` can be loaded by typing ```library(MVP)```. Typing `?KAMBLUP` could get the details of all parameters.
+After installed successfully, `KAMBLUP` can be loaded by typing ```library(KAMBLUP)```. Typing `?KAMBLUP` could get the details of all parameters.
 
 ---
 ## INPUT
