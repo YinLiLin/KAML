@@ -67,10 +67,10 @@ After installed successfully, `KAMBLUP` can be loaded by typing ```library(MVP)`
 ***"scale","center","vanraden"***
 ), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
 
-> `mouse.Kin.txt`***(optional)
+> `mouse.Kin.txt`***(optional)***
 
 | 0.3032 | -0.0193 | 0.0094 | 0.0024 | 0.0381 | ... | -0.0072 |
-| :---: | :---: |  :---: |  :---: |  :---: |
+| :---: | :---: |  :---: |  :---: |  :---: |  :---: |  :---: |
 | -0.0193 | 0.274 | -0.0243 | 0.0032 | -0.0081 | ... | 0.0056 |
 | 0.0094 | -0.0243 | 0.3207 | -0.0071 | -0.0045 | ... | -0.0407 |
 | 0.0024 | 0.0032 | -0.0071 | 0.321 | -0.008 | ... | -0.0093 |
@@ -85,8 +85,10 @@ is a n×n matrix, where each row and each column corresponds to individuals in t
 
 #### Hapmap
 
+> `mouse.hmp.txt`
+
 | rs# | alleles | chrom | pos | strand | assembly# | center | protLSID | assayLSID | panelLSID | QCcode | A048005080 | A048006063 | A048006555 | A048007096 | A048010273 | ... | A084292044 |
-| :---: | :---: |  :---: |  :---: |  :---: | :---: |
+| :---: | :---: |  :---: |  :---: |  :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | rs3683945 | G/A | 1 | 3197400 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
 | rs3707673 | A/G | 1 | 3407393 | + | NA | NA | NA | NA | NA | NA | GA | GA | AA | GA | AA | ... | GG |
 | rs6269442 | G/A | 1 | 3492195 | + | NA | NA | NA | NA | NA | NA | AG | GG | GG | AG | GG | ... | AA |
@@ -98,14 +100,19 @@ KAMBLUP.Data(hfile="", out="testGeno")
 ```
 
 #### PLINK Binary
+
+`mouse.fam`, `mouse.bim`, `mouse.bed`
+
 ```r
 KAMBLUP.Data(bfile="", out="testGeno")
 ```
 
 #### Numeric
 
+> `mouse.Numeric.txt`
+
 | 1 | 1 | 2 | 1 | 2 | … | 0 |
-| :---: | :---: |  :---: |  :---: |  :---: | :---: |
+| :---: | :---: |  :---: |  :---: |  :---: | :---: | :---: |
 | 1 | 1 | 0 | 1 | 0 | … | 2 |
 | 1 | 2 | 2 | 1 | 2 | … | 0 |
 | 1 | 1 | 2 | 1 | 2 | … | 0 |
