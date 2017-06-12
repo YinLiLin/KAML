@@ -134,8 +134,8 @@ KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.tx
 ```
 ### Advanced
 <p align="center">
-<a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/Manhattan_Fpro.jpg">
-<img src="/Manhattan_Fpro.jpg" height="250px" width="800px">
+<a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/figures/Manhattan_Fpro.jpg">
+<img src="/figures/Manhattan_Fpro.jpg" height="250px" width="800px">
 </a>
 </p>
 
