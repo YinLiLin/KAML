@@ -33,6 +33,7 @@ devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAMBLUP/KAMBLUP")
 ```
 After installed successfully, `KAMBLUP` can be loaded by typing ```library(MVP)```. Typing `?KAMBLUP` could get the details of all parameters.
+
 ---
 ## INPUT
 ### Phenotype file
