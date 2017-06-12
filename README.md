@@ -32,23 +32,26 @@ devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAMBLUP/KAMBLUP")
 ```
+After installed successfully, `KAMBLUP` can be loaded by typing ```library(MVP)```. Typing `?KAMBLUP` could get the details of all parameters.
 ---
 ## INPUT
 ### Phenotype file
-> `testPheno.txt`
 
-| Trait1 | Trait2 | Trait3 | ... | TraitN |
-| :---: | :---: |  :---: |  :---: |  :---: |
-| 3.20 | NA | 1 | ... | -0.31 |
-| 0.58 | 58.2 | NA| ... | NA |
-| NA | 35.7 | 0 | ... | NA |
-| -0.25 | 42.4 | 1| ... | 0.47 |
-| NA | NA | 0| ... | -1.01 |
-| ... | ... | ... | ... | ... |
-| 1.24 | 25.6 | 1 | ... | 0.25 |
+> `mouse.Pheno.txt`
+
+| Trait1 | Trait2 | Trait3 | Trait4 | Trait5 | Trait6 |
+| :---: | :---: |  :---: |  :---: |  :---: | :---: |
+| 0.224991591484104 | 0.224991591484104 | NA | 1 | NA | -0.285427742494795 |
+| -0.97454252753557 | -0.97454252753557 | NA | 0 | NA | -2.33353176490961 |
+| 0.19590969210935 | 0.19590969210935 | NA | 1 | NA | 0.0468180689957051 |
+| NA | NA | NA | NA | NA | NA |
+| NA | NA | NA | NA | NA | NA |
+| ... | ... | ... | ... | ... | ... |
+| NA | NA | NA | NA | NA | 0.720009758345358 |
+
 
 ### Covariate file
-> `testCV.txt`
+> `CV.txt` ***(optional)
 
 | female | group1 | 1 | ... | 55 |
 | :---: | :---: |  :---: |  :---: |  :---: |
@@ -63,30 +66,32 @@ devtools::install_github("YinLiLin/R-KAMBLUP/KAMBLUP")
 `KAMBLUP` requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
 ***"scale","center","vanraden"***
 ), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
-> `testKin.txt`
 
-| female | group1 | 1 | ... | 55 |
+> `mouse.Kin.txt`***(optional)
+
+| 0.3032 | -0.0193 | 0.0094 | 0.0024 | 0.0381 | ... | -0.0072 |
 | :---: | :---: |  :---: |  :---: |  :---: |
-| female | group2 | 1| ... | 57 |
-| male | group2 | 2 | ... | 62 |
-| male | group3 | 2| ... | 75 |
-| male | group2 | 2| ... | 45 |
-| ... | ... | ... | ... | ... |
-| female | group3 | 1 | ... | 80 |
+| -0.0193 | 0.274 | -0.0243 | 0.0032 | -0.0081 | ... | 0.0056 |
+| 0.0094 | -0.0243 | 0.3207 | -0.0071 | -0.0045 | ... | -0.0407 |
+| 0.0024 | 0.0032 | -0.0071 | 0.321 | -0.008 | ... | -0.0093 |
+| 0.0381 | -0.0081 | -0.0045 | -0.008 | 0.3498 | ... | -0.0238 |
+| ... | ... | ... | ... | ... | ... | ... | 
+| -0.0072 | 0.0056 | -0.0407 | -0.0093 | -0.0238 | ... | 0.3436 |
 
 ### Genotype file
 is a n×n matrix, where each row and each column corresponds to individuals in the same order as in the
 
-> `test.map, test.geno.desc, test.geno.bin`
+> `mouse.map, mouse.geno.desc, mouse.geno.bin`
 
 #### Hapmap
-| rs | alleles | chrom | pos | strand | assembly | center | protLSID | assayLSID | panel | QCcode | Ind1 | Ind2 | Ind3 | Ind4 | Ind5 |
-| :---: | :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |  :---: |
-| PZB00859.1 | A/C | 1 | 157104 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | CC | CC | CC | CC | AA | 
-| PZA01271.1 | C/G | 1 | 1947984 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | CC | GG | CC | GG | CC | 
-| PZA03613.2 | G/T | 1 | 2914066 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | GG | GG | GG | GG | GG | 
-| PZA03613.1 | A/T | 1 | 2914171 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | TT | TT | TT | TT | TT | 
-| PZA03614.2 | A/G | 1 | 2915078 | + | AGPv1 | Panzea | NA | NA | maize282 | NA | GG | GG | GG | GG | GG | 
+
+| rs# | alleles | chrom | pos | strand | assembly# | center | protLSID | assayLSID | panelLSID | QCcode | A048005080 | A048006063 | A048006555 | A048007096 | A048010273 | ... | A084292044 |
+| :---: | :---: |  :---: |  :---: |  :---: | :---: |
+| rs3683945 | G/A | 1 | 3197400 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
+| rs3707673 | A/G | 1 | 3407393 | + | NA | NA | NA | NA | NA | NA | GA | GA | AA | GA | AA | ... | GG |
+| rs6269442 | G/A | 1 | 3492195 | + | NA | NA | NA | NA | NA | NA | AG | GG | GG | AG | GG | ... | AA |
+| rs6336442 | G/A | 1 | 3580634 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
+| rs13475699 | G | 1 | 3860406 | + | NA | NA | NA | NA | NA | NA | GG | GG | GG | GG | GG | ... | GG |
 
 ```r
 KAMBLUP.Data(hfile="", out="testGeno")
@@ -98,6 +103,14 @@ KAMBLUP.Data(bfile="", out="testGeno")
 ```
 
 #### Numeric
+
+| 1 | 1 | 2 | 1 | 2 | … | 0 |
+| :---: | :---: |  :---: |  :---: |  :---: | :---: |
+| 1 | 1 | 0 | 1 | 0 | … | 2 |
+| 1 | 2 | 2 | 1 | 2 | … | 0 |
+| 1 | 1 | 2 | 1 | 2 | … | 0 |
+| 0 | 0 | 0 | 0 | 0 | … | 0 |
+
 ```r
 KAMBLUP.Data(numfile="", mapfile="", out="testGeno")
 ```
