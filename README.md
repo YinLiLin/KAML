@@ -45,6 +45,7 @@ cd example
 
 ## INPUT
 ### Phenotype file
+The files must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. However, if a phenotype takes only values 0, 1(or only two levels), then `KAMBLUP` consider it to be a case-control trait. When a phenotype file contains more than one phenotype, you should specify which to analyse using the option "pheno=X".
 
 > `mouse.Pheno.txt`
 
@@ -171,7 +172,7 @@ apt-get install libssl-dev/unstable
  
  ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
  
-:yum: **Answer:** Please type the following codes and than try agian.
+:yum: **Answer:** Please type the following codes and then try agian.
 ```r
 library(httr)
 set_config(config(ssl_verifypeer = 0L))
