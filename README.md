@@ -37,13 +37,13 @@ After installed successfully, `KAMBLUP` can be loaded by typing ```library(KAMBL
 
 ### Test Datasets
 
-```ssh
+```bash
 wget https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip
 unzip example.zip
 cd example
 ```
 
-Or click [here](https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip) in your browser.
+**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip) in your browser.
 
 ---
 
@@ -168,7 +168,7 @@ KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="
 ***removing ‘/Users/acer/R/3.4/library/devtools’***
 
 :yum: **Answer:** Please type the following codes in terminal.
-```ssh
+```bash
 apt-get install libssl-dev/unstable
 ```
 ---
