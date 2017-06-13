@@ -52,7 +52,7 @@ After installed successfully, `KAMBLUP` can be loaded by typing ```library(KAMBL
 
 
 ### Covariate file
-> `CV.txt` ***(optional)
+> `CV.txt` ***(optional)***
 
 | female | group1 | 1 | ... | 55 |
 | :---: | :---: |  :---: |  :---: |  :---: |
@@ -68,7 +68,7 @@ After installed successfully, `KAMBLUP` can be loaded by typing ```library(KAMBL
 ***"scale","center","vanraden"***
 ), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
 
-> `mouse.Kin.txt`***(optional)***
+> `mouse.Kin.txt` ***(optional)***
 
 | 0.3032 | -0.0193 | 0.0094 | 0.0024 | 0.0381 | ... | -0.0072 |
 | :---: | :---: |  :---: |  :---: |  :---: |  :---: |  :---: |
