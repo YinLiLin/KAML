@@ -34,7 +34,13 @@ devtools::install_github("YinLiLin/R-KAMBLUP/KAMBLUP")
 ```
 After installed successfully, `KAMBLUP` can be loaded by typing ```library(KAMBLUP)```. Typing `?KAMBLUP` could get the details of all parameters.
 
+### Test Datasets
+```ssh
+wget https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip
+```
+Or click [here](https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip) in your browser
 ---
+
 ## INPUT
 ### Phenotype file
 
