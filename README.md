@@ -150,7 +150,6 @@ KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="
 ---
 ## OUTPUT
 
----
 ## FAQ and Hints
 
 :sos: **Question1:** Failing to install "devtools":
