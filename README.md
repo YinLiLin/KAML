@@ -97,7 +97,7 @@ is a n×n matrix, where each row and each column corresponds to individuals in t
 | rs13475699 | G | 1 | 3860406 | + | NA | NA | NA | NA | NA | NA | GG | GG | GG | GG | GG | ... | GG |
 
 ```r
-KAMBLUP.Data(hfile="", out="testGeno")
+KAMBLUP.Data(hfile="mouse.hmp.txt", out="mouse")
 ```
 
 #### PLINK Binary
@@ -105,7 +105,7 @@ KAMBLUP.Data(hfile="", out="testGeno")
 `mouse.fam`, `mouse.bim`, `mouse.bed`
 
 ```r
-KAMBLUP.Data(bfile="", out="testGeno")
+KAMBLUP.Data(bfile="mouse", out="mouse")
 ```
 
 #### Numeric
@@ -120,17 +120,17 @@ KAMBLUP.Data(bfile="", out="testGeno")
 | 0 | 0 | 0 | 0 | 0 | … | 0 |
 
 ```r
-KAMBLUP.Data(numfile="", mapfile="", out="testGeno")
+KAMBLUP.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 ```
 
 ---
 ## USAGE
 ### Basic
 ```r
-KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno")
+KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
 ```
 ```r
-KAMBLUP(pfile="./testPheno.txt", pheno=1, gfile="./testGeno", cfile="./testCV.txt", kfile="./testKin.txt")
+KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mouse.Kin.txt")
 ```
 ### Advanced
 <p align="center">
