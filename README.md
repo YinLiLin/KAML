@@ -39,13 +39,13 @@ unzip example.zip
 cd example
 ```
 
-**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip) in your browser.
+**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip) in your browser to download.
 
 ---
 
 ## INPUT
 ### Phenotype file
-The files must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. However, if a phenotype takes only values 0, 1(or only two levels), then `KAMBLUP` consider it to be a case-control trait. When a phenotype file contains more than one phenotype, you should specify which to analyse using the option "pheno=X".
+The files must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. However, if a phenotype takes only values 0, 1(or only two levels), then `KAMBLUP` consider it to be a case-control trait. When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=X".
 
 > `mouse.Pheno.txt`
 
@@ -59,8 +59,10 @@ The files must contain a header row. Missing values should be denoted by NA, whi
 | ... | ... | ... | ... | ... | ... |
 | NA | NA | NA | NA | NA | 0.720009 |
 
-
 ### Covariate file
+Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is optional, in order to fit the model for original phenotype prediction, users can provide the covariates in file.
+If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, `KAMBLUP` will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
+
 > `CV.txt` ***(optional)***
 
 | female | group1 | 1 | ... | 55 |
