@@ -145,8 +145,8 @@ KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="
 ```
 ### Advanced
 <p align="center">
-<a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/figures/Manhattan_Fpro.jpg">
-<img src="/figures/Manhattan_Fpro.jpg" height="250px" width="800px">
+<a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/figures/Trait1.jpg">
+<img src="/figures/Trait1.jpg" height="250px" width="800px">
 </a>
 </p>
 
