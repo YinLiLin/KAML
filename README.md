@@ -1,6 +1,6 @@
-# KAMBLUP [![](https://img.shields.io/badge/Issues-1%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAMBLUP/issues) [![](https://img.shields.io/badge/Release-v1.0.1-ff69b4.svg)](https://github.com/YinLiLin/R-KAMBLUP/commits/master)
+# KAML [![](https://img.shields.io/badge/Issues-1%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.0.1-ff69b4.svg)](https://github.com/YinLiLin/R-KAML/commits/master)
 
-## Kinship Adjusted Multi-locus Best Linear Unbiased Prediction
+## Kinship Adjusted Multiple Locus Best Linear Unbiased Prediction
 
 ## Contents
 * [GETTING STARTED](#getting-started)
@@ -18,34 +18,34 @@
 
 ---
 ## GETTING STARTED
-`KAMBLUP` is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend **MRO** instead of **R** for running `KAMBLUP`. **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
+`KAML` is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend **MRO** instead of **R** for running `KAML`. **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
 ### Installation
-`KAMBLUP` is not available on CRAN, but can be installed using the R package **"devtools"**. There are two packages should be installed beforehand, **"snpStats"** and **"rfunctions"**. `KAMBLUP` can be installed with the following R code:
+`KAML` is not available on CRAN, but can be installed using the R package **"devtools"**. There are two packages should be installed beforehand, **"snpStats"** and **"rfunctions"**. `KAML` can be installed with the following R code:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_version('RcppEigen', version = "0.3.2.9.0")
 devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
-devtools::install_github("YinLiLin/R-KAMBLUP/KAMBLUP")
+devtools::install_github("YinLiLin/R-KAML/KAML")
 ```
-After installed successfully, `KAMBLUP` can be loaded by typing ```library(KAMBLUP)```. Typing `?KAMBLUP` could get the details of all parameters.
+After installed successfully, `KAML` can be loaded by typing ```library(KAML)```. Typing `?KAML` could get the details of all parameters.
 
 ### Test Datasets
 
 ```bash
-wget https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip
+wget https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip
 unzip example.zip
 cd example
 ```
 
-**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/example/example.zip) in your browser to download.
+**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip) in your browser to download.
 
 ---
 
 ## INPUT
 ### Phenotype file
-The files must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. However, if a phenotype takes only values 0, 1(or only two levels), then `KAMBLUP` consider it to be a case-control trait. When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=X".
+The files must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. However, if a phenotype takes only values 0, 1(or only two levels), then `KAML` consider it to be a case-control trait. When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=X".
 
 > `mouse.Pheno.txt`
 
@@ -61,7 +61,7 @@ The files must contain a header row. Missing values should be denoted by NA, whi
 
 ### Covariate file
 Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is optional, in order to fit the model for original phenotype prediction, users can provide the covariates in file.
-If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, `KAMBLUP` will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
+If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, `KAML` will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
 
 > `CV.txt` ***(optional)***
 
@@ -75,7 +75,7 @@ If provided, NAs are not allowed in the file, the order of all individuals must 
 | female | group3 | 1 | ... | 80 |
 
 ### Kinship file
-`KAMBLUP` requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
+`KAML` requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
 ***"scale","center","vanraden"***
 ), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
 
@@ -108,7 +108,7 @@ is a n×n matrix, where each row and each column corresponds to individuals in t
 | rs13475699 | G | 1 | 3860406 | + | NA | NA | NA | NA | NA | NA | GG | GG | GG | GG | GG | ... | GG |
 
 ```r
-KAMBLUP.Data(hfile="mouse.hmp.txt", out="mouse")
+KAML.Data(hfile="mouse.hmp.txt", out="mouse")
 ```
 
 #### PLINK Binary
@@ -116,7 +116,7 @@ KAMBLUP.Data(hfile="mouse.hmp.txt", out="mouse")
 `mouse.fam`, `mouse.bim`, `mouse.bed`
 
 ```r
-KAMBLUP.Data(bfile="mouse", out="mouse")
+KAML.Data(bfile="mouse", out="mouse")
 ```
 
 #### Numeric
@@ -131,21 +131,21 @@ KAMBLUP.Data(bfile="mouse", out="mouse")
 | 0 | 0 | 0 | 0 | 0 | … | 0 |
 
 ```r
-KAMBLUP.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
+KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 ```
 
 ---
 ## USAGE
 ### Basic
 ```r
-KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
+KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
 ```
 ```r
-KAMBLUP(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mouse.Kin.txt")
+KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mouse.Kin.txt")
 ```
 ### Advanced
 <p align="center">
-<a href="https://raw.githubusercontent.com/YinLiLin/R-KAMBLUP/master/figures/Trait1.jpg">
+<a href="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/Trait1.jpg">
 <img src="/figures/Trait1.jpg" height="300px" width="840px">
 </a>
 </p>
@@ -180,5 +180,5 @@ library(httr)
 set_config(config(ssl_verifypeer = 0L))
 ```
 
-**Questions, suggestions, and bug reports are welcome and appreciated.** [:arrow_right:](https://github.com/YinLiLin/R-KAMBLUP/issues)
+**Questions, suggestions, and bug reports are welcome and appreciated.** [:arrow_right:](https://github.com/YinLiLin/R-KAML/issues)
 
