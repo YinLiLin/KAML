@@ -3,6 +3,7 @@
 ## Kinship Adjusted Multiple Locus Best Linear Unbiased Prediction
 
 ## Contents
+* [OVERVIEW](#overview)
 * [GETTING STARTED](#getting-started)
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
@@ -17,6 +18,9 @@
 * [FAQ AND HINTS](#faq-and-hints)
 
 ---
+## OVERVIEW
+`KAML` is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene.
+`KAML` is developed by [Lili Yin](), [Xiaolei Liu](), [Xinyun Li](), [Shuhong Zhao]() at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/2014/ch/)
 ## GETTING STARTED
 `KAML` is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend **MRO** instead of **R** for running `KAML`. **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
@@ -60,7 +64,7 @@ The files must contain a header row. Missing values should be denoted by NA, whi
 | NA | NA | NA | NA | NA | 0.720009 |
 
 ### Covariate file
-Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is optional, in order to fit the model for original phenotype prediction, users can provide the covariates in file.
+Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file.
 If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, `KAML` will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
 
 > `CV.txt` ***(optional)***
