@@ -57,7 +57,8 @@ cd example
 
 ## INPUT
 ### Phenotype file
-The files must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. However, if a phenotype takes only values 0, 1(or only two levels), then `KAML` consider it to be a case-control trait. When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=X".
+The file must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. Notice that only numeric values are allowed and characters will not be recognized. However, if a phenotype takes only values 0, 1(or only two levels), then `KAML` would consider it to be a case-control trait, and the predicted value could be directly interpreted as the probability of being a case. <br>
+When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=X".
 
 > `mouse.Pheno.txt`
 
@@ -72,8 +73,7 @@ The files must contain a header row. Missing values should be denoted by NA, whi
 | NA | NA | NA | NA | NA | 0.720009 |
 
 ### Covariate file
-Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file.
-If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, `KAML` will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
+Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file. If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, `KAML` will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
 
 > `CV.txt` ***(optional)***
 
@@ -103,9 +103,9 @@ If provided, NAs are not allowed in the file, the order of all individuals must 
 | -0.0072 | 0.0056 | -0.0407 | -0.0093 | -0.0238 | ... | 0.3436 |
 
 ### Genotype file
-With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, `KAML` is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.
-
-> `mouse.map, mouse.geno.desc, mouse.geno.bin`
+With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, `KAML` is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.<br>
+By default, total three files should be provided: `*.map`, `*.geno.bin`, `*.geno.desc`.The `*.map` file contains SNP information, the first column is SNP id, the second column is its chromosome number, and the third column is its base-pair
+position; `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so `KAML` provides a function *`KAML.Data()`* for genotype format transformation. Currently, genotype file could be in three formats, either in the ***Hapmap*** format, ***PLINK binary ped*** format, or the m by n ***Numeric*** format. 
 
 #### Hapmap
 
@@ -145,6 +145,8 @@ KAML.Data(bfile="mouse", out="mouse")
 ```r
 KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 ```
+
+> `mouse.map, mouse.geno.desc, mouse.geno.bin`
 
 ---
 ## USAGE
