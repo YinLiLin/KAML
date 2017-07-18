@@ -103,7 +103,7 @@ If provided, NAs are not allowed in the file, the order of all individuals must 
 | -0.0072 | 0.0056 | -0.0407 | -0.0093 | -0.0238 | ... | 0.3436 |
 
 ### Genotype file
-is a n×n matrix, where each row and each column corresponds to individuals in the same order as in the
+With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, `KAML` is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.
 
 > `mouse.map, mouse.geno.desc, mouse.geno.bin`
 
