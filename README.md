@@ -19,8 +19,11 @@
 
 ---
 ## OVERVIEW
-`KAML` is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene.
-`KAML` is developed by [Lili Yin](), [Xiaolei Liu](), [Xinyun Li](), [Shuhong Zhao]() at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/2014/ch/)
+`KAML` is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene. In brief, `KAML` incorporates pseudo QTNs as fixed effects and a trait-specific K matrix as random effect in a mixed linear model. Both pseudo QTNs and trait-specific K matrix are optimized using a parallel-accelerated machine learning strategy.
+
+`KAML` is developed by [***Lili Yin***](https://github.com/YinLiLin), [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio), [***Xinyun Li***](http://pdc.hzau.edu.cn/jgfw/desktop/grzy/show.htm?zgh=105042007017), [***Shuhong Zhao***](http://pdc.hzau.edu.cn/jgfw/desktop/grzy/show.htm?zgh=105041992036) at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/2014/ch/)
+
+---
 ## GETTING STARTED
 `KAML` is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend **MRO** instead of **R** for running `KAML`. **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
