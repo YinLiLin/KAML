@@ -106,13 +106,13 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 
 With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, ***`KAML`*** is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.<br>
 By default, total three files should be provided: `*.map`, `*.geno.bin`, `*.geno.desc` and **all with the same prefix**. The `*.map` file contains SNP information, the first column is SNP id, the second column is its chromosome number, and the third column is its base-pair position; `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. Currently, genotype file could be in three formats, either in the ***Hapmap*** format, ***PLINK binary ped*** format, or the m by n ***Numeric*** format. When transformin, missing genotypes are replaced by the mean genotype value of a given marker. After transformed, ***`KAML`*** can read it on-the-fly without a memory attenuation.<br>
-
 ***NOTE***: No matter what type of format of genotype, the order of individuals in columns of the file must correspond to phenotype file in rows.
 
 #### Hapmap
 Hapmap is the most popular used format for storing genotype data. As the example below, the SNP information is stored in the rows and individuals information is stored in the columns. The first 11 columns display attributes of the SNPs and the remaining columns show the nucleotides genotyped at each SNP for all individuals.
 
 > `mouse.hmp.txt`
+
 | rs# | alleles | chrom | pos | strand | assembly# | center | protLSID | assayLSID | panelLSID | QCcode | A048005080 | A048006063 | A048006555 | A048007096 | A048010273 | ... | A084292044 |
 | :---: | :---: |  :---: |  :---: |  :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | rs3683945 | G/A | 1 | 3197400 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
@@ -164,8 +164,7 @@ KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 
 After transformed, three file will be generated, all with the same prefix which is assigned by users in the *`KAML.Data*`* function.
 
-*The example mouse datasets:*
-
+> *The example mouse datasets:*
 > `mouse.map, mouse.geno.desc, mouse.geno.bin`
 
 ---
