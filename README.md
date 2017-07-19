@@ -58,7 +58,7 @@ cd example
 ## INPUT
 ### Phenotype file
 The file must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. Notice that only numeric values are allowed and characters will not be recognized. However, if a phenotype takes only values 0, 1(or only two levels), then ***`KAML`*** would consider it to be a case-control trait, and the predicted value could be directly interpreted as the probability of being a case. <br>
-When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=X".
+When a phenotype file contains more than one phenotype, users should specify which to analyse using the option "pheno=N", for example: KAML(..., pheno=1) means the trait in first column would be predicted. 
 
 > `mouse.Pheno.txt`
 
@@ -103,14 +103,15 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 | -0.0072 | 0.0056 | -0.0407 | -0.0093 | -0.0238 | ... | 0.3436 |
 
 ### Genotype file
+
 With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, ***`KAML`*** is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.<br>
-By default, total three files should be provided: `*.map`, `*.geno.bin`, `*.geno.desc`.The `*.map` file contains SNP information, the first column is SNP id, the second column is its chromosome number, and the third column is its base-pair
-position; `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. Currently, genotype file could be in three formats, either in the ***Hapmap*** format, ***PLINK binary ped*** format, or the m by n ***Numeric*** format. 
+By default, total three files should be provided: `*.map`, `*.geno.bin`, `*.geno.desc`. The `*.map` file contains SNP information, the first column is SNP id, the second column is its chromosome number, and the third column is its base-pair position; `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. Currently, genotype file could be in three formats, either in the ***Hapmap*** format, ***PLINK binary ped*** format, or the m by n ***Numeric*** format. When transformin, missing genotypes are replaced by the mean genotype value of a given marker.<br>
+** Note: No matter what type of format of genotype, the order of individuals in columns of the file must correspond to phenotype file in rows.**
 
 #### Hapmap
+Hapmap is the most popular used format for storing genotype data. As the example below, the SNP information is stored in the rows and taxa information is stored in the columns. The first 11 columns display attributes of the SNPs and the remaining columns show the nucleotides genotyped at each SNP for all individuals.
 
 > `mouse.hmp.txt`
-
 | rs# | alleles | chrom | pos | strand | assembly# | center | protLSID | assayLSID | panelLSID | QCcode | A048005080 | A048006063 | A048006555 | A048007096 | A048010273 | ... | A084292044 |
 | :---: | :---: |  :---: |  :---: |  :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | rs3683945 | G/A | 1 | 3197400 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
@@ -119,8 +120,16 @@ position; `*.geno.bin` is the numeric m(number of markers) by n(number of indivi
 | rs6336442 | G/A | 1 | 3580634 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
 | rs13475699 | G | 1 | 3860406 | + | NA | NA | NA | NA | NA | NA | GG | GG | GG | GG | GG | ... | GG |
 
+This type of file can be transformed by the following codes:
+
 ```r
 KAML.Data(hfile="mouse.hmp.txt", out="mouse")
+```
+
+Normally, all chromosomes are stored in one file, but can be stored in separated files for different chromosomes. If in this case, it can be transformed by following codes:
+
+```r
+KAML.Data(hfile=c("mouse.chr1.hmp.txt", "mouse.chr2.hmp.txt",...), out="mouse")
 ```
 
 #### PLINK Binary
