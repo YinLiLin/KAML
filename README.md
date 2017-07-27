@@ -73,7 +73,7 @@ When a phenotype file contains more than one trait, users should specify which t
 | NA | NA | NA | NA | NA | 0.720009 |
 
 ### Covariate file
-Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file. If provided, NAs are not allowed in the file, the order of all individuals must be corresponding to phenotype file. As is the example below, the elements can be either character or numeric, ***`KAML`*** will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
+Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file. If provided, NAs are not allowed in the file, **the order of all individuals must be corresponding to phenotype file**. As is the example below, the elements can be either character or numeric, ***`KAML`*** will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
 
 > `CV.txt` ***(optional)***
 
@@ -89,7 +89,7 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 ### Kinship file
 ***`KAML`*** requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
 ***"scale","center","vanraden"***
-), but can be supplied in file by users. If in this case, the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names.
+), but can be supplied in file by users. If in this case, **the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names**.
 
 > `mouse.Kin.txt` ***(optional)***
 
@@ -106,7 +106,7 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 
 With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, ***`KAML`*** is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.<br>
 By default, total three files should be provided: `*.map`, `*.geno.bin`, `*.geno.desc` and **all with the same prefix**. The `*.map` file contains SNP information, the first column is SNP id, the second column is its chromosome number, and the third column is its base-pair position; `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. Currently, genotype file could be in three formats, either in the ***Hapmap*** format, ***PLINK binary ped*** format, or the m by n ***Numeric*** format. When transforming, missing genotypes are replaced by the mean genotype value of a given marker. After transformed, ***`KAML`*** can read it on-the-fly without a memory attenuation.<br>
-***NOTE***: No matter what type of format of genotype, the order of individuals in columns of the file must correspond to phenotype file in rows.
+***NOTE***: **No matter what type of format of genotype, the order of individuals in columns of the file must correspond to phenotype file in rows.**
 
 #### Hapmap
 Hapmap is the most popular used format for storing genotype data. As the example below, the SNP information is stored in the rows and individuals information is stored in the columns. The first 11 columns display attributes of the SNPs and the remaining columns show the nucleotides genotyped at each SNP for all individuals.
@@ -146,7 +146,7 @@ KAML.Data(bfile="mouse", out="mouse")
 ```
 
 #### Numeric
-***`KAML`*** also accepts the numeric format. All nucleotides have been coded as 0, 1, 2. The SNP information is stored in the rows and individuals information is stored in the columns. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files must be provided. One file contains the numeric genotypic data, and the other contains the position of each SNP. ***NOTE***: Row names and column names are not allowed, the number of row and the order of SNPs must be same in those two files.
+***`KAML`*** also accepts the numeric format. All nucleotides have been coded as 0, 1, 2. The SNP information is stored in the rows and individuals information is stored in the columns, **the order of individuals in columns must correspond to phenotype file in rows**. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files must be provided. One file contains the numeric genotypic data, and the other contains the position of each SNP. ***NOTE:*** **Row names and column names are not allowed, the number of row and the order of SNPs must be same in those two files.**
 
 > `mouse.Numeric.txt`
 
@@ -157,12 +157,21 @@ KAML.Data(bfile="mouse", out="mouse")
 | 1 | 1 | 2 | 1 | 2 | … | 0 |
 | 0 | 0 | 0 | 0 | 0 | … | 0 |
 
+> `mouse.map`
+
+| rs3683945 | 1 | 3197400 |
+| :---: | :---: |  :---: |
+| rs3707673 | 1 | 3407393 |
+| rs6269442 | 1 | 3492195 |
+| rs6336442 | 1 | 3580634 |
+| rs13475699 | 1 | 3860406 |
+
 This type of file can be transformed by the following codes:
 ```r
 KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 ```
 
-After transformed, three file will be generated, all with the same prefix which is assigned by users in the *`KAML.Data*`* function.
+After transformed from one of three type of format above, three file will be generated, all with the same prefix which is assigned by users in the *`KAML.Data*`* function.
 
 > *The example mouse datasets:*
 > `mouse.map, mouse.geno.desc, mouse.geno.bin`
