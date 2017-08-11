@@ -45,13 +45,14 @@ After installed successfully, ***`KAML`*** can be loaded by typing ```library(KA
 
 ### Test Datasets
 
+The example data is available for Linux by:
 ```bash
 wget https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip
 unzip example.zip
 cd example
 ```
 
-**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip) in your browser to download.
+**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ```r setwd()``` in R.
 
 ---
 
