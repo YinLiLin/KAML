@@ -251,7 +251,7 @@ KAML.Data(bfile="mouse", out="mouse")
 
 > `mouse.Numeric.txt`
 
-<table style="display:inline;padding-right:20px">
+<table style="display: inline-block;">
 <tbody>
 <tr>
 <td align="center">1</td>
@@ -299,7 +299,7 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">0</td>
 </tr></tbody></table>
 
-<table>
+<table style="float: left;">
 <tbody>
 <tr>
 <td align="center">rs3683945</td>
@@ -351,6 +351,7 @@ KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mou
 <p align="center">
 <a href="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/Trait1.jpg">
 <img src="/figures/Trait1.jpg" height="300px" width="840px"/>
+</a>
 </p>
 
 ---
