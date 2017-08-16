@@ -297,8 +297,8 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">0</td>
 <td align="center">…</td>
 <td align="center">0</td>
-</tr></tbody>
-
+</tr></tbody></table>
+<table style="display:inline;padding-right:20px">
 <tbody>
 <tr>
 <td align="center">rs3683945</td>
