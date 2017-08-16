@@ -251,7 +251,7 @@ KAML.Data(bfile="mouse", out="mouse")
 
 > `mouse.Numeric.txt`
 
-<table style="display:inline;padding-right:20px">
+<table>
 <tbody>
 <tr>
 <td align="center">1</td>
