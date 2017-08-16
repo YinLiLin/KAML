@@ -251,7 +251,7 @@ KAML.Data(bfile="mouse", out="mouse")
 
 > `mouse.Numeric.txt`
 
-<table style="display: inline-block">
+<table style="display: inline-table">
 <tbody>
 <tr>
 <td align="center">1</td>
@@ -299,7 +299,7 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">0</td>
 </tr></tbody></table>
 <span style="padding-right:20px"></span>
-<table style="display: inline-block">
+<table style="display: inline-table">
 <tbody>
 <tr>
 <td align="center">rs3683945</td>
