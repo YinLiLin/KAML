@@ -78,14 +78,57 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 
 > `CV.txt` ***(optional)***
 
-| female | group1 | 1 | ... | 55 |
-| :---: | :---: |  :---: |  :---: |  :---: |
-| female | group2 | 1| ... | 57 |
-| male | group2 | 2 | ... | 62 |
-| male | group3 | 2| ... | 75 |
-| male | group2 | 2| ... | 45 |
-| ... | ... | ... | ... | ... |
-| female | group3 | 1 | ... | 80 |
+<table>
+<tbody>
+<tr>
+<td align="center">female</td>
+<td align="center">group1</td>
+<td align="center">1</td>
+<td align="center">...</td>
+<td align="center">55</td>
+</tr>
+<tr>
+<td align="center">female</td>
+<td align="center">group2</td>
+<td align="center">1</td>
+<td align="center">...</td>
+<td align="center">57</td>
+</tr>
+<tr>
+<td align="center">male</td>
+<td align="center">group2</td>
+<td align="center">2</td>
+<td align="center">...</td>
+<td align="center">62</td>
+</tr>
+<tr>
+<td align="center">male</td>
+<td align="center">group3</td>
+<td align="center">2</td>
+<td align="center">...</td>
+<td align="center">75</td>
+</tr>
+<tr>
+<td align="center">male</td>
+<td align="center">group2</td>
+<td align="center">2</td>
+<td align="center">...</td>
+<td align="center">45</td>
+</tr>
+<tr>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+</tr>
+<tr>
+<td align="center">female</td>
+<td align="center">group3</td>
+<td align="center">1</td>
+<td align="center">...</td>
+<td align="center">80</td>
+</tr></tbody></table>
 
 ### Kinship file
 ***`KAML`*** requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
@@ -94,14 +137,71 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 
 > `mouse.Kin.txt` ***(optional)***
 
-| 0.3032 | -0.0193 | 0.0094 | 0.0024 | 0.0381 | ... | -0.0072 |
-| :---: | :---: |  :---: |  :---: |  :---: |  :---: |  :---: |
-| -0.0193 | 0.274 | -0.0243 | 0.0032 | -0.0081 | ... | 0.0056 |
-| 0.0094 | -0.0243 | 0.3207 | -0.0071 | -0.0045 | ... | -0.0407 |
-| 0.0024 | 0.0032 | -0.0071 | 0.321 | -0.008 | ... | -0.0093 |
-| 0.0381 | -0.0081 | -0.0045 | -0.008 | 0.3498 | ... | -0.0238 |
-| ... | ... | ... | ... | ... | ... | ... | 
-| -0.0072 | 0.0056 | -0.0407 | -0.0093 | -0.0238 | ... | 0.3436 |
+<table>
+<tbody>
+<tr>
+<td align="center">0.3032</td>
+<td align="center">-0.0193</td>
+<td align="center">0.0094</td>
+<td align="center">0.0024</td>
+<td align="center">0.0381</td>
+<td align="center">...</td>
+<td align="center">-0.0072</td>
+</tr>
+<tr>
+<td align="center">-0.0193</td>
+<td align="center">0.274</td>
+<td align="center">-0.0243</td>
+<td align="center">0.0032</td>
+<td align="center">-0.0081</td>
+<td align="center">...</td>
+<td align="center">0.0056</td>
+</tr>
+<tr>
+<td align="center">0.0094</td>
+<td align="center">-0.0243</td>
+<td align="center">0.3207</td>
+<td align="center">-0.0071</td>
+<td align="center">-0.0045</td>
+<td align="center">...</td>
+<td align="center">-0.0407</td>
+</tr>
+<tr>
+<td align="center">0.0024</td>
+<td align="center">0.0032</td>
+<td align="center">-0.0071</td>
+<td align="center">0.321</td>
+<td align="center">-0.008</td>
+<td align="center">...</td>
+<td align="center">-0.0093</td>
+</tr>
+<tr>
+<td align="center">0.0381</td>
+<td align="center">-0.0081</td>
+<td align="center">-0.0045</td>
+<td align="center">-0.008</td>
+<td align="center">0.3498</td>
+<td align="center">...</td>
+<td align="center">-0.0238</td>
+</tr>
+<tr>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+</tr>
+<tr>
+<td align="center">-0.0072</td>
+<td align="center">0.0056</td>
+<td align="center">-0.0407</td>
+<td align="center">-0.0093</td>
+<td align="center">-0.0238</td>
+<td align="center">...</td>
+<td align="center">0.3436</td>
+</tr></tbody></table>
 
 ### Genotype file
 
@@ -151,21 +251,81 @@ KAML.Data(bfile="mouse", out="mouse")
 
 > `mouse.Numeric.txt`
 
-| 1 | 1 | 2 | 1 | 2 | … | 0 |
-| :---: | :---: |  :---: |  :---: |  :---: | :---: | :---: |
-| 1 | 1 | 0 | 1 | 0 | … | 2 |
-| 1 | 2 | 2 | 1 | 2 | … | 0 |
-| 1 | 1 | 2 | 1 | 2 | … | 0 |
-| 0 | 0 | 0 | 0 | 0 | … | 0 |
+<table style="display:inline;padding-right:20px">
+<tbody>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">…</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">…</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">…</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">…</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+<td align="center">0</td>
+</tr></tbody></table>
 
-> `mouse.map`
-
-| rs3683945 | 1 | 3197400 |
-| :---: | :---: |  :---: |
-| rs3707673 | 1 | 3407393 |
-| rs6269442 | 1 | 3492195 |
-| rs6336442 | 1 | 3580634 |
-| rs13475699 | 1 | 3860406 |
+<table>
+<tbody>
+<tr>
+<td align="center">rs3683945</td>
+<td align="center">1</td>
+<td align="center">3197400</td>
+</tr>
+<tr>
+<td align="center">rs3707673</td>
+<td align="center">1</td>
+<td align="center">3407393</td>
+</tr>
+<tr>
+<td align="center">rs6269442</td>
+<td align="center">1</td>
+<td align="center">3492195</td>
+</tr>
+<tr>
+<td align="center">rs6336442</td>
+<td align="center">1</td>
+<td align="center">3580634</td>
+</tr>
+<tr>
+<td align="center">rs13475699</td>
+<td align="center">1</td>
+<td align="center">3860406</td>
+</tr></tbody></table>
 
 This type of file can be transformed by the following codes:
 ```r
