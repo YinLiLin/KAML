@@ -348,11 +348,10 @@ KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mou
 #<a href="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/Trait1.jpg"> align="center"
 ```
 ### Advanced
-<p>
+
 <img src="/figures/Trait1.jpg" height="300px" width="840px"/>
 <img src="/figures/Trait1.jpg" height="300px" width="840px"/>
 <img src="/figures/Trait1.jpg" height="300px" width="840px"/> 
-</p>
 
 
 ---
