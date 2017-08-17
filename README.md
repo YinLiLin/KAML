@@ -251,9 +251,11 @@ KAML.Data(bfile="mouse", out="mouse")
 
 > `mouse.Numeric.txt`
 
-| text1 | text2 |
-| :---: | :---: |
-|
+<table>
+<tbody>
+<tr>
+<td align="center">
+
 <table>
 <tbody>
 <tr>
@@ -301,7 +303,10 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">…</td>
 <td align="center">0</td>
 </tr></tbody></table>
-|
+
+</td>
+
+<td align="center">
 <table>
 <tbody>
 <tr>
@@ -329,7 +334,9 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">1</td>
 <td align="center">3860406</td>
 </tr></tbody></table>
-|
+
+</td>
+</tr></tbody></table>
 
 This type of file can be transformed by the following codes:
 ```r
