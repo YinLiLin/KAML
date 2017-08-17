@@ -251,7 +251,15 @@ KAML.Data(bfile="mouse", out="mouse")
 
 > `mouse.Numeric.txt`
 
+<p><code>mouse.Pheno.txt</code></p>
+
 <table>
+<thead>
+<tr>
+<th align="center"><p><code>mouse.Numeric.txt</code></p></th>
+<th align="center"><p><code>mouse.map</code></p></th>
+</tr>
+</thead>
 <tbody>
 <tr>
 <td align="center">
