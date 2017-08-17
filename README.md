@@ -345,7 +345,7 @@ This type of file can be transformed by the following codes:
 KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 ```
 
-After transformed from one of three type of format above, three file will be generated, all with the same prefix which is assigned by users in the *`KAML.Data*`* function.
+After transformed from one of three type of format above, three file will be generated, all with the same prefix which is assigned by users in the *`KAML.Data`* function.
 
 > *The example mouse datasets:*
 > `mouse.map, mouse.geno.desc, mouse.geno.bin`
