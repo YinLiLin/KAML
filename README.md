@@ -250,10 +250,10 @@ KAML.Data(bfile="mouse", out="mouse")
 ***`KAML`*** also accepts the numeric format. All nucleotides have been coded as 0, 1, 2. The SNP information is stored in the rows and individuals information is stored in the columns, it means that the dimension of the numeric matrix is m by n, **the order of individuals in columns must correspond to phenotype file in rows**. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files must be provided. One file contains the numeric genotypic data, and the other contains the position of each SNP. ***NOTE:*** **Row names and column names are not allowed, the number of row and the order of SNPs must be same in those two files.**
 
 > `mouse.Numeric.txt`
-<table style="
-    display: inline;
-    padding-left: 10px;
-">
+| text1 | text2 |
+| :---: | :---: |
+|
+<table>
 <tbody>
 <tr>
 <td align="center">1</td>
@@ -300,11 +300,8 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">…</td>
 <td align="center">0</td>
 </tr></tbody></table>
-
-<table style="
-    display: inline;
-    padding-left: 10px;
-">
+|
+<table>
 <tbody>
 <tr>
 <td align="center">rs3683945</td>
@@ -331,6 +328,7 @@ KAML.Data(bfile="mouse", out="mouse")
 <td align="center">1</td>
 <td align="center">3860406</td>
 </tr></tbody></table>
+|
 
 This type of file can be transformed by the following codes:
 ```r
