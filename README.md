@@ -41,7 +41,11 @@ devtools::install_github("Bioconductor-mirror/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAML/KAML")
 ```
-After installed successfully, ***`KAML`*** can be loaded by typing ```library(KAML)```. Typing `?KAML` could get the details of all parameters.
+After installed successfully, ***`KAML`*** can be loaded by typing
+```r
+library(KAML)
+```
+Typing `?KAML` could get the details of all parameters.
 
 ### Test Datasets
 
