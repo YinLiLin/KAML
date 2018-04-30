@@ -37,7 +37,7 @@
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_version('RcppEigen', version = "0.3.2.9.0")
-devtools::install_github("Bioconductor-mirror/snpStats")
+devtools::install_github("hclimente/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAML/KAML")
 ```
@@ -77,69 +77,118 @@ When a phenotype file contains more than one trait, users should specify which t
 | ... | ... | ... | ... | ... | ... |
 | NA | NA | NA | NA | NA | 0.720009 |
 
-### Covariate file
-Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file. If provided, NAs are not allowed in the file, **the order of all individuals must be corresponding to phenotype file**. As is the example below, the elements can be either character or numeric, ***`KAML`*** will regard the column whose levels is less than 50% of total individuals as fixed effect, and transform the (0, 1) identity matrix for it automatically, other columns will be treated as covariates directely.
+### Covariate file ***(optional)***
+Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file. If provided, NAs are not allowed in the file, **the order of all individuals must be corresponding to phenotype file**. Actually, there are two parameters for covariates: **`dcovfile`** and **`qcovfile`**;
 
-> `CV.txt` ***(optional)***
+**`dcovfile`**: Input discrete covariates from a plain text file, e.g. *dcov.txt*. Each discrete covariate is recognized as a categorical factor with several levels. The levels of each factor can be represented by a single character, word or numerical number. NOTE: the design matrix of the mean in the model (which is a vector of all ones) is always a linear combination of the design matrix of a discrete covariate so that not all the effects of the levels (or classes, e.g. male and female) of a discrete covariate are estimable. ***`KAML`*** will always constrain the effect of the first level to be zero and the effect of any other level represents its difference in effect compared to the first level.
+
+**`qcovfile`**: Input quantitative covariates from a plain text file, e.g. *qcov.txt*. Each quantitative covariate is recognized as a continuous variable.
 
 <table>
 <tbody>
 <tr>
-<td align="center">female</td>
-<td align="center">group1</td>
+<td align="center"><em><strong><code>dcov.txt</code></strong></em></td>
+<td align="center"><em><strong><code>qcov.txt</code></strong></em></td>
+</tr>
+<tr>
+<td align="center">
+
+<table>
+<tbody>
+<tr>
+<td align="center">F</td>
+<td align="center">H1</td>
 <td align="center">1</td>
-<td align="center">...</td>
-<td align="center">55</td>
+<td align="center">pop1</td>
 </tr>
 <tr>
-<td align="center">female</td>
-<td align="center">group2</td>
+<td align="center">F</td>
+<td align="center">H3</td>
+<td align="center">0</td>
+<td align="center">pop2</td>
+</tr>
+<tr>
+<td align="center">M</td>
+<td align="center">0</td>
+<td align="center">002</td>
+<td align="center">pop2</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">H3</td>
 <td align="center">1</td>
-<td align="center">...</td>
-<td align="center">57</td>
+<td align="center">pop4</td>
 </tr>
 <tr>
-<td align="center">male</td>
-<td align="center">group2</td>
-<td align="center">2</td>
-<td align="center">...</td>
-<td align="center">62</td>
-</tr>
-<tr>
-<td align="center">male</td>
-<td align="center">group3</td>
-<td align="center">2</td>
-<td align="center">...</td>
-<td align="center">75</td>
-</tr>
-<tr>
-<td align="center">male</td>
-<td align="center">group2</td>
-<td align="center">2</td>
-<td align="center">...</td>
-<td align="center">45</td>
-</tr>
-<tr>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-<td align="center">...</td>
-</tr>
-<tr>
-<td align="center">female</td>
-<td align="center">group3</td>
+<td align="center">M</td>
+<td align="center">H3</td>
 <td align="center">1</td>
+<td align="center">pop4</td>
+</tr>
+<tr>
 <td align="center">...</td>
-<td align="center">80</td>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+</tr>
+<tr>
+<td align="center">M</td>
+<td align="center">H5</td>
+<td align="center">0</td>
+<td align="center">pop5</td>
 </tr></tbody></table>
 
-### Kinship file
+</td>
+
+<td align="center">
+<table>
+<tbody>
+<tr>
+<td align="center">12</td>
+<td align="center">0.01</td>
+<td align="center">0.13</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">-0.05</td>
+<td align="center">0.25</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">0.05</td>
+<td align="center">-0.36</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">0.16</td>
+<td align="center">0.28</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">0.07</td>
+<td align="center">0.95</td>
+</tr>
+<tr>
+<td align="center">...</td>
+<td align="center">...</td>
+<td align="center">...</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">-0.12</td>
+<td align="center">0.35</td>
+</tr></tbody></table>
+
+</td>
+</tr></tbody></table>
+
+
+### Kinship file ***(optional)***
 ***`KAML`*** requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
 ***"scale","center","vanraden"***
 ), but can be supplied in file by users. If in this case, **the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names**.
 
-> `mouse.Kin.txt` ***(optional)***
+> `mouse.Kin.txt` 
 
 <table>
 <tbody>
