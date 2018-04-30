@@ -109,8 +109,8 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 </tr>
 <tr>
 <td align="center">M</td>
+<td align="center">H2</td>
 <td align="center">0</td>
-<td align="center">002</td>
 <td align="center">pop2</td>
 </tr>
 <tr>
