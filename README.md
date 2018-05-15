@@ -416,7 +416,9 @@ After transformed from one of three type of format above, three file will be gen
 </p>
 
 <p align="center">
+<a 
 ![equation](http://latex.codecogs.com/gif.latex?{\color{Red}G}=\frac{MM^{T}}{2\sum_{i=1}^{m}Pi(1-Pi)})
+>
 </p>
 
 ```r
