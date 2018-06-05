@@ -3,11 +3,15 @@
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)ocus Best Linear Unbiased Prediction*
 
 ## Contents
+
 * [OVERVIEW](#overview)
 * [CITATION](#citation)
 * [GETTING STARTED](#getting-started)
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
+  
+ <img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/clusterProfiler/clusterProfiler.png" height="200" align="right" />
+  
 * [INPUT](#input)
   - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file) 
   - [Genotype file](#genotype-file)
