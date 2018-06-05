@@ -6,12 +6,11 @@
 
 * [OVERVIEW](#overview)
 * [CITATION](#citation)
+<img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/clusterProfiler/clusterProfiler.png" height="200" align="right" />
+
 * [GETTING STARTED](#getting-started)
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
-  
- <img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/clusterProfiler/clusterProfiler.png" height="200" align="right" />
-  
 * [INPUT](#input)
   - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file) 
   - [Genotype file](#genotype-file)
