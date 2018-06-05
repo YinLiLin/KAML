@@ -322,6 +322,12 @@ KAML.Data(hfile=c("mouse.chr1.hmp.txt", "mouse.chr2.hmp.txt",...), out="mouse")
 1	1	10006986	A	G	.	.	PR	GT	0/0	0/0	0/1	./.	1/1	1/1
 ```
 
+This type of file can be transformed by the following codes:
+
+```r
+KAML.Data(vfile="mouse.vcf", out="mouse")
+```
+
 #### PLINK Binary
 The **PLINK Banary** format is derived from Plink software. This format requires three files: \*.bed, \*.bim and
 \*.fam, all with the same prefix. ***`KAML`*** only use \*.bed and \*.bim file. ***NOTE*** that the id of SNPs must be unique.
