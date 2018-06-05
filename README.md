@@ -6,9 +6,7 @@
 
 * [OVERVIEW](#overview)
 * [CITATION](#citation)
-<img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/clusterProfiler/clusterProfiler.png" height="200" align="right" />
-
-* [GETTING STARTED](#getting-started)
+* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/clusterProfiler/clusterProfiler.png" height="200" align="right" />
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
 * [INPUT](#input)
