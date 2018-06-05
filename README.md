@@ -38,7 +38,7 @@
 </a>
 </p>
 
-***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/2014/ch/).
+***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/en/HOME.htm).
 
 If you have any bug reports or questions please send an email to [**Lilin Yin**](https://github.com/YinLiLin) at **ylilin@163.com**
 
