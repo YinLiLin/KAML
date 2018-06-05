@@ -22,6 +22,13 @@
 ## OVERVIEW
 ***`KAML`*** is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene. In brief, ***`KAML`*** incorporates pseudo QTNs as fixed effects and a trait-specific K matrix as random effect in a mixed linear model. Both pseudo QTNs and trait-specific K matrix are optimized using a parallel-accelerated machine learning strategy.
 
+![equation](http://latex.codecogs.com/gif.latex?{y=Xb+{\color{Red}Qq}+Z{\color{Red}\mu}+e;\mu\sim{N}(0{\color{Red}K}\sigma^{2})})
+
+![equation](http://latex.codecogs.com/gif.latex?{K_{ij}=\frac{1}{m}\sum_{k=1}^{m}\frac{(M_{ik}-2p_{k}){\color{Red}\xi_{k}}(M_{jk}-2p_{k})}{2p_{k}(1-p_{k})}})
+
+![equation](http://latex.codecogs.com/gif.latex?{\xi_{k}\mid(\alpha,\beta)\sim\begin{cases}1&\text{;}1-\beta&Log_{\alpha}(P_{m\beta+1})-Log_{\alpha}(P_{m\beta})&\text{;}\beta\end{cases}})
+
+
 ***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/2014/ch/).
 
 If you have any bug reports or questions please send an email to [**Lilin Yin**](https://github.com/YinLiLin) at **ylilin@163.com**
@@ -408,13 +415,6 @@ After transformed from one of three type of format above, three file will be gen
 ---
 ## USAGE
 ### Basic
-
-
-<p align="center">
-<a 
-![equation](http://latex.codecogs.com/gif.latex?{\color{Red}G}=\frac{MM^{T}}{2\sum_{i=1}^{m}Pi(1-Pi)})
->
-</p>
 
 ```r
 KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
