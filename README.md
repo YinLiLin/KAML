@@ -22,6 +22,9 @@
 ## OVERVIEW
 ***`KAML`*** is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene. In brief, ***`KAML`*** incorporates pseudo QTNs as fixed effects and a trait-specific K matrix as random effect in a mixed linear model. Both pseudo QTNs and trait-specific K matrix are optimized using a parallel-accelerated machine learning strategy.
 
+
+![equation](http://latex.codecogs.com/gif.latex?{y=Xb+{\color{Red}Qq}+Z{\color{Red}\mu}+e;\mu\sim{N}(0,{\color{Red}K}\sigma^{2})})
+
 <p align="center">
 <a target="_blank" href="https://camo.githubusercontent.com/e38e5173dea08de31c537db2808dfdd96f18552a/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f253742793d58622b253742253543636f6c6f7225374252656425374451712537442b5a253742253543636f6c6f722537425265642537442535436d752537442b653b2535436d7525354373696d2537424e2537442830253742253543636f6c6f722537425265642537444b2537442535437369676d612535452537423225374429253744"><img src="https://camo.githubusercontent.com/e38e5173dea08de31c537db2808dfdd96f18552a/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f253742793d58622b253742253543636f6c6f7225374252656425374451712537442b5a253742253543636f6c6f722537425265642537442535436d752537442b653b2535436d7525354373696d2537424e2537442830253742253543636f6c6f722537425265642537444b2537442535437369676d612535452537423225374429253744" alt="equation" data-canonical-src="http://latex.codecogs.com/gif.latex?%7By=Xb+%7B%5Ccolor%7BRed%7DQq%7D+Z%7B%5Ccolor%7BRed%7D%5Cmu%7D+e;%5Cmu%5Csim%7BN%7D(0%7B%5Ccolor%7BRed%7DK%7D%5Csigma%5E%7B2%7D)%7D" style="max-width:100%;">
 </a>
