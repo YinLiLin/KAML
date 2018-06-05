@@ -11,7 +11,7 @@
 * [INPUT](#input)
   - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file) 
   - [Genotype file](#genotype-file)
-    * [Hapmap](#hapmap)/[PLINK Binary](#plink-binary)/[Numeric](#numeric)
+    * [Hapmap](#hapmap)/[VCF](#vcf)/[PLINK Binary](#plink-binary)/[Numeric](#numeric)
 * [USAGE](#usage)
   - [Basic](#basic)
   - [Advanced](#advanced)
@@ -304,6 +304,10 @@ Normally, all chromosomes are stored in one file, but can be stored in separated
 ```r
 KAML.Data(hfile=c("mouse.chr1.hmp.txt", "mouse.chr2.hmp.txt",...), out="mouse")
 ```
+
+#### VCF
+
+
 
 #### PLINK Binary
 The **PLINK Banary** format is derived from Plink software. This format requires three files: \*.bed, \*.bim and
