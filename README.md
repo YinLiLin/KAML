@@ -70,12 +70,11 @@ Typing `?KAML` could get the details of all parameters.
 
 The example data is available for Linux by:
 ```bash
-wget https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip
+wget https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip
 unzip example.zip
-cd example
 ```
 
-**Or** click [here](https://raw.githubusercontent.com/YinLiLin/R-KAML/master/example/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
+**Or** click [here](https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
 
 ---
 
