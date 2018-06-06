@@ -274,7 +274,6 @@ Generally, there are no covariates when predicting candidates in most cases, esp
 </tr></tbody></table>
 
 ### Genotype file
-
 With the increasing number of SNPs through whole genome, the storage of genotype is a big problem. Obviously, it's not a good choice to read it into memory with a memory-limited PC directly. Here, ***`KAML`*** is integrated with a memory-efficient tool named ***bigmemory*** and could obtain the genotype information from disk instead, which can save much of memory to do more analysis.<br>
 By default, total two files should be provided: `*.geno.bin`, `*.geno.desc` and **all with the same prefix**. `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. Currently, genotype file could be in four formats, either in the ***Hapmap*** format, ***VCF*** format, ***PLINK binary ped*** format, or the m by n ***Numeric*** format. When transforming, missing genotypes are replaced by the selected methods(Left, Middle, "Right") of a given marker. After transformed, ***`KAML`*** can read it on-the-fly without a memory attenuation.<br>
 ***NOTE***: **No matter what type of format of genotype, the order of individuals in columns of the file must correspond to phenotype file in rows.**
@@ -336,8 +335,7 @@ KAML.Data(vfile=c("mouse1.vcf", "mouse2.vcf",...), out="mouse")
 
 #### PLINK Binary
 The **PLINK Banary** format is derived from Plink software. This format requires three files: \*.bed, \*.bim and
-\*.fam, all with the same prefix. ***`KAML`*** only use \*.bed and \*.bim file. 
-
+\*.fam, all with the same prefix. ***`KAML`*** only use \*.bed and \*.bim file.<br>
 ***NOTE*** that the id of SNPs must be unique.
 
 >`mouse.fam`, `mouse.bim`, `mouse.bed`
@@ -349,7 +347,8 @@ KAML.Data(bfile="mouse", out="mouse")
 ```
 
 #### Numeric
-***`KAML`*** also accepts the numeric format. All nucleotides have been coded as 0, 1, 2. The SNP information is stored in the rows and individuals information is stored in the columns, it means that the dimension of the numeric matrix is m by n, **the order of individuals in columns must correspond to phenotype file in rows**. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files must be provided. One file contains the numeric genotypic data, and the other contains the position of each SNP. ***NOTE:*** **Row names and column names are not allowed, the number of row and the order of SNPs must be same in those two files.**
+***`KAML`*** also accepts the numeric format. All nucleotides have been coded as 0, 1, 2. The SNP information is stored in the rows and individuals information is stored in the columns, it means that the dimension of the numeric matrix is m by n, **the order of individuals in columns must correspond to phenotype file in rows**. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files must be provided. One file contains the numeric genotypic data, and the other contains the position of each SNP.<br>
+***NOTE:*** **Row names and column names are not allowed, the number of row and the order of SNPs must be same in those two files.**
 
 <table>
 <tbody>
@@ -450,14 +449,14 @@ KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 After transformed from one of four types of format above, two needed files will be generated, all with the same prefix which is assigned by users in the *`KAML.Data`* function.
 
 > *The example mouse datasets:*
-> mouse.geno.desc, mouse.geno.bin`
+
+> `mouse.geno.desc, mouse.geno.bin`
 
 ---
 ## USAGE
 ### Basic
 
-To run(basic) ***`KAML`***, you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`*** could automatically attach `*.bin` and `*.desc`.
-
+To run(basic) ***`KAML`***, you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`*** could automatically attach `*.geno.bin` and `*.geno.desc`.<br>
 ***Note again:*** ***`KAML`*** has no function for adjusting the order of individuals. So please make sure the same order of individuals between phenotype and genotype.
 
 ```r
