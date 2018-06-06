@@ -448,9 +448,7 @@ KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 
 After transformed from one of four types of format above, two needed files will be generated, all with the same prefix which is assigned by users in the *`KAML.Data`* function.
 
-> *The example mouse datasets:*
-
-> `mouse.geno.desc, mouse.geno.bin`
+> *The example mouse datasets:* `mouse.geno.desc, mouse.geno.bin`
 
 ---
 ## USAGE
