@@ -336,7 +336,9 @@ KAML.Data(vfile=c("mouse1.vcf", "mouse2.vcf",...), out="mouse")
 
 #### PLINK Binary
 The **PLINK Banary** format is derived from Plink software. This format requires three files: \*.bed, \*.bim and
-\*.fam, all with the same prefix. ***`KAML`*** only use \*.bed and \*.bim file. ***NOTE*** that the id of SNPs must be unique.
+\*.fam, all with the same prefix. ***`KAML`*** only use \*.bed and \*.bim file. 
+
+***NOTE*** that the id of SNPs must be unique.
 
 >`mouse.fam`, `mouse.bim`, `mouse.bed`
 
@@ -454,7 +456,8 @@ After transformed from one of four types of format above, two needed files will 
 ## USAGE
 ### Basic
 
-To run(basic) ***`KAML`***, you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`** could automatically attach `*.bin` and `*.desc`.
+To run(basic) ***`KAML`***, you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`*** could automatically attach `*.bin` and `*.desc`.
+
 ***Note again:*** ***`KAML`*** has no function for adjusting the order of individuals. So please make sure the same order of individuals between phenotype and genotype.
 
 ```r
