@@ -6,7 +6,7 @@
 
 * [OVERVIEW](#overview)
 * [CITATION](#citation)
-* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/clusterProfiler/clusterProfiler.png" height="200" align="right" />
+* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML.jpg" height="250" align="right" />
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
 * [INPUT](#input)
