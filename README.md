@@ -479,7 +479,7 @@ Change the top picked number of SNPs and model of GWAS("MLM","GLM", "RR"):
 ```
 
 ### Advanced
-For a unknow trait, we don't know the actual genetic architecture, which could be obtained from a series of of  ***`KAML`*** could obtain the 
+For a unknow trait, we don't know its actual genetic architecture, which could be obtained from a machine learning strategy of  ***`KAML`***. Although those procedure could be speeded up by parallel computation, 
 <p align="center">
 <a href="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/Trait1.jpg">
 <img src="/figures/Trait1.jpg" height="300px" width="840px"/>
