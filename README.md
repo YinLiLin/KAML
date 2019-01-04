@@ -454,7 +454,7 @@ After transformed from one of four types of format above, two needed files will 
 ## USAGE
 ### Basic
 
-To run ***`KAML`***, you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`*** could automatically attach `*.geno.bin` and `*.geno.desc`. <br>
+To run ***`KAML`,*** you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`*** could automatically attach `*.geno.bin` and `*.geno.desc`. <br>
 ***Note again:*** ***`KAML`*** has no function for adjusting the order of individuals. So please make sure the same order of individuals between phenotype and genotype.
 
 ```r
@@ -480,7 +480,7 @@ Change the top picked number of SNPs and model of GWAS("MLM","GLM", "RR"):
 ```
 
 ### Advanced
-In practice, we don't know its actual genetic architecture of unknow traits, which could be obtained from a machine learning strategy of  ***`KAML`***. Although those procedures could be speeded up by parallel computation, it's still time-consuming with limited computation resources. So it would be a better choice to run ***`KAML`*** within a smaller population to obtain the parameters, and then apply the optimized parameters to greater populations, which has been proved to be more efficient but generate similar prediction performance in our numbers of tests.
+In practice, we don't know its actual genetic architecture of unknow traits, which could be obtained from a machine learning strategy of  ***`KAML`.*** Although those procedures could be speeded up by parallel computation, it's still time-consuming with limited computation resources. So it would be a better choice to run ***`KAML`*** within a smaller population to obtain the parameters, and then apply the optimized parameters to greater populations, which has been proved to be more efficient but generate similar prediction performance in our numbers of tests.
 <p align="center">
 <a href="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/Trait1.jpg">
 <img src="/figures/Trait1.jpg" height="300px" width="840px"/>
