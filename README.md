@@ -473,19 +473,21 @@ Set the sample number and validation number for cross_validation:
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", sample.num=2, crv.num=5)
 ```
 
-Change the top picked number of SNPs and model of GWAS("MLM","GLM", "RR"):
+Change the top picked number of SNPs and model of GWAS ("MLM","GLM", "RR"):
 
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=15, GWAS.model="MLM")
 ```
 
+Change the methods of variance components estimation ("brent", "emma", "he"):
+
+```r
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
+```
+
 ### Advanced
 In practice, we don't know its actual genetic architecture of unknow traits, which could be obtained from a machine learning strategy of  ***`KAML`.*** Although those procedures could be speeded up by parallel computation, it's still time-consuming with limited computation resources. So it would be a better choice to run ***`KAML`*** within a smaller population to obtain the parameters, and then apply the optimized parameters to greater populations, which has been proved to be more efficient but generate similar prediction performance in our numbers of tests.
-<p align="center">
-<a href="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/Trait1.jpg">
-<img src="/figures/Trait1.jpg" height="300px" width="840px"/>
-</a>
-</p>
+
 
 ---
 ## OUTPUT
