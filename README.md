@@ -503,11 +503,11 @@ Only optimize the big effect QTNs which could be added to covariates:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.perc=NULL)
 ```
-Do not optimize anything, KAML will turn into LMM(GBLUP)
+Do not optimize anything, KAML will turn into LMM (GBLUP)
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=NULL, Top.perc=NULL)
 ```
-Some validated caused SNPs of the trait could be integrated as covariates directly:
+Some validated cause SNPs of the trait could be integrated as covariates directly:
 ```r
 # directly predict by LM (QTN)
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), prior.model="QTN")
