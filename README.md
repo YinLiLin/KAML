@@ -41,7 +41,7 @@
 
 ***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/en/HOME.htm).
 
-If you have any bug reports or questions please send an email to [**Lilin Yin**](https://github.com/YinLiLin) at **ylilin@163.com**
+If you have any bug reports or questions please send an email to [**Lilin Yin**](https://github.com/YinLiLin) at **ylilin@163.com** or [**Xiaolei Liu**](https://github.com/XiaoleiLiuBio) at **xiaoleiliu@mail.hzau.edu.cn**
 
 ---
 ## CITATION
@@ -480,14 +480,34 @@ Change the methods of variance components estimation ("brent", "emma", "he", "ai
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
 ```
-Change the start value of grid search procedure:
+Change the start value of grid search procedure of Kinship optimization:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
             Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15))
+Note: More levels of start value will lead to much more calculation time.
+```
+Change the max number of iteration of bisection algorithm:
+```r
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
+            Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15), bisection.loop=8)
+Note: if bisection.loop=0, the bisection procedure will not run.
 ```
 
 ### Advanced
 
+Only optimize a weighted kinship matrix:
+```r
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=NULL)
+```
+Only optimize the big effect QTNs which could be added to covariates:
+```r
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.perc=NULL)
+```
+Do not optimize anything, KAML will turn into LMM(GBLUP)
+```r
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=NULL, Top.perc=NULL)
+```
+Some validated caused SNPs of the trait could be integrated as covariates directly:
 ```r
 # directly predict by LM (QTN)
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), prior.model="QTN")
@@ -498,16 +518,7 @@ Change the start value of grid search procedure:
 # predict by MLM with QTNs and a Kinship (QTN + standard Kinship)
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), 
             prior.model="QTN+K", Top.perc=NULL)
-
-# predict by MLM with a Kinship optimization procedure only (weighted Kinship)
-> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=NULL, Top.num=NULL, 
-            prior.model="QTN+K")
-
-# predict by MLM with a Kinship only (standard Kinship, known as 'GBLUP')
-> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=NULL, Top.num=NULL, 
-            prior.model="QTN+K", Top.perc=NULL)
 ```
-
 In practice, we don't know its actual genetic architecture of unknow traits, which could be obtained from a machine learning strategy of  ***`KAML`.*** Although those procedures could be speeded up by parallel computation, it's still time-consuming with limited computation resources. So it would be a better choice to run ***`KAML`*** within a smaller population to obtain the parameters, and then apply the optimized parameters to greater populations, which has been proved to be more efficient but generate similar prediction performance in our numbers of tests.
 
 ```r
@@ -517,7 +528,7 @@ mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358
 
 ---
 ## OUTPUT
-
+***`KAML`*** returns total 8 lists of results including: predicted phenotype, coefficients of fixed effects, predicted GEBVs, pseudo QTNs, the used model, the optimized top percentage of GWAS results, the optimized base value of Log and the optimized Kinship matrix.
 ```r
 > str(mykaml)
 List of 8
