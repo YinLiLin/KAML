@@ -459,6 +459,8 @@ To run ***`KAML`,*** you should provide two basic files: the phenotype(values fo
 
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
+# multiple threads computation
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cpu=30)
 ```
 
 Implement ***`KAML`*** with provided covariate, kinship files:
@@ -479,7 +481,7 @@ Change the top picked number of SNPs and model of GWAS ("MLM","GLM", "RR"):
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=15, GWAS.model="MLM")
 ```
 
-Change the methods of variance components estimation ("brent", "emma", "he"):
+Change the methods of variance components estimation ("brent", "emma", "he", "ai"):
 
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
@@ -488,9 +490,44 @@ Change the methods of variance components estimation ("brent", "emma", "he"):
 ### Advanced
 In practice, we don't know its actual genetic architecture of unknow traits, which could be obtained from a machine learning strategy of  ***`KAML`.*** Although those procedures could be speeded up by parallel computation, it's still time-consuming with limited computation resources. So it would be a better choice to run ***`KAML`*** within a smaller population to obtain the parameters, and then apply the optimized parameters to greater populations, which has been proved to be more efficient but generate similar prediction performance in our numbers of tests.
 
+```r
+# directly predict by LM (QTN)
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), prior.model="QTN")
+
+# predict by MLM with QTNs and a Kinship optimization procedure (QTN + weighted Kinship)
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), prior.model="QTN+K")
+
+# predict by MLM with QTNs and a Kinship (QTN + standard Kinship)
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), prior.model="QTN+K", Top.perc=NULL)
+
+# predict by MLM with a Kinship optimization procedure only (weighted Kinship)
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=NULL, Top.num=NULL, prior.model="QTN+K")
+
+# predict by MLM with a Kinship only (standard Kinship, known as 'GBLUP')
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=NULL, Top.num=NULL, prior.model="QTN+K", Top.perc=NULL)
+```
 
 ---
 ## OUTPUT
+
+```r
+> str(mykaml)
+List of 8
+ $ y       : num [1:1940, 1] -0.109 -0.362 -0.149 -1.101 0.114 ...
+  ..- attr(*, "dimnames")=List of 2
+  .. ..$ : NULL
+  .. ..$ : chr "Trait1"
+ $ beta    : num -0.0801
+ $ gebv    : num [1:1940, 1] -0.0286 -0.2823 -0.0691 -1.0205 0.1943 ...
+  ..- attr(*, "dimnames")=List of 2
+  .. ..$ : NULL
+  .. ..$ : chr "Trait1"
+ $ qtn     : num [1:2] 9358 9375
+ $ model   : chr "QTN+K"
+ $ top.perc: num 0.0277
+ $ logx    : num 3.11
+ $ K       : num [1:1940, 1:1940] 0.8989 -0.0996 0.0538 0.0372 0.1102 ...
+```
 
 ## FAQ and Hints
 
