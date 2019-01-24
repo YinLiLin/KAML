@@ -459,6 +459,7 @@ To run ***`KAML`,*** you should provide two basic files: the phenotype(values fo
 
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
+
 # multiple threads computation
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cpu=30)
 ```
@@ -468,27 +469,21 @@ Implement ***`KAML`*** with provided covariate, kinship files:
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mouse.Kin.txt")
 ```
 Set the sample number and validation number for cross_validation:
-
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", sample.num=2, crv.num=5)
 ```
-
 Change the top picked number of SNPs and model of GWAS ("MLM","GLM", "RR"):
-
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=15, GWAS.model="MLM")
 ```
-
 Change the methods of variance components estimation ("brent", "emma", "he", "ai"):
-
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
 ```
-
 Change the start value of grid search procedure:
-
 ```r
-
+> mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
+            Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15))
 ```
 
 ### Advanced
