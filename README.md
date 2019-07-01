@@ -41,7 +41,7 @@
 
 ***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Haohao Zhang***](https://github.com/hyacz), and [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/en/HOME.htm).
 
-If you have any bug reports or questions please send an email to **Xiaolei Liu** at **xiaoleiliu@mail.hzau.edu.cn** or **Lilin Yin**at **ylilin@163.com**.
+If you have any bug reports or questions please send an email to **Xiaolei Liu** at **xiaoleiliu@mail.hzau.edu.cn** or **Lilin Yin** at **ylilin@163.com**.
 
 ---
 ## CITATION
