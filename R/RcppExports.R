@@ -5,3 +5,7 @@ TransData_c <- function(bfile, pBigMat, maxLine, threads = 0L, verbose = TRUE) {
     invisible(.Call(`_KAML_TransData_c`, bfile, pBigMat, maxLine, threads, verbose))
 }
 
+gaston_brent <- function(Y, X, p_, Sigma, U, min_h2, max_h2, tol, verbose) {
+    .Call(`_KAML_gaston_brent`, Y, X, p_, Sigma, U, min_h2, max_h2, tol, verbose)
+}
+
