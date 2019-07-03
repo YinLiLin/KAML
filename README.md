@@ -56,7 +56,6 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_version('RcppEigen', version = "0.3.2.9.0")
-devtools::install_github("hclimente/snpStats")
 devtools::install_github("jaredhuling/rfunctions")
 devtools::install_github("YinLiLin/R-KAML/KAML")
 ```
