@@ -11,9 +11,8 @@ Description: Kinship Adjusted Multiple Loci Best Linear Unbiased Prediction
 License: Apache License | file LICENSE
 SystemRequirements: C++11
 BugReports: https://github.com/YinLiLin/R-KAML
-Imports: utils, stats, methods, graphics, grDevices
-Depends: Rcpp, BH, bigmemory, parallel, compiler, MASS, gaston, rfunctions
-Remotes: jaredhuling/rfunctions
-LinkingTo: Rcpp, BH, bigmemory
+Imports: utils, stats, methods, graphics, grDevices, Rcpp, RcppEigen, BH, parallel, compiler, MASS, rfunctions
+Depends: MASS, parallel, bigmemory, rfunctions
+LinkingTo: Rcpp, RcppEigen, bigmemory, rfunctions
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
