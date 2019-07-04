@@ -52,7 +52,7 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 ***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend [Microsoft R Open](https://mran.microsoft.com/open/) instead of [R](https://www.r-project.org/) for running ***`KAML`*** . **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
 ### Installation
-***`KAML`*** is not available on CRAN, but can be installed using the R package **"devtools"**. There are two packages should be installed beforehand, **"snpStats"** and **"rfunctions"**. ***`KAML`*** can be installed with the following R code:
+***`KAML`*** is not available on CRAN, but can be installed using the R package **"devtools"**. ***`KAML`*** can be installed with the following R code:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/R-KAML")
