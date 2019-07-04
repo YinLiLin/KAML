@@ -640,7 +640,7 @@ function(
 			LL <- reml$REML
 		}
 		if(vc.method == "he"){
-			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
+			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 			lambda <- reml$delta
 			LL <- NA
 		}
@@ -648,14 +648,14 @@ function(
 			if(math.cpu == 1){
 			
 				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
+				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 				reml <- KAML.AIEM(y, X=X, eigenK=eig, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
 				lambda <- reml$vc[2] / reml$vc[1]
 				LL <- NA
 			}else{
 			
 				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
+				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 				reml <- KAML.AIEM(phe, X=refX, K=K, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
 				beta <- reml$beta
 				BLUP.ebv <- reml$u
