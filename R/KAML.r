@@ -2778,7 +2778,7 @@ function(
 		X0 <- cbind(matrix(1, n), pca, CV[Ind.index, ])
 	}
 	if(is.null(REML) & method == "MLM"){
-		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K, root=FALSE)
+		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K)
 		if(vc.method == "emma") REML <- KAML.EMMA.REML(ys, X=X0, K=K)
 		if(vc.method == "brent") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
 		if(vc.method == "ai") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
