@@ -55,9 +55,8 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 ***`KAML`*** is not available on CRAN, but can be installed using the R package **"devtools"**. There are two packages should be installed beforehand, **"snpStats"** and **"rfunctions"**. ***`KAML`*** can be installed with the following R code:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
-devtools::install_version('RcppEigen', version = "0.3.2.9.0")
 devtools::install_github("jaredhuling/rfunctions")
-devtools::install_github("YinLiLin/R-KAML/KAML")
+devtools::install_github("YinLiLin/R-KAML")
 ```
 After installed successfully, ***`KAML`*** can be loaded by typing
 ```r
