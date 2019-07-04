@@ -13,6 +13,6 @@ SystemRequirements: C++11
 BugReports: https://github.com/YinLiLin/R-KAML
 Imports: utils, stats, methods, graphics, grDevices, Rcpp, RcppEigen, BH, parallel, compiler, MASS, rfunctions
 Depends:
-LinkingTo: Rcpp, RcppEigen, BH, bigmemory, rfunctions
+LinkingTo: Rcpp, RcppEigen, BH, bigmemory, compiler, rfunctions
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
