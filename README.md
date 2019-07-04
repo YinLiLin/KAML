@@ -57,6 +57,13 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/R-KAML")
 ```
+If you get trouble in installing "devtools", please download [rfunctions_0.1.tar.gz](https://github.com/YinLiLin/R-KAML/releases/download/example/rfunctions_0.1.tar.gz) and [KAML_1.0.1.tar.gz](https://github.com/YinLiLin/R-KAML/releases/download/example/KAML_1.0.1.tar.gz), then try following steps:
+```r
+pkg <- setdiff(c("RcppEigen", "bigmemory"), installed.packages()[,c("Package")])
+install.packages(pkg)
+install.packages("rfunctions_0.1.tar.gz", repos=NULL)
+install.packages("KAML_1.0.1.tar.gz", repos=NULL)
+```
 After installed successfully, ***`KAML`*** can be loaded by typing
 ```r
 library(KAML)
@@ -71,7 +78,7 @@ wget https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip
 unzip example.zip
 ```
 
-**Or** click [here](https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
+**Or** click [example.zip](https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
 
 ---
 
