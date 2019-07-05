@@ -404,6 +404,40 @@ function(
     return(index=theIndex)
 }
 
+KAML.EIGEN.REML <- 
+function(y, X, eigenK)
+{
+    p = 0
+    Sigma <- eigenK$values
+    w <- which(Sigma < 1e-6)
+    Sigma[w] <- 1e-6
+    U <- eigenK$vectors
+    min_h2 = 0
+    max_h2 = 1
+    tol = .Machine$double.eps^0.25
+    reml <- gaston_brent(y, X, p, Sigma, U, min_h2, max_h2, tol, verbose = FALSE)
+    vg <- reml[[2]]
+    ve <- reml[[1]]
+    delta <- ve / vg
+    return(list(vg = vg, ve = ve, delta = delta))
+}
+
+Math_cpu_check <- 
+function()
+{
+    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+	if(r.open){
+		cpu <- try(getMKLthreads(), silent=TRUE)
+		if(class(cpu) == "try-error"){
+			return(2)
+		}else{
+			return(cpu)
+		}
+	}else{
+		return(1)
+	}
+}
+
 KAML.HE <- 
 function(
 	y, X, K
@@ -985,6 +1019,61 @@ function(
 	return (list(REML=maxLL, delta=maxdelta, ve=maxve, vg=maxva))
 }
 
+KAML.Num <-
+function(
+	x, impute="Middle"
+)
+{
+#--------------------------------------------------------------------------------------------------------#
+# Object: transform ATCG into numeric genotype															 #
+# 	 																									 #
+# Input:	 																							 #
+# x: a vector contains "ATCG"	 																		 #
+# impute: "Left", "Middle", "Right"								 										 #
+#--------------------------------------------------------------------------------------------------------#
+	#replace missing allels
+	x[x=="XX"]="N"
+	x[x=="--"]="N"
+	x[x=="++"]="N"
+	x[x=="//"]="N"
+	x[x=="NN"]="N"
+	x[x=="00"]="N"
+	
+	#replace false allels
+    x[x=="CA"]="AC"
+	x[x=="GA"]="AG"
+	x[x=="TA"]="AT"
+	x[x=="GC"]="CG"
+	x[x=="TC"]="CT"
+	x[x=="TG"]="GT"
+	
+    n=length(x)
+    lev=levels(as.factor(x))
+    lev=setdiff(lev,"N")
+    len=length(lev)
+
+    #Genotype counts
+    count=1:len
+    for(i in 1:len){
+        count[i]=length(x[(x==lev[i])])
+    }
+    position=order(count)
+    if(len<=1 | len> 3)x=rep(0, length(x))
+    if(len==2)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))
+	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,ifelse(x==lev[3],2,1)))
+
+    #missing data imputation
+    if(impute=="Middle") {x[is.na(x)]=1 }
+    if(len==3){
+        if(impute=="Minor")  {x[is.na(x)]=position[1]-1}
+        if(impute=="Major")  {x[is.na(x)]=position[len]-1}
+    }else{
+        if(impute=="Minor")  {x[is.na(x)]=2*(position[1]-1)}
+        if(impute=="Major")  {x[is.na(x)]=2*(position[len]-1)}
+    }
+    return(x)
+}
+
 KAML.Data <- cmpfun(
 function(
 	hfile=NULL, vfile=NULL, numfile=NULL, mapfile=NULL, bfile=NULL, out=NULL, sep="\t", SNP.impute=c("Left", "Middle", "Right"), maxLine=10000, priority="memory"
@@ -1424,61 +1513,6 @@ function(
 	cat(" KAML data prepration accomplished successfully!\n")
 }
 )
-
-KAML.Num <-
-function(
-	x, impute="Middle"
-)
-{
-#--------------------------------------------------------------------------------------------------------#
-# Object: transform ATCG into numeric genotype															 #
-# 	 																									 #
-# Input:	 																							 #
-# x: a vector contains "ATCG"	 																		 #
-# impute: "Left", "Middle", "Right"								 										 #
-#--------------------------------------------------------------------------------------------------------#
-	#replace missing allels
-	x[x=="XX"]="N"
-	x[x=="--"]="N"
-	x[x=="++"]="N"
-	x[x=="//"]="N"
-	x[x=="NN"]="N"
-	x[x=="00"]="N"
-	
-	#replace false allels
-    x[x=="CA"]="AC"
-	x[x=="GA"]="AG"
-	x[x=="TA"]="AT"
-	x[x=="GC"]="CG"
-	x[x=="TC"]="CT"
-	x[x=="TG"]="GT"
-	
-    n=length(x)
-    lev=levels(as.factor(x))
-    lev=setdiff(lev,"N")
-    len=length(lev)
-
-    #Genotype counts
-    count=1:len
-    for(i in 1:len){
-        count[i]=length(x[(x==lev[i])])
-    }
-    position=order(count)
-    if(len<=1 | len> 3)x=rep(0, length(x))
-    if(len==2)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))
-	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,ifelse(x==lev[3],2,1)))
-
-    #missing data imputation
-    if(impute=="Middle") {x[is.na(x)]=1 }
-    if(len==3){
-        if(impute=="Minor")  {x[is.na(x)]=position[1]-1}
-        if(impute=="Major")  {x[is.na(x)]=position[len]-1}
-    }else{
-        if(impute=="Minor")  {x[is.na(x)]=2*(position[1]-1)}
-        if(impute=="Major")  {x[is.na(x)]=2*(position[len]-1)}
-    }
-    return(x)
-}
 
 KAML.QTN.sel <-
 function(
@@ -3547,38 +3581,4 @@ function(
 	cat(paste(" ", TAXA, " is DONE within total run time: ", times(time.cal), "\n", sep=""))
 	cat(paste(c("#", rep("-", 19), "KAML ACCOMPLISHED SUCCESSFULLY", rep("-", 19), "#"), collapse=""),"\n\r")
 	return(list(y=yHat, beta=beta, gebv=GEBV, qtn=cross.QTN, model=cross.model, top.perc=cross.tp, logx=cross.amp, K=cross.k))
-}
-
-KAML.EIGEN.REML <- 
-function(y, X, eigenK)
-{
-    p = 0
-    Sigma <- eigenK$values
-    w <- which(Sigma < 1e-6)
-    Sigma[w] <- 1e-6
-    U <- eigenK$vectors
-    min_h2 = 0
-    max_h2 = 1
-    tol = .Machine$double.eps^0.25
-    reml <- gaston_brent(y, X, p, Sigma, U, min_h2, max_h2, tol, verbose = FALSE)
-    vg <- reml[[2]]
-    ve <- reml[[1]]
-    delta <- ve / vg
-    return(list(vg = vg, ve = ve, delta = delta))
-}
-
-Math_cpu_check <- 
-function()
-{
-    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
-	if(r.open){
-		cpu <- try(getMKLthreads(), silent=TRUE)
-		if(class(cpu) == "try-error"){
-			return(2)
-		}else{
-			return(cpu)
-		}
-	}else{
-		return(1)
-	}
 }
