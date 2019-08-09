@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // TransData_c
 void TransData_c(std::string bfile, SEXP pBigMat, long maxLine, int threads, bool verbose);
-RcppExport SEXP _KAML_TransData_c(SEXP bfileSEXP, SEXP pBigMatSEXP, SEXP maxLineSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+RcppExport SEXP KAML_TransData_c(SEXP bfileSEXP, SEXP pBigMatSEXP, SEXP maxLineSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type bfile(bfileSEXP);
@@ -22,7 +22,7 @@ END_RCPP
 }
 // gaston_brent
 List gaston_brent(NumericVector Y, NumericMatrix X, IntegerVector p_, NumericVector Sigma, NumericMatrix U, double min_h2, double max_h2, double tol, double verbose);
-RcppExport SEXP _KAML_gaston_brent(SEXP YSEXP, SEXP XSEXP, SEXP p_SEXP, SEXP SigmaSEXP, SEXP USEXP, SEXP min_h2SEXP, SEXP max_h2SEXP, SEXP tolSEXP, SEXP verboseSEXP) {
+RcppExport SEXP KAML_gaston_brent(SEXP YSEXP, SEXP XSEXP, SEXP p_SEXP, SEXP SigmaSEXP, SEXP USEXP, SEXP min_h2SEXP, SEXP max_h2SEXP, SEXP tolSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -39,14 +39,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-static const R_CallMethodDef CallEntries[] = {
-    {"_KAML_TransData_c", (DL_FUNC) &_KAML_TransData_c, 5},
-    {"_KAML_gaston_brent", (DL_FUNC) &_KAML_gaston_brent, 9},
-    {NULL, NULL, 0}
-};
-
-RcppExport void R_init_KAML(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
+// crossprodcpp
+SEXP crossprodcpp(SEXP X);
+RcppExport SEXP KAML_crossprodcpp(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(crossprodcpp(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// geninv
+SEXP geninv(SEXP GG);
+RcppExport SEXP KAML_geninv(SEXP GGSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type GG(GGSEXP);
+    rcpp_result_gen = Rcpp::wrap(geninv(GG));
+    return rcpp_result_gen;
+END_RCPP
 }
