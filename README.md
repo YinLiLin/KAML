@@ -6,7 +6,7 @@
 
 * [OVERVIEW](#overview)
 * [CITATION](#citation)
-* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML.jpg" height="250" align="right" />
+* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML.png" height="250" align="right" />
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
 * [INPUT](#input)
@@ -39,7 +39,7 @@
 </a>
 </p>
 
-***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Haohao Zhang***](https://github.com/hyacz), and [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Centra of China) agriculture University***](http://www.hzau.edu.cn/en/HOME.htm).
+***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Haohao Zhang***](https://github.com/hyacz), and [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Central of China) Agricultural University***](http://www.hzau.edu.cn/en/HOME.htm).
 
 If you have any bug reports or questions please send an email to **Xiaolei Liu** at **xiaoleiliu@mail.hzau.edu.cn**
 
@@ -49,7 +49,7 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 
 ---
 ## GETTING STARTED
-***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend [Microsoft R Open](https://mran.microsoft.com/open/) instead of [R](https://www.r-project.org/) for running ***`KAML`*** . **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations, ***such as matrix multiply/inverse, matrix decomposition, and some higher-level matrix operations***, to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
+***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend [Microsoft R Open](https://mran.microsoft.com/open/) instead of [R](https://www.r-project.org/) for running ***`KAML`*** . **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
 ### Installation
 ***`KAML`*** is not available on CRAN, but can be installed using the R package **"devtools"**. ***`KAML`*** can be installed with the following R code:
@@ -57,12 +57,11 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/R-KAML")
 ```
-If you get trouble in installing "devtools", please download [rfunctions_0.1.tar.gz](https://github.com/YinLiLin/R-KAML/releases/download/example/rfunctions_0.1.tar.gz) and [KAML_1.0.1.tar.gz](https://github.com/YinLiLin/R-KAML/releases/download/example/KAML_1.0.1.tar.gz), then try following steps:
+If you get trouble in installing "devtools", please download [KAML_0.99.1.tar.gz](https://github.com/YinLiLin/R-KAML/releases/download/example/KAML_0.99.1.tar.gz), then try following steps:
 ```r
 pkg <- setdiff(c("RcppEigen", "bigmemory"), installed.packages()[,c("Package")])
 install.packages(pkg)
-install.packages("rfunctions_0.1.tar.gz", repos=NULL)
-install.packages("KAML_1.0.1.tar.gz", repos=NULL)
+install.packages("KAML_0.99.1.tar.gz", repos=NULL)
 ```
 After installed successfully, ***`KAML`*** can be loaded by typing
 ```r
