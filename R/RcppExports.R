@@ -2,10 +2,18 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 TransData_c <- function(bfile, pBigMat, maxLine, threads = 0L, verbose = TRUE) {
-    invisible(.Call(`_KAML_TransData_c`, bfile, pBigMat, maxLine, threads, verbose))
+    invisible(.Call('KAML_TransData_c', PACKAGE = 'KAML', bfile, pBigMat, maxLine, threads, verbose))
 }
 
 gaston_brent <- function(Y, X, p_, Sigma, U, min_h2, max_h2, tol, verbose) {
-    .Call(`_KAML_gaston_brent`, Y, X, p_, Sigma, U, min_h2, max_h2, tol, verbose)
+    .Call('KAML_gaston_brent', PACKAGE = 'KAML', Y, X, p_, Sigma, U, min_h2, max_h2, tol, verbose)
+}
+
+crossprodcpp <- function(X) {
+    .Call('KAML_crossprodcpp', PACKAGE = 'KAML', X)
+}
+
+geninv <- function(GG) {
+    .Call('KAML_geninv', PACKAGE = 'KAML', GG)
 }
 

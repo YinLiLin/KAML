@@ -3,16 +3,16 @@ function()
 {
 #--------------------------------------------------------------------------------------------------------#
 # KAMLMM: Kinship Adjusted Multiple Locus BLUP															 #
-# Writen by Lilin Yin and Xiaolei Liu																	 #
+# Writen by Lilin Yin               																	 #
 # Last update: May 20, 2017																				 #
 #--------------------------------------------------------------------------------------------------------#
 cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-", 26), collapse=""), "#", sep=""), "\n")
 cat("#    ______ _________ ______  _________                              #\n")
-cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
+cat("#    ___/ //_/___/   |___/  |/  /___/ / Kinship Adjusted Multi-Locus #\n")
 cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
 cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.0.1      #\n")
 cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
-cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
+cat("#                                                   //^. .^\\\\        #\n")
 cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
 }
 
@@ -402,40 +402,6 @@ function(
 		}
 	)
     return(index=theIndex)
-}
-
-KAML.EIGEN.REML <- 
-function(y, X, eigenK)
-{
-    p = 0
-    Sigma <- eigenK$values
-    w <- which(Sigma < 1e-6)
-    Sigma[w] <- 1e-6
-    U <- eigenK$vectors
-    min_h2 = 0
-    max_h2 = 1
-    tol = .Machine$double.eps^0.25
-    reml <- gaston_brent(y, X, p, Sigma, U, min_h2, max_h2, tol, verbose = FALSE)
-    vg <- reml[[2]]
-    ve <- reml[[1]]
-    delta <- ve / vg
-    return(list(vg = vg, ve = ve, delta = delta))
-}
-
-Math_cpu_check <- 
-function()
-{
-    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
-	if(r.open){
-		cpu <- try(getMKLthreads(), silent=TRUE)
-		if(class(cpu) == "try-error"){
-			return(2)
-		}else{
-			return(cpu)
-		}
-	}else{
-		return(1)
-	}
 }
 
 KAML.HE <- 
@@ -1019,62 +985,7 @@ function(
 	return (list(REML=maxLL, delta=maxdelta, ve=maxve, vg=maxva))
 }
 
-KAML.Num <-
-function(
-	x, impute="Middle"
-)
-{
-#--------------------------------------------------------------------------------------------------------#
-# Object: transform ATCG into numeric genotype															 #
-# 	 																									 #
-# Input:	 																							 #
-# x: a vector contains "ATCG"	 																		 #
-# impute: "Left", "Middle", "Right"								 										 #
-#--------------------------------------------------------------------------------------------------------#
-	#replace missing allels
-	x[x=="XX"]="N"
-	x[x=="--"]="N"
-	x[x=="++"]="N"
-	x[x=="//"]="N"
-	x[x=="NN"]="N"
-	x[x=="00"]="N"
-	
-	#replace false allels
-    x[x=="CA"]="AC"
-	x[x=="GA"]="AG"
-	x[x=="TA"]="AT"
-	x[x=="GC"]="CG"
-	x[x=="TC"]="CT"
-	x[x=="TG"]="GT"
-	
-    n=length(x)
-    lev=levels(as.factor(x))
-    lev=setdiff(lev,"N")
-    len=length(lev)
-
-    #Genotype counts
-    count=1:len
-    for(i in 1:len){
-        count[i]=length(x[(x==lev[i])])
-    }
-    position=order(count)
-    if(len<=1 | len> 3)x=rep(0, length(x))
-    if(len==2)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))
-	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,ifelse(x==lev[3],2,1)))
-
-    #missing data imputation
-    if(impute=="Middle") {x[is.na(x)]=1 }
-    if(len==3){
-        if(impute=="Minor")  {x[is.na(x)]=position[1]-1}
-        if(impute=="Major")  {x[is.na(x)]=position[len]-1}
-    }else{
-        if(impute=="Minor")  {x[is.na(x)]=2*(position[1]-1)}
-        if(impute=="Major")  {x[is.na(x)]=2*(position[len]-1)}
-    }
-    return(x)
-}
-
-KAML.Data <- cmpfun(
+KAML.Data <- 
 function(
 	hfile=NULL, vfile=NULL, numfile=NULL, mapfile=NULL, bfile=NULL, out=NULL, sep="\t", SNP.impute=c("Left", "Middle", "Right"), maxLine=10000, priority="memory"
 )
@@ -1512,7 +1423,61 @@ function(
 	gc()
 	cat(" KAML data prepration accomplished successfully!\n")
 }
+
+KAML.Num <-
+function(
+	x, impute="Middle"
 )
+{
+#--------------------------------------------------------------------------------------------------------#
+# Object: transform ATCG into numeric genotype															 #
+# 	 																									 #
+# Input:	 																							 #
+# x: a vector contains "ATCG"	 																		 #
+# impute: "Left", "Middle", "Right"								 										 #
+#--------------------------------------------------------------------------------------------------------#
+	#replace missing allels
+	x[x=="XX"]="N"
+	x[x=="--"]="N"
+	x[x=="++"]="N"
+	x[x=="//"]="N"
+	x[x=="NN"]="N"
+	x[x=="00"]="N"
+	
+	#replace false allels
+    x[x=="CA"]="AC"
+	x[x=="GA"]="AG"
+	x[x=="TA"]="AT"
+	x[x=="GC"]="CG"
+	x[x=="TC"]="CT"
+	x[x=="TG"]="GT"
+	
+    n=length(x)
+    lev=levels(as.factor(x))
+    lev=setdiff(lev,"N")
+    len=length(lev)
+
+    #Genotype counts
+    count=1:len
+    for(i in 1:len){
+        count[i]=length(x[(x==lev[i])])
+    }
+    position=order(count)
+    if(len<=1 | len> 3)x=rep(0, length(x))
+    if(len==2)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))
+	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,ifelse(x==lev[3],2,1)))
+
+    #missing data imputation
+    if(impute=="Middle") {x[is.na(x)]=1 }
+    if(len==3){
+        if(impute=="Minor")  {x[is.na(x)]=position[1]-1}
+        if(impute=="Major")  {x[is.na(x)]=position[len]-1}
+    }else{
+        if(impute=="Minor")  {x[is.na(x)]=2*(position[1]-1)}
+        if(impute=="Major")  {x[is.na(x)]=2*(position[len]-1)}
+    }
+    return(x)
+}
 
 KAML.QTN.sel <-
 function(
@@ -1747,7 +1712,7 @@ function(
 			cl <- makeCluster(max.cpu, outfile = "Loop.log")
 			registerDoParallel(cl)
 			clusterExport(cl, varlist=c("KAML.GWAS", "KAML.EMMA.REML", "KAML.Mix"))
-			P.values <- foreach(x=1:gwas.num, .packages=c("bigmemory", "rfunctions")) %dopar% mult.run.gwas(x)
+			P.values <- foreach(x=1:gwas.num, .packages=c("bigmemory")) %dopar% mult.run.gwas(x)
 			stopCluster(cl)
 			cat(" Multi-process done!\n")
 		}else{
@@ -2147,7 +2112,7 @@ function(
 						clusterExport(cl, varlist=c("KAML.Mix", "KAML.EMMA.REML", "KAML.HE", "KAML.GEMMA.VC",
 							"KAML.stas.cal", "KAML.Kin", "KAML.QTN.rm", "KAML.GLM"))
 						mult.res <- foreach(x=1:loop,
-						.packages=c("bigmemory", "rfunctions")) %dopar% mult.run(x, math.cpu=mkl)
+						.packages=c("bigmemory")) %dopar% mult.run(x, math.cpu=mkl)
 						if(is.null(Top.perc))	stopCluster(cl)
 						cat(" Multi-process done!\n")
 					}else{
@@ -2443,10 +2408,10 @@ function(
 					cl <- makeCluster(cpu, outfile = "Loop.log")
 					registerDoParallel(cl)
 					clusterExport(cl, varlist=c("KAML.Mix", "KAML.EMMA.REML", "KAML.stas.cal", "KAML.Kin", "KAML.QTN.rm", "KAML.GLM"))
-					#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory), library(rfunctions)))
+					#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
 				}
 				mult.res <- foreach(x=1:iterationN,
-                .packages=c("bigmemory", "rfunctions")) %dopar% mult.run(x, math.cpu=mkl)
+                .packages=c("bigmemory")) %dopar% mult.run(x, math.cpu=mkl)
 				if(!bisection)	stopCluster(cl)
 				cat(" Multi-process done!\n")
 			}else
@@ -2571,7 +2536,7 @@ function(
 					if(wind){
 						print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 						mult.res <- foreach(x=1:iterationN,
-						.packages=c("bigmemory", "rfunctions")) %dopar% mult.run(x, math.cpu=mkl)
+						.packages=c("bigmemory")) %dopar% mult.run(x, math.cpu=mkl)
 						if(loop == bisection.loop)	stopCluster(cl)
 					}else
 					{
@@ -2740,7 +2705,7 @@ function(
 	return(list(QTN.eff=QTN.eff))
 }
 
-KAML.GWAS <- cmpfun(
+KAML.GWAS <- 
 function(
 	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
 )
@@ -2922,7 +2887,7 @@ function(
 				#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
 				cl <- makeCluster(getOption("cl.cores", cpu))
 				clusterExport(cl, varlist=c("geno", "yt", "X0", "U", "vgs", "ves", "mkl"), envir=environment())
-				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
+				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
 				results <- parallel::parLapply(cl, 1:m, eff.mlm)
 				stopCluster(cl)
 			}else{
@@ -2950,7 +2915,7 @@ function(
 				#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
 				cl <- makeCluster(getOption("cl.cores", cpu))
 				clusterExport(cl, varlist=c("geno", "ys", "X0", "math.cpu"), envir=environment())
-				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
+				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
 				results <- parallel::parLapply(cl, 1:m, eff.glm)
 				stopCluster(cl)
 			}else{
@@ -2976,7 +2941,6 @@ function(
 	if(is.list(results)) results <- t(sapply(results, unlist))
 	return(results)
 }
-)
 
 KAML.copy <- 
 function(
@@ -3581,4 +3545,38 @@ function(
 	cat(paste(" ", TAXA, " is DONE within total run time: ", times(time.cal), "\n", sep=""))
 	cat(paste(c("#", rep("-", 19), "KAML ACCOMPLISHED SUCCESSFULLY", rep("-", 19), "#"), collapse=""),"\n\r")
 	return(list(y=yHat, beta=beta, gebv=GEBV, qtn=cross.QTN, model=cross.model, top.perc=cross.tp, logx=cross.amp, K=cross.k))
+}
+
+KAML.EIGEN.REML <- 
+function(y, X, eigenK)
+{
+    p = 0
+    Sigma <- eigenK$values
+    w <- which(Sigma < 1e-6)
+    Sigma[w] <- 1e-6
+    U <- eigenK$vectors
+    min_h2 = 0
+    max_h2 = 1
+    tol = .Machine$double.eps^0.25
+    reml <- gaston_brent(y, X, p, Sigma, U, min_h2, max_h2, tol, verbose = FALSE)
+    vg <- reml[[2]]
+    ve <- reml[[1]]
+    delta <- ve / vg
+    return(list(vg = vg, ve = ve, delta = delta))
+}
+
+Math_cpu_check <- 
+function()
+{
+    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+	if(r.open){
+		cpu <- try(getMKLthreads(), silent=TRUE)
+		if(class(cpu) == "try-error"){
+			return(2)
+		}else{
+			return(cpu)
+		}
+	}else{
+		return(1)
+	}
 }
