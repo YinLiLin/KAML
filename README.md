@@ -57,7 +57,7 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/R-KAML")
 ```
-If you get trouble in installing "devtools", please download [KAML_0.99.1.tar.gz](https://github.com/YinLiLin/R-KAML/releases/download/example/KAML_0.99.1.tar.gz), then try following steps:
+If you get trouble in installing "devtools", please download [KAML_0.99.1.tar.gz](https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/KAML_0.99.1.tar.gz), then try following steps:
 ```r
 pkg <- setdiff(c("RcppEigen", "bigmemory"), installed.packages()[,c("Package")])
 install.packages(pkg)
@@ -73,11 +73,11 @@ Typing `?KAML` could get the details of all parameters.
 
 The example data is available for Linux by:
 ```bash
-wget https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip
+wget https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/example.zip
 unzip example.zip
 ```
 
-**Or** click [example.zip](https://github.com/YinLiLin/R-KAML/releases/download/example/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
+**Or** click [example.zip](https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
 
 ---
 
