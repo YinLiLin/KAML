@@ -13,9 +13,9 @@ if (getPackageName() == ".GlobalEnv") {
 }
 cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-", 26), collapse=""), "#", sep=""), "\n")
 cat("#    ______ _________ ______  _________                              #\n")
-cat("#    ___/ //_/___/   |___/  |/  /___/ / Kinship Adjusted Multi-Loci  #\n")
+cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Multi-Loci #\n")
 cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
-cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         paste("Version: ", version, paste(rep(" ", 11 - nchar(version)), collapse=""), sep="")#\n")
+cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         ", paste('Version: ', version, paste(rep(' ', 11 - nchar(version)), collapse=''), sep=''), "#\n", sep="")
 cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
 cat("#                                                   //^. .^\\\\        #\n")
 cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
