@@ -51,22 +51,21 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 
 ---
 ## GETTING STARTED
-***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would reduce the time consumption significantly
-it possible for so many common R operations to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
+***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would reduce the time consumption significantly as many matrix operations could be computed in parallel by using all the available processing power [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
 ### Installation
-***`KAML`*** is not available on CRAN, but can be installed using the R package **"devtools"**. ***`KAML`*** can be installed with the following R code:
+***`KAML`*** can be installed with **"devtools"** by using the following R codes:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/R-KAML")
 ```
-If you get trouble in installing "devtools", please download [KAML_0.99.1.tar.gz](https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/KAML_0.99.1.tar.gz), then try following steps:
+If you get trouble in installing the **"devtools"**, please download [KAML_0.99.1.tar.gz](https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/KAML_0.99.1.tar.gz), and then try the following steps:
 ```r
 pkg <- setdiff(c("RcppEigen", "bigmemory"), installed.packages()[,c("Package")])
 install.packages(pkg)
 install.packages("KAML_0.99.1.tar.gz", repos=NULL)
 ```
-After installed successfully, ***`KAML`*** can be loaded by typing
+After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
 library(KAML)
 ```
