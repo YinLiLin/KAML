@@ -47,7 +47,7 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 
 ---
 ## CITATION
-(waiting for updating)
+(waiting for update)
 
 ---
 ## GETTING STARTED
