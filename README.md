@@ -21,7 +21,7 @@
 
 ---
 ## OVERVIEW
-***`KAML`*** is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene. In brief, ***`KAML`*** incorporates pseudo QTNs as fixed effects and a trait-specific K matrix as random effect in a mixed linear model. Both pseudo QTNs and trait-specific K matrix are optimized using a parallel-accelerated machine learning strategy.
+***`KAML`*** is designed to predict genetic values using genome-wide or chromosome-wide SNPs for either simple traits that controlled by a limited number of major genes or complex traits that influenced by many polygenes with minor effects. In brief, ***`KAML`*** provides a flexible assumption to accommodate traits of various genetic architectures and incorporates pseudo-QTNs as fixed effect terms and a trait-specific random effect term under the LMM framework. The model parameters are optimized using the information of bootstrap strategy based GWAS results in a parallel accelerated cross-validation procedure.
 
 
 <!-- <p align="center">
