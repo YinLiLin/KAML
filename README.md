@@ -100,11 +100,14 @@ The file must contain a header row, which may represents the trait names. The mi
 | NA | NA | NA | NA | NA | 0.720009 |
 
 ### Covariate file
-Generally, there are no covariates when predicting candidates in most cases, especially genomic selection of animal breeding, because the predicted values are not original phenotypes but the (genomic) estimated breeding value(GEBV/EBV), which have been corrected by covariates. So **Covariate file** is **optional**, in order to fit the model for original phenotype prediction, users can provide the covariates in file. If provided, NAs are not allowed in the file, **the order of all individuals must be corresponding to phenotype file**. Actually, there are two parameters for covariates: **`dcovfile`** and **`qcovfile`**;
+The **Covariate file** is **optional**, in order to fit the model for raw phenotype prediction, users can provide the covariates. Please attention that NAs are not allowed in the **Covariate file**,  and all individuals should be in the same order with phenotype file. In ***`KAML`***, there are two types of covariates: **`dcovfile`** and **`qcovfile`**.
 
-**`dcovfile`*****(optional)***: Input discrete covariates from a plain text file, e.g. *dcov.txt*. Each discrete covariate is recognized as a categorical factor with several levels. The levels of each factor can be represented by a single character, word or numerical number. NOTE: the design matrix of the mean in the model (which is a vector of all ones) is always a linear combination of the design matrix of a discrete covariate so that not all the effects of the levels (or classes, e.g. male and female) of a discrete covariate are estimable. ***`KAML`*** will always constrain the effect of the first level to be zero and the effect of any other level represents its difference in effect compared to the first level.
+**`dcovfile`*****(optional)***: discrete covariates, e.g. *dcov.txt*. Each discrete covariate is recognized as a categorical factor with several levels. Each level can be denoted by a single character, a word, or a numerical number. 
 
-**`qcovfile`*****(optional)***: Input quantitative covariates from a plain text file, e.g. *qcov.txt*. Each quantitative covariate is recognized as a continuous variable.
+**`qcovfile`*****(optional)***: quantitative covariates, e.g. *qcov.txt*. Each quantitative covariate is recognized as a continuous variable.
+
+
+**NOTE:** the design matrix of the mean, which is a vector of all ones, in the model is always a linear combination of the design matrix of a discrete covariate so that not all the effects of the levels (or classes, e.g. male and female) of a discrete covariate are estimable. ***`KAML`*** will always constrain the effect of the first level to be zero and the effect of any other level represents its difference in effect compared to the first level.
 
 <table>
 <tbody>
