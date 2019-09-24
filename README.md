@@ -280,12 +280,12 @@ The **Covariate file** is **optional**, in order to fit the model for raw phenot
 </tr></tbody></table>
 
 ### Genotype file
-With the increasing number of SNPs, the genotype file becomes very big and it is not possible to read it into the memory directly with a memory-limited machine. Hence, ***`KAML`*** is integrated with ***`bigmemory`*** package, which designed a specific data format for saving the memory usage.<br>
-A total of two files should be provided: `*.geno.bin` and `*.geno.desc`, both files should use the same prefix. `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in *big.matrix* format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. In the released version, ***`KAML`*** could accept the genotype file in four formats, including the ***Hapmap*** format, the ***VCF*** format, the ***PLINK binary ped*** format, and the ***Numeric*** format. When transforming, missing genotypes are replaced by the selected methods (Left, Middle, "Right") of a given marker. After transformed, ***`KAML`*** can read it on-the-fly without a memory attenuation.<br>
-***NOTE***: **No matter what type of format of genotype, the order of individuals in columns of the file must correspond to phenotype file in rows.**
+With the increasing number of SNPs, the genotype file becomes very big and it is not possible to read it into the memory directly with a memory-limited machine. Hence, ***`KAML`*** is integrated with ***`bigmemory`*** package, which designed a specific data format named ***big.matrix*** for saving the memory usage.<br>
+A total of two files should be provided: `*.geno.bin` and `*.geno.desc`, both files should use the same prefix. `*.geno.bin` is the numeric m(number of markers) by n(number of individuals) genotype file in ***big.matrix*** format, and `*.geno.desc` is the description file of `*.geno.bin`. Actually, users could manually make those files, but time-consuming and error prone, so ***`KAML`*** provides a function ***`KAML.Data()`*** for genotype format transformation. In the released version, ***`KAML`*** could accept the genotype file in four formats, including the ***Hapmap*** format, the ***VCF*** format, the ***PLINK Binary*** format, and the ***Numeric*** format. When transforming, missing genotypes are replaced by the selected methods (Left, Middle, "Right") of a given marker. After transformed, ***`KAML`*** can read it on-the-fly without a memory attenuation.<br>
+***NOTE***: No matter what type of genotype format, the order of individuals in columns should be the same as phenotype file.
 
 #### Hapmap
-Hapmap is the most popular used format for storing genotype data. As the example below, the SNP information is stored in the rows and individuals information is stored in the columns. The first 11 columns display attributes of the SNPs and the remaining columns show the nucleotides genotyped at each SNP for all individuals.
+Hapmap is one of the commonly used data format for storing genotype. As the example shown below, the SNP information is stored in rows while the individual information is stored in columns. The first 11 columns showed attributes of the SNPs and the remaining columns show the nucleotides information that genotyped at each SNP for all individuals.
 
 > `mouse.hmp.txt`
 
@@ -297,20 +297,20 @@ Hapmap is the most popular used format for storing genotype data. As the example
 | rs6336442 | G/A | 1 | 3580634 | + | NA | NA | NA | NA | NA | NA | AG | AG | GG | AG | GG | ... | AA |
 | rs13475699 | G | 1 | 3860406 | + | NA | NA | NA | NA | NA | NA | GG | GG | GG | GG | GG | ... | GG |
 
-This type of file can be transformed by the following codes:
+The genotype in ***Hapmap*** format can be transformed to ***big.matrix*** format by the following codes:
 
 ```r
 KAML.Data(hfile="mouse.hmp.txt", out="mouse")
 ```
 
-Normally, all chromosomes are stored in one file, but can be stored in separated files for different chromosomes. If in this case, it can be transformed by following codes:
+If the genotype in ***Hapmap*** format is stored in multiple files for many chromosomes, it can be transformed to ***big.matrix*** format by the following codes:
 
 ```r
 KAML.Data(hfile=c("mouse.chr1.hmp.txt", "mouse.chr2.hmp.txt",...), out="mouse")
 ```
 
 #### VCF
-VCF(Variant Call Format) file has been developed with the advent of large-scale genotyping and DNA sequencing projects, such as the 1000 Genomes Project, also it is the only defined format for some popular software, such as Beagle. 
+***VCF*** (Variant Call Format) file has been developed with the advent of large-scale genotyping and DNA sequencing projects, such as the 1000 Genomes Project, it is one of the most widely used genotype format. An VCF file example is shown below: 
 
 ```
 ##fileformat=VCFv4.2
@@ -327,34 +327,34 @@ VCF(Variant Call Format) file has been developed with the advent of large-scale 
 1	1	10006986	A	G	.	.	PR	GT	0/0	0/0	0/1	./.	1/1	1/1
 ```
 
-This type of file can be transformed by the following codes:
+The genotype in ***VCF*** format can be transformed to ***big.matrix*** format by the following codes:
 
 ```r
 KAML.Data(vfile="mouse.vcf", out="mouse")
 ```
 
-For multiple VCF files:
+If the genotype in ***VCF*** format is stored in multiple files for many chromosomes, it can be transformed to ***big.matrix*** format by the following codes:
 
 ```r
 KAML.Data(vfile=c("mouse1.vcf", "mouse2.vcf",...), out="mouse")
 ```
 
 #### PLINK Binary
-The **PLINK Banary** format is derived from Plink software. This format requires three files: \*.bed, \*.bim and
-\*.fam, all with the same prefix. ***`KAML`*** only use \*.bed and \*.bim file.<br>
-***NOTE*** that the id of SNPs must be unique.
+The ***PLINK Banary*** format is derived from Plink software. This format requires three files: \*.bed, \*.bim and
+\*.fam, all with the same prefix. ***`KAML`*** only use the \*.bed and the \*.bim file.<br>
+***NOTE:*** the SNP ID must be unique.
 
 >`mouse.fam`, `mouse.bim`, `mouse.bed`
 
-This type of file can be transformed by the following codes:
+The genotype in ***PLINK Banary*** format can be transformed to ***big.matrix*** format by the following codes:
 
 ```r
 KAML.Data(bfile="mouse", out="mouse")
 ```
 
 #### Numeric
-***`KAML`*** also accepts the numeric format. All nucleotides have been coded as 0, 1, 2. The SNP information is stored in the rows and individuals information is stored in the columns, it means that the dimension of the numeric matrix is m by n, **the order of individuals in columns must correspond to phenotype file in rows**. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files must be provided. One file contains the numeric genotypic data, and the other contains the position of each SNP.<br>
-***NOTE:*** **Row names and column names are not allowed, the number of row and the order of SNPs must be same in those two files.**
+***`KAML`*** also accepts the ***Numeric*** format. The homozygote should be coded as 0, 2 while the heterozygote is coded as 1. The SNP information is stored in the rows and individual information is stored in the columns, it means that the dimension of the numeric matrix is m by n, **the order of individuals in columns must correspond to the phenotype file in rows**. Additionally, this format does not contain the chromosome and position of the SNPs. Therefore, two separate files should be provided, including one file contains the numeric genotype data, and the other file contains the position of each SNP.<br>
+***NOTE:*** Row names and column names are not allowed, the number of row and the order of SNPs must be same in the two files.
 
 <table>
 <tbody>
@@ -460,7 +460,7 @@ After transformed from one of four types of format above, two needed files will 
 ## USAGE
 ### Basic
 
-To run ***`KAML`,*** you should provide two basic files: the phenotype(values for training, NAs for predictors) and genotype. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which should be used with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be predicted. For the genotype, only the prefix should be assigned, ***`KAML`*** could automatically attach `*.geno.bin` and `*.geno.desc`. <br>
+To run ***`KAML`***, you should provide two basic files: the phenotype file (values for training, NAs for predictors) and the genotype file. By default, the first column of phenotype will be analyzed, if there are more than one trait, please specify which column of trait is to be analyzed with the parameter "pheno=". For example: *`KAML(..., pheno=3)`* means the trait in third column would be analyzed. For the genotype, only the prefix need to be assigned, ***`KAML`*** could automatically attach the `*.geno.bin` and `*.geno.desc` files. <br>
 ***Note again:*** ***`KAML`*** has no function for adjusting the order of individuals. So please make sure the same order of individuals between phenotype and genotype.
 
 ```r
@@ -470,29 +470,29 @@ To run ***`KAML`,*** you should provide two basic files: the phenotype(values fo
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cpu=30)
 ```
 
-Implement ***`KAML`*** with provided covariate, kinship files:
+Run ***`KAML`*** with the provided covariate file ***cfile*** and kinship file ***kfile***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mouse.Kin.txt")
 ```
-Set the sample number and validation number for cross_validation:
+Set the sample number ***sample.num*** and validation number ***crv.num*** for cross_validation:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", sample.num=2, crv.num=5)
 ```
-Change the top picked number of SNPs and model of GWAS ("MLM","GLM", "RR"):
+Change the top selected number of SNPs ***Top.num*** and GWAS model ***(the options are "MLM", "GLM", "RR")***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=15, GWAS.model="MLM")
 ```
-Change the methods of variance components estimation ("brent", "emma", "he", "ai"):
+Change the methods of variance components estimation ***vc.method*** ***(the options are "brent", "emma", "he", "ai")***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
 ```
-Change the start value of grid search procedure of Kinship optimization:
+Change the start value of grid search procedure of Kinship optimization ***Top.perc*** & ***Logx***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
             Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15))
-Note: More levels of start value will lead to much more calculation time.
+Note: More levels of start values will lead to much more calculation burden.
 ```
-Change the max number of iteration of bisection algorithm:
+Change the maximum iteration number of bisection algorithm ***bisection.loop***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
             Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15), bisection.loop=8)
@@ -501,19 +501,19 @@ Note: if bisection.loop=0, the bisection procedure will not run.
 
 ### Advanced
 
-Only optimize a weighted kinship matrix:
+Only to optimize a trait-specific (weighted) kinship matrix:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=NULL)
 ```
-Only optimize the big effect QTNs which could be added to covariates:
+Only to add the selected pseudo QTNs with big effects as covariates:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.perc=NULL)
 ```
-Do not optimize anything, KAML will turn into LMM (GBLUP)
+Switch KAML to LMM (GBLUP)
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=NULL, Top.perc=NULL)
 ```
-Some validated cause SNPs of the trait could be integrated as covariates directly:
+Integrate some previously validated causal SNPs of the trait as covariates directly:
 ```r
 # directly predict by LM (QTN)
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358, 9375), prior.model="QTN")
