@@ -465,38 +465,52 @@ To run ***`KAML`***, you should provide two basic files: the phenotype file (val
 
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse")
+# pfile: phenotype file
+# pheno: the column number of predicted phenotype
+# gfile: transformed genotype file
 
 # multiple threads computation
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cpu=30)
+# cpu: number pf threads
 ```
 
 Run ***`KAML`*** with the provided covariate file ***cfile*** and kinship file ***kfile***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", cfile="CV.txt", kfile="mouse.Kin.txt")
+# cfile: covariates file
+# kfile: kinship file
 ```
 Set the sample number ***sample.num*** and validation number ***crv.num*** for cross_validation:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", sample.num=2, crv.num=5)
+# sample.num: the number of replicates on cross-validation 
+# crv.num: fold of cross-validation
 ```
 Change the top selected number of SNPs ***Top.num*** and GWAS model ***(the options are "MLM", "GLM", "RR")***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", Top.num=15, GWAS.model="MLM")
+# Top.num: max number of top LD-filtered SNPs before pseudo QTNs optimization
+# GWAS.model: select the model of Genome-Wide Association Study
 ```
 Change the methods of variance components estimation ***vc.method*** ***(the options are "brent", "emma", "he", "ai")***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
+# vc.method: select the method of variance components estimation
 ```
 Change the start value of grid search procedure of Kinship optimization ***Top.perc*** & ***Logx***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
             Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15))
-Note: More levels of start values will lead to much more calculation burden.
+# Top.perc: prior value of the percentage of SNPs which would be given more weights
+# Logx: prior value of the base of log function
+# Note: More levels of start values will lead to much more calculation burden.
 ```
 Change the maximum iteration number of bisection algorithm ***bisection.loop***:
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent",
             Top.perc=c(0.0001,0.001,0.01), Logx=c(0.01,0.05,0.1,0.5,1,5,10,15), bisection.loop=8)
-Note: if bisection.loop=0, the bisection procedure will not run.
+# bisection.loop: the max number of iteration for bisection algorithm
+# Note: if bisection.loop=0, the bisection procedure will not run.
 ```
 
 ### Advanced
