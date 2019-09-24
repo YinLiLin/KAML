@@ -107,7 +107,7 @@ The **Covariate file** is **optional**, in order to fit the model for raw phenot
 **`qcovfile`*****(optional)***: quantitative covariates, e.g. *qcov.txt*. Each quantitative covariate is recognized as a continuous variable.
 
 
-**NOTE:** the design matrix of the mean, which is a vector of all ones, in the model is always a linear combination of the design matrix of a discrete covariate so that not all the effects of the levels (or classes, e.g. male and female) of a discrete covariate are estimable. ***`KAML`*** will always constrain the effect of the first level to be zero and the effect of any other level represents its difference in effect compared to the first level.
+***NOTE:*** the design matrix of the mean, which is a vector of all ones, in the model is always a linear combination of the design matrix of a discrete covariate so that not all the effects of the levels (or classes, e.g. male and female) of a discrete covariate are estimable. ***`KAML`*** will always constrain the effect of the first level to be zero and the effect of any other level represents its difference in effect compared to the first level.
 
 <table>
 <tbody>
@@ -209,9 +209,7 @@ The **Covariate file** is **optional**, in order to fit the model for raw phenot
 
 
 ### Kinship file 
-***`KAML`*** requires a n×n relatedness matrix. By default, it is automatically calculated using choosed one type of three algorithms(
-***"scale","center","vanraden"***
-), but can be supplied in file by users. If in this case, **the order of individuals for each row and each column in the file must correspond to phenotype file, no column and row names**.
+***`KAML`*** requires a n×n matrix that represents the relationship among individuals. By default, it could be automatically calculated by using one of the three algorithms(***"scale","center","vanraden"***) that implemented in ***`KAML`*** package. It could be also supplied by the users, however, in this case, the order of individuals in either row or column should be the same as phenotype file, the column and row names are not needed.
 
 > `mouse.Kin.txt` ***(optional)***
 
