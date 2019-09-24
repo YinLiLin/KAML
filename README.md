@@ -51,7 +51,7 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 
 ---
 ## GETTING STARTED
-***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would reduce the time consumption significantly as many matrix operations could be computed in parallel by using all the available processing power [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
+***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would [reduce the time consumption significantly](https://mran.microsoft.com/documents/rro/multithread/#mt-bench) as many matrix operations could be computed in parallel by using all the available processing power.
 
 ### Installation
 ***`KAML`*** can be installed with **"devtools"** by using the following R codes:
@@ -73,19 +73,19 @@ Typing `?KAML` could get the details of all parameters.
 
 ### Test Datasets
 
-The example data is available for Linux by:
+The example data can be downloaded by typing:
 ```bash
 wget https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/example.zip
 unzip example.zip
 ```
 
-**Or** click [example.zip](https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/example.zip) in your browser to download for windows, after downloaded, unzip the file and change the workplace by ``` setwd("")``` in R.
+**Or** by clicking the [example.zip](https://github.com/YinLiLin/KAML/releases/download/Version_0.99.1/example.zip) in your browser. After downloaded, unzip the file and change the workplace by ``` setwd("")```.
 
 ---
 
 ## INPUT
 ### Phenotype file
-The file must contain a header row. Missing values should be denoted by NA, which will be treated as candidates. Notice that only numeric values are allowed and characters will not be recognized. However, if a phenotype takes only values 0, 1(or only two levels), then ***`KAML`*** would consider it to be a case-control trait, and the predicted value could be directly interpreted as the probability of being a case. <br>
+The file must contain a header row, which may represents the trait names. The missing values should be denoted by NA, which will be treated as candidates. Notice that only the numeric values are allowed and the characters will not be recognized. However, if a phenotype takes only values of 0, 1 (or only two levels), ***`KAML`*** would consider it to be a case-control trait, and the predicted value could be directly interpreted as the probability of being a case. <br>
 
 > `mouse.Pheno.txt`
 
