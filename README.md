@@ -6,7 +6,7 @@
 
 * [OVERVIEW](#overview)
 * [CITATION](#citation)
-* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML.png" height="250" align="right" />
+* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML_log.png" height="250" align="right" />
   - [Installation](#installation)
   - [Test Datasets](#test-datasets)
 * [INPUT](#input)
@@ -24,7 +24,7 @@
 ***`KAML`*** is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene. In brief, ***`KAML`*** incorporates pseudo QTNs as fixed effects and a trait-specific K matrix as random effect in a mixed linear model. Both pseudo QTNs and trait-specific K matrix are optimized using a parallel-accelerated machine learning strategy.
 
 
-<p align="center">
+<!-- <p align="center">
 <a target="_blank" href="https://camo.githubusercontent.com/6af206ddeaf9b5fdd9b944e82e7b5d698f29ccbf/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f253742793d58622b253742253543636f6c6f7225374252656425374451712537442b5a253742253543636f6c6f722537425265642537442535436d752537442b653b2535436d7525354373696d2537424e25374428302c253742253543636f6c6f722537425265642537444b2537442535437369676d612535452537423225374429253744"><img src="https://camo.githubusercontent.com/6af206ddeaf9b5fdd9b944e82e7b5d698f29ccbf/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f253742793d58622b253742253543636f6c6f7225374252656425374451712537442b5a253742253543636f6c6f722537425265642537442535436d752537442b653b2535436d7525354373696d2537424e25374428302c253742253543636f6c6f722537425265642537444b2537442535437369676d612535452537423225374429253744" alt="equation" data-canonical-src="http://latex.codecogs.com/gif.latex?%7By=Xb+%7B%5Ccolor%7BRed%7DQq%7D+Z%7B%5Ccolor%7BRed%7D%5Cmu%7D+e;%5Cmu%5Csim%7BN%7D(0,%7B%5Ccolor%7BRed%7DK%7D%5Csigma%5E%7B2%7D)%7D" style="max-width:100%;">
 </a>
 </p>
@@ -38,6 +38,8 @@
 <a target="_blank" href="https://camo.githubusercontent.com/844a26b674cc2acbc1f0c3ef08dd55c074ffb475/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f25374225354378695f2537426b2537442535436d696428253543616c7068612c253543626574612925354373696d253543626567696e25374263617365732537443126253543746578742537423b253744312d25354362657461264c6f675f253742253543616c70686125374428505f2537426d253543626574612b31253744292d4c6f675f253742253543616c70686125374428505f2537426d253543626574612537442926253543746578742537423b25374425354362657461253543656e642537426361736573253744253744"><img src="https://camo.githubusercontent.com/844a26b674cc2acbc1f0c3ef08dd55c074ffb475/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f25374225354378695f2537426b2537442535436d696428253543616c7068612c253543626574612925354373696d253543626567696e25374263617365732537443126253543746578742537423b253744312d25354362657461264c6f675f253742253543616c70686125374428505f2537426d253543626574612b31253744292d4c6f675f253742253543616c70686125374428505f2537426d253543626574612537442926253543746578742537423b25374425354362657461253543656e642537426361736573253744253744" alt="equation" data-canonical-src="http://latex.codecogs.com/gif.latex?%7B%5Cxi_%7Bk%7D%5Cmid(%5Calpha,%5Cbeta)%5Csim%5Cbegin%7Bcases%7D1&amp;%5Ctext%7B;%7D1-%5Cbeta&amp;Log_%7B%5Calpha%7D(P_%7Bm%5Cbeta+1%7D)-Log_%7B%5Calpha%7D(P_%7Bm%5Cbeta%7D)&amp;%5Ctext%7B;%7D%5Cbeta%5Cend%7Bcases%7D%7D" style="max-width:100%;">
 </a>
 </p>
+
+ -->
 
 ***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Haohao Zhang***](https://github.com/hyacz), and [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Central China) Agricultural University***](http://www.hzau.edu.cn/en/HOME.htm).
 
