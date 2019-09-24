@@ -51,7 +51,8 @@ If you have any bug reports or questions please send an email to **Xiaolei Liu**
 
 ---
 ## GETTING STARTED
-***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), We strongly recommend [Microsoft R Open](https://mran.microsoft.com/open/) instead of [R](https://www.r-project.org/) for running ***`KAML`*** . **MRO** is the enhanced distribution of **R**, it includes multi-threaded math libraries. These libraries make it possible for so many common R operations to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
+***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would reduce the time consumption significantly
+it possible for so many common R operations to compute in parallel and use all of the processing power available to [reduce computation times](https://mran.microsoft.com/documents/rro/multithread/#mt-bench).
 
 ### Installation
 ***`KAML`*** is not available on CRAN, but can be installed using the R package **"devtools"**. ***`KAML`*** can be installed with the following R code:
