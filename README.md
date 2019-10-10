@@ -69,7 +69,7 @@ After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
 library(KAML)
 ```
-Typing `?KAML` could get the details of all parameters.
+Typing `?KAML` could get the details of all parameters. Some related functions for ***`KAML`*** could be refered to our develeped GWAS package rMVP (https://github.com/XiaoleiLiuBio/rMVP), and integated analysis extending ***`KAML`*** to BLUP could be found at our flexible GP/GS package HIBLUP (https://hiblup.github.io).
 
 ### Test Datasets
 
