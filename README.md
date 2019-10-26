@@ -69,7 +69,7 @@ After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
 library(KAML)
 ```
-Typing `?KAML` could get the details of all parameters. Some related functions for ***`KAML`*** could be refered to our develeped GWAS package rMVP (https://github.com/XiaoleiLiuBio/rMVP), and integated analysis extending ***`KAML`*** to BLUP could be found at our flexible GP/GS package HIBLUP (https://hiblup.github.io).
+Typing `?KAML` could get the details of all parameters. Some related functions for ***`KAML`*** could be refered to our developed GWAS package rMVP (https://github.com/XiaoleiLiuBio/rMVP), and integrated analysis extending ***`KAML`*** to BLUP could be found at our flexible GP/GS package HIBLUP (https://hiblup.github.io).
 
 ### Test Datasets
 
@@ -209,7 +209,7 @@ The **Covariate file** is **optional**, in order to fit the model for raw phenot
 
 
 ### Kinship file 
-***`KAML`*** requires a n×n matrix that represents the relationship among individuals. By default, it could be automatically calculated by using one of the three algorithms(***"scale","center","vanraden"***) that implemented in ***`KAML`*** package. It could be also supplied by the users, however, in this case, the order of individuals in either row or column should be the same as phenotype file, the column and row names are not needed.
+***`KAML`*** requires a n×n matrix that represents the relationship among individuals. By default, it could be automatically calculated by using one of the three algorithms (***"scale","center","vanraden"***) that implemented in ***`KAML`*** package. It could be also supplied by the users, however, in this case, the order of individuals in either row or column should be the same as phenotype file, the column and row names are not needed.
 
 > `mouse.Kin.txt` ***(optional)***
 
@@ -589,7 +589,7 @@ apt-get install libssl-dev/unstable
  
  ***Error in curl::curl_fetch_disk(url, x$path, handle = handle): Problem with the SSL CA cert (path? access rights?)***
  
-:yum: **Answer:** Please type the following codes and then try agian.
+:yum: **Answer:** Please type the following codes and then try again.
 ```r
 library(httr)
 set_config(config(ssl_verifypeer = 0L))
