@@ -13,3 +13,4 @@ importFrom(utils, read.table)
 importFrom(utils, write.table)
 importFrom(utils, memory.limit)
 importFrom(utils, packageVersion)
+
