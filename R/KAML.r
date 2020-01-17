@@ -196,14 +196,14 @@ function(
 )
 {
 #--------------------------------------------------------------------------------------------------------#
-# Object: transform numeric genotype into "BIMBAM", "Bianry", "PED" 									 #
-#	 																									 #
-# Input:	 																							 #
-# phe: a numeric vector(NA is allowed)	 																 #
-# geno: m*n matrix(0, 1, 2), m is the number of markers, n is the number of individuals					 #
-# map: m*3 matrix, the three columns are SNP, Chr, Pos respectively	 									 #
-# memo: the name of output files	 																	 #
-# type: which file type will be transformed into	 													 #
+# Object: transform numeric genotype into "BIMBAM", "Bianry", "PED" 					 #
+#	 												 #
+# Input:	 											 #
+# phe: a numeric vector(NA is allowed)	 								 #
+# geno: m*n matrix(0, 1, 2), m is the number of markers, n is the number of individuals			 #
+# map: m*3 matrix, the three columns are SNP, Chr, Pos respectively					 #
+# memo: the name of output files	 								 #
+# type: which file type will be transformed into							 #
 #--------------------------------------------------------------------------------------------------------#
 	phe[is.na(phe)]=0
 	geno=as.matrix(geno)
