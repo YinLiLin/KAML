@@ -512,9 +512,7 @@ SEXP geninv(SEXP GG)
     double tol(1.0e-10);
     MatrixXd A(MatrixXd(mn, mn));
     MatrixXd L(MatrixXd(mn, mn).setZero());
-    
-    
-    
+     
     if (n < m) {
       transp = true;
       A = xxt(G);
