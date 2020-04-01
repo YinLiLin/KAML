@@ -545,6 +545,7 @@ mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", prior.QTN=c(9358
           Top.perc=0.0276, Logx=3.1094)
 ```
 **Integrate KAML to SSBLUP (SSKAML)**
+
 The weighted Kinship matrix can be directly applied into SSBLUP model to improve the prediction accuracy for both genotyped and non-genotyped individuals. To run SSBLUP model, please install our developed tool [HIBLUP](https://hiblup.github.io).
 ```r
 library(hiblup)
