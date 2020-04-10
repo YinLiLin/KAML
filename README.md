@@ -78,7 +78,7 @@ wget https://github.com/YinLiLin/KAML/releases/download/1.0.1/Data_example.zip
 unzip example.zip
 ```
 
-**Or** by clicking the [example.zip](https://github.com/YinLiLin/KAML/releases/download/1.0.1/Data_example.zip) in your browser. After downloaded, unzip the file and change the workplace by ``` setwd("")```.
+**Or** by clicking the [Data_example.zip](https://github.com/YinLiLin/KAML/releases/download/1.0.1/Data_example.zip) in your browser. After downloaded, unzip the file and change the workplace by ``` setwd("")```.
 
 ---
 
