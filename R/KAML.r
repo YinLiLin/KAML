@@ -3453,7 +3453,7 @@ function(
 	cat(" Number of Total SNPs:", nrow(GENO), "\n")
 	cat(" Number of CPUs:", cpu, "\n")
 	cat(" New seeds generated from:", theSeed, "\n")
-	if((N.Ind-NA.Ind) < 1000)
+	if((N.Ind-NA.Ind) < 1000 & sample.num < 4)
 		cat(" Warning: number of individuals with observations is less than 1000, we recommend setting bigger 'sample.num'!", "\n")
 	if(is.null(kfile) & (!is.null(prior.model) && prior.model != "QTN")){
 		cat(" Calculating marker-based Kinship...")
