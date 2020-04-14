@@ -32,7 +32,7 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
 \item{GWAS.npc}{the number of PC that will be added as covariance to control population structure}
 \item{prior.QTN}{the prior QTNs which will be added as covariants, if provided prior QTNs,  KAML will not optimize QTNs and model during cross-validation}
 \item{prior.model}{the prior Model for the prior.QTN that added as covariants}
-\item{vc.method}{method for variance components estimation("emma" or "gemma")}
+\item{vc.method}{method for variance components estimation("brent", "he", "emma", "ai")}
 \item{K.method}{which algorithm will be applied("center", "scale", "vanraden")}
 \item{Top.perc}{a vector, a subset of top SNPs for each iteration are amplified when calculating KINSHIP}
 \item{Top.num}{a number, a subset of top SNPs for each iteration are used as covariants}
