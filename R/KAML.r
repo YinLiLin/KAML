@@ -3305,7 +3305,7 @@ function(
 KAML <- 
 function(
 	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma", "ai"), 
-	K.method=c("center", "scale", "vanraden"), Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=10, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
+	K.method=c("center", "scale", "vanraden"), Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
 	bin.size=1000000, max.nQTN=TRUE, sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3, count.threshold=0.9,
 	bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
 )
