@@ -3434,6 +3434,11 @@ function(
 		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
 		GEBV <- myest$ebv
 		beta <- as.vector(myest$beta[c(1:ncol(Cov))])
+		cross.QTN <- NULL
+		cross.model <- "K"
+		cross.tp <- NULL
+		cross.amp <- NULL
+		cross.k <- K
 	}
 	#return the results
 	GEBV <- as.matrix(GEBV)
