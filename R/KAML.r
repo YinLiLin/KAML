@@ -1,23 +1,13 @@
 KAML.version <-
 function()
 {
-#--------------------------------------------------------------------------------------------------------#
-# KAMLMM: Kinship Adjusted Multiple Locus BLUP															 #
-# Writen by Lilin Yin               																	 #
-# Last update: May 20, 2017																				 #
-#--------------------------------------------------------------------------------------------------------#
-if (getPackageName() == ".GlobalEnv") {
-	version <- "devel"
-} else {
-	version <- as.character(packageVersion(getPackageName()))
-}
 cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-", 26), collapse=""), "#", sep=""), "\n")
 cat("#    ______ _________ ______  _________                              #\n")
-cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Multi-Loci #\n")
+cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
 cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
-cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         ", paste('Version: ', version, paste(rep(' ', 11 - nchar(version)), collapse=''), sep=''), "#\n", sep="")
+cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.0.1      #\n")
 cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
-cat("#                                                   //^. .^\\\\        #\n")
+cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
 cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
 }
 
@@ -187,101 +177,6 @@ function(
 				sprintf("%.2f%%", progress * 100 / n), sep=""))
 			}
 		}
-	)
-}
-
-KAML.File <- 
-function(
-	phe, geno, map, memo="mydata", type=c("BIMBAM", "Binary","PED")
-)
-{
-#--------------------------------------------------------------------------------------------------------#
-# Object: transform numeric genotype into "BIMBAM", "Bianry", "PED" 					 #
-#	 												 #
-# Input:	 											 #
-# phe: a numeric vector(NA is allowed)	 								 #
-# geno: m*n matrix(0, 1, 2), m is the number of markers, n is the number of individuals			 #
-# map: m*3 matrix, the three columns are SNP, Chr, Pos respectively					 #
-# memo: the name of output files	 								 #
-# type: which file type will be transformed into							 #
-#--------------------------------------------------------------------------------------------------------#
-	phe[is.na(phe)]=0
-	geno=as.matrix(geno)
-	map=as.matrix(map)
-	map=cbind(as.character(map[,1]),as.integer(map[,2]),as.integer(map[,3]))
-	switch(
-	match.arg(type),
-	"PED"={
-		cat(" Transpose...")
-		geno=t(geno); gc()
-		cat("Done!\n")
-		cat(" Replace...")
-		geno[is.na(geno)]=00
-		geno[geno == 0]=11
-		geno[geno == 1]=12
-		geno[geno == 2]=22
-		cat("Done!\n")
-		file.map <- cbind(map[, 2], map[, 1], 0, map[, 3])
-		file.ped <- cbind(c(1:length(phe)), c(1:length(phe)), matrix(0, length(phe), 3), phe, geno)
-		cat(" Writing map...")
-		write.table(file.map, paste(memo, ".map", sep=""), col.names=FALSE, row.names=FALSE, quote=FALSE, sep="\t")
-		cat("Done!\n")
-		cat(" Writing ped...\n")
-		fileNumCon<-file(description=paste(memo,".ped",sep=""), open="w")
-		for(i in 1:nrow(file.ped)){
-			KAML.Bar(i = i, n = nrow(file.ped))
-			writeLines(as.character(file.ped[i,1:(ncol(file.ped)-1)]), fileNumCon, sep="\t")
-			writeLines(as.character(file.ped[i,ncol(file.ped)]), fileNumCon, sep="\n")
-		}
-		close.connection(fileNumCon)
-		cat("DONE!\n")
-	},
-	"BIMBAM"={
-		pheno=as.matrix(phe)
-		geno=cbind(map[, 1], 0, 0, geno)
-		anno=cbind(map[, 1], map[, 3], map[, 2], 0)
-		cat(" Writing phenotype...")
-		write.table(pheno, paste(memo, ".pheno.txt", sep=""), col.names=FALSE, row.names=FALSE, quote=FALSE, sep="\t")
-		cat("Done!\n")
-		cat(" Writing genotype...")
-		write.table(geno, paste(memo, ".geno.txt", sep=""), col.names=FALSE, row.names=FALSE, quote=FALSE, sep=", ")
-		cat("Done!\n")
-		cat(" Writing map...")
-		write.table(anno, paste(memo, ".anno.txt", sep=""), col.names=FALSE, row.names=FALSE, quote=FALSE, sep="\t")
-		cat("Done!\n")
-	}, 
-	"Binary"={
-		files <- list.files()
-		cat(" Transpose...")
-		geno=t(geno)
-		cat("Done!\n")
-		cat(" Replace...")
-		geno[geno == 0]=11
-		geno[geno == 1]=12
-		geno[geno == 2]=22
-		cat("Done!\n")
-		file.map <- cbind(map[, 2], map[, 1], 0, map[, 3])
-		file.ped <- cbind(c(1:length(phe)), c(1:length(phe)), matrix(0, length(phe), 3), phe, geno)
-		cat(" Writing map...")
-		write.table(file.map, paste(memo, "_plink.map", sep=""), col.names=FALSE, row.names=FALSE, quote=FALSE, sep="\t")
-		cat("Done!\n")
-		cat(" Writing ped...\n")
-		fileNumCon<-file(description=paste(memo,"_plink.ped",sep=""), open="w")
-		for(i in 1:nrow(file.ped)){
-			KAML.Bar(i = i, n = nrow(file.ped))
-			writeLines(as.character(file.ped[i,1:(ncol(file.ped)-1)]), fileNumCon, sep="\t")
-			writeLines(as.character(file.ped[i,ncol(file.ped)]), fileNumCon, sep="\n")
-		}
-		close.connection(fileNumCon)
-		cat(" Plinking...\n")
-		system(paste("plink --file ", memo,
-			"_plink --allow-extra-chr --chr-set ", length(unique(map[,2]))-4,
-			" --compound-genotypes --out ", memo,
-			" --make-bed", " > /dev/null 2>&1", sep=""))
-		cat(" DONE!\n")
-		filesN <- list.files()
-		unlink(filesN[!filesN %in% c(files, paste(memo, c(".bed", ".bim", ".fam", ".log"), sep=""))], recursive = TRUE)
-	}
 	)
 }
 
@@ -596,7 +491,7 @@ function(
 # K: Kinship for all individuals(row and column orders must be the same with y)							 #
 # eigen.K: a priori calculated eigen for K																 #
 # vc.method: the methods for estimating variance component						 						 #
-# lambda: ve/vg, ve is the variance of residual, vg is the variance of additive effect					 #
+# lambda：ve/vg, ve is the variance of residual, vg is the variance of additive effect					 #
 #--------------------------------------------------------------------------------------------------------#
     r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
 	math.cpu <- Math_cpu_check()
@@ -645,7 +540,7 @@ function(
 			LL <- reml$REML
 		}
 		if(vc.method == "he"){
-			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
+			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
 			lambda <- reml$delta
 			LL <- NA
 		}
@@ -653,14 +548,14 @@ function(
 			if(math.cpu == 1){
 			
 				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
+				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
 				reml <- KAML.AIEM(y, X=X, eigenK=eig, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
 				lambda <- reml$vc[2] / reml$vc[1]
 				LL <- NA
 			}else{
 			
 				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
+				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
 				reml <- KAML.AIEM(phe, X=refX, K=K, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
 				beta <- reml$beta
 				BLUP.ebv <- reml$u
@@ -721,7 +616,7 @@ function(
 # priority: choose the calculation speed or memory														 #
 # memo: the names of temporary files																	 #
 # SUM: the sum will be used to scale the matrix						 									 #
-# maxLine: this parameter can control the memory size when using big.matrix								 #
+# maxLine：this parameter can control the memory size when using big.matrix								 #
 #--------------------------------------------------------------------------------------------------------#
 	if(!effect %in% c("A", "D", "AA", "AD", "DD")) stop("Please select the right effect: 'A', 'D', 'AA', 'AD', 'DD'!")
 	if(!type %in% c("scale", "center", "vanraden"))	stop("please select the right kinship algorithm: 'center', 'scale', 'vanraden'!")
@@ -990,7 +885,7 @@ function(
 	return (list(REML=maxLL, delta=maxdelta, ve=maxve, vg=maxva))
 }
 
-KAML.Data <- 
+KAML.Data <- cmpfun(
 function(
 	hfile=NULL, vfile=NULL, numfile=NULL, mapfile=NULL, bfile=NULL, out=NULL, sep="\t", SNP.impute=c("Left", "Middle", "Right"), maxLine=10000, priority="memory"
 )
@@ -1010,7 +905,7 @@ function(
 # out: Name of output files																				 #
 # sep: seperator for hapmap, numeric, map, and phenotype												 #
 # SNP.impute: "Left", "Middle", "Right"								 									 #
-# maxLine: this parameter can control the memory size when using big.matrix								 #
+# maxLine：this parameter can control the memory size when using big.matrix								 #
 # priority: choose take 'speed' or 'memory' into consideration											 #
 #--------------------------------------------------------------------------------------------------------#	
 	
@@ -1428,6 +1323,7 @@ function(
 	gc()
 	cat(" KAML data prepration accomplished successfully!\n")
 }
+)
 
 KAML.Num <-
 function(
@@ -1717,7 +1613,7 @@ function(
 			cl <- makeCluster(max.cpu, outfile = "Loop.log")
 			registerDoParallel(cl)
 			clusterExport(cl, varlist=c("KAML.GWAS", "KAML.EMMA.REML", "KAML.Mix"))
-			P.values <- foreach(x=1:gwas.num, .packages=c("bigmemory")) %dopar% mult.run.gwas(x)
+			P.values <- foreach(x=1:gwas.num, .packages=c("bigmemory", "rfunctions")) %dopar% mult.run.gwas(x)
 			stopCluster(cl)
 			cat(" Multi-process done!\n")
 		}else{
@@ -2103,7 +1999,7 @@ function(
 					}
 				}else
 				{
-					#1: mclapply doesn't work at windows system
+					#1：mclapply doesn't work at windows system
 					#2: there are always some errors when use multi-process in microsoft r open
 					
 					#get the user-specific cpu number
@@ -2117,7 +2013,7 @@ function(
 						clusterExport(cl, varlist=c("KAML.Mix", "KAML.EMMA.REML", "KAML.HE", "KAML.GEMMA.VC",
 							"KAML.stas.cal", "KAML.Kin", "KAML.QTN.rm", "KAML.GLM"))
 						mult.res <- foreach(x=1:loop,
-						.packages=c("bigmemory")) %dopar% mult.run(x, math.cpu=mkl)
+						.packages=c("bigmemory", "rfunctions")) %dopar% mult.run(x, math.cpu=mkl)
 						if(is.null(Top.perc))	stopCluster(cl)
 						cat(" Multi-process done!\n")
 					}else{
@@ -2346,8 +2242,9 @@ function(
 				mytop.order <- order(P.value[[cv]], decreasing=FALSE)
 				mytop.perc <- mytop.order[1:ceiling(n.marker * Top.perc[top])]
                 mytop.sub <- mytop.order[ceiling(n.marker * Top.perc[top]) + 1]
-                #top.wt <- log(P.value[[cv]][mytop.sub], base=amplify[amp.index])-log(P.value[[cv]][mytop.perc], base=amplify[amp.index])
-				top.wt <- -log(P.value[[cv]][mytop.perc], base=amplify[amp.index])
+                top.wt <- log(P.value[[cv]][mytop.sub], base=amplify[amp.index])-log(P.value[[cv]][mytop.perc], base=amplify[amp.index])
+				# top.wt <- -log(P.value[[cv]][mytop.perc], base=amplify[amp.index])
+				# top.wt <- -log(P.value[[cv]][mytop.perc])
 				max.wt <- max(top.wt)
 				
 				#set the weight of cross.QTN to 0
@@ -2359,7 +2256,9 @@ function(
 				#---------------------------#
 
 				Kt <- KAML.Kin(geno[mytop.perc, ], weight=top.wt, SUM=SUM, type=K.method)
-				Kt <- K + Kt
+				Kt <- (K + Kt)/(mean(diag(K)) + mean(diag(Kt)))
+				# Kt <- (1 - amplify[amp.index]) * K + (amplify[amp.index]) * Kt
+				
 				
 				#-----------debug-----------#
 				 # write.csv(P.value[[cv]], "debug.csv")
@@ -2413,10 +2312,10 @@ function(
 					cl <- makeCluster(cpu, outfile = "Loop.log")
 					registerDoParallel(cl)
 					clusterExport(cl, varlist=c("KAML.Mix", "KAML.EMMA.REML", "KAML.stas.cal", "KAML.Kin", "KAML.QTN.rm", "KAML.GLM"))
-					#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
+					#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory), library(rfunctions)))
 				}
 				mult.res <- foreach(x=1:iterationN,
-                .packages=c("bigmemory")) %dopar% mult.run(x, math.cpu=mkl)
+                .packages=c("bigmemory", "rfunctions")) %dopar% mult.run(x, math.cpu=mkl)
 				if(!bisection)	stopCluster(cl)
 				cat(" Multi-process done!\n")
 			}else
@@ -2541,7 +2440,7 @@ function(
 					if(wind){
 						print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 						mult.res <- foreach(x=1:iterationN,
-						.packages=c("bigmemory")) %dopar% mult.run(x, math.cpu=mkl)
+						.packages=c("bigmemory", "rfunctions")) %dopar% mult.run(x, math.cpu=mkl)
 						if(loop == bisection.loop)	stopCluster(cl)
 					}else
 					{
@@ -2622,8 +2521,9 @@ function(
 			mytop.perc <- mytop.order[1 : mytop.num]
             mytop.sub <- mytop.order[mytop.num + 1]
             
-            #top.wt <- log(P.value.ref[mytop.sub], base=amp.max) - log(P.value.ref[mytop.perc], base=amp.max)
-			top.wt <- -log(P.value.ref[mytop.perc], base=amp.max)
+            top.wt <- log(P.value.ref[mytop.sub], base=amp.max) - log(P.value.ref[mytop.perc], base=amp.max)
+			# top.wt <- -log(P.value.ref[mytop.perc], base=amp.max)
+			# top.wt <- -log(P.value.ref[mytop.perc])
 			
 			#top.wt <- top.wt*1.5
 			
@@ -2633,7 +2533,9 @@ function(
 			
 			cat(" Calculating optimized KINSHIP...\n")
 			optK <- KAML.Kin(geno[mytop.perc,], type=K.method, weight = top.wt, SUM=SUM)
-            K <- K + optK
+            K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
+            # Kt <- (1 - amp.max) * K + (amp.max) * optK
+				
             
             #-----------debug-----------#
             #print(K[1:5,1:5])
@@ -2667,7 +2569,7 @@ function(
 			
 			cat(" Calculating optimized KINSHIP...\n")
 			optK <- KAML.Kin(geno[mytop.perc,], type="center", weight = top.wt, SUM=nrow(geno))
-            K <- K + optK
+            K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
 			rm(list=c("mytop.order", "mytop.perc", "top.wt", "optK"))
 			rm(list=c("P.value.ref")); gc()
 		}else{
@@ -2710,7 +2612,7 @@ function(
 	return(list(QTN.eff=QTN.eff))
 }
 
-KAML.GWAS <- 
+KAML.GWAS <- cmpfun(
 function(
 	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
 )
@@ -2782,7 +2684,7 @@ function(
 		X0 <- cbind(matrix(1, n), pca, CV[Ind.index, ])
 	}
 	if(is.null(REML) & method == "MLM"){
-		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K)
+		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K, root=FALSE)
 		if(vc.method == "emma") REML <- KAML.EMMA.REML(ys, X=X0, K=K)
 		if(vc.method == "brent") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
 		if(vc.method == "ai") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
@@ -2892,7 +2794,7 @@ function(
 				#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
 				cl <- makeCluster(getOption("cl.cores", cpu))
 				clusterExport(cl, varlist=c("geno", "yt", "X0", "U", "vgs", "ves", "mkl"), envir=environment())
-				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
+				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
 				results <- parallel::parLapply(cl, 1:m, eff.mlm)
 				stopCluster(cl)
 			}else{
@@ -2920,7 +2822,7 @@ function(
 				#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
 				cl <- makeCluster(getOption("cl.cores", cpu))
 				clusterExport(cl, varlist=c("geno", "ys", "X0", "math.cpu"), envir=environment())
-				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
+				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
 				results <- parallel::parLapply(cl, 1:m, eff.glm)
 				stopCluster(cl)
 			}else{
@@ -2946,6 +2848,7 @@ function(
 	if(is.list(results)) results <- t(sapply(results, unlist))
 	return(results)
 }
+)
 
 KAML.copy <- 
 function(
@@ -3304,7 +3207,7 @@ function(
 
 KAML <- 
 function(
-	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma", "ai"), 
+	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma", "ai"), 
 	K.method=c("center", "scale", "vanraden"), Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
 	bin.size=1000000, max.nQTN=TRUE, sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3, count.threshold=0.9,
 	bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
@@ -3319,7 +3222,7 @@ function(
 # kfile: n*n, optional, provided KINSHIP file for all individuals										 #
 # dcovfile: n*x, optional, the provided discrete covariates file										 #
 # qcovfile: n*x, optional, the provided quantitative covariates file									 #
-# pheno: specify phenotype column in the phenotype file(default 1)										 #
+# pheno：specify phenotype column in the phenotype file(default 1)										 #
 # GWAS.model: which model will be used for GWAS(only "GLM" and "MLM" can be selected presently)			 #
 # GWAS.npc: the number of PC that will be added as covariance to control population structure			 #
 # prior.QTN: the prior QTNs which will be added as covariants, if provided prior QTNs, 	KAML will not	 #
@@ -3452,81 +3355,88 @@ function(
 	cat(" Number of Covariates:", ncol(Cov), "\n")
 	cat(" Number of Total SNPs:", nrow(GENO), "\n")
 	cat(" Number of CPUs:", cpu, "\n")
-	cat(" New seeds generated from:", theSeed, "\n")
-	if((N.Ind-NA.Ind) < 1000 & sample.num < 4)
-		cat(" Warning: number of individuals with observations is less than 1000, we recommend setting bigger 'sample.num'!", "\n")
-	if(is.null(kfile) & (!is.null(prior.model) && prior.model != "QTN")){
-		cat(" Calculating marker-based Kinship...")
-		KIN <- KAML.Kin(GENO, type=K.method); gc()
-		cat("Done!\n")
-	}else{
-		KIN <- NULL
-	}
 
-	if(!is.null(prior.QTN)){
-		if(is.null(prior.model))	stop("Please provid prior model!")
-		Top.num <- NULL
-		if(prior.model == "QTN"){Top.num <- NULL; Top.perc <- NULL}
-	}else{
-		if(prior.model == "QTN")	stop("QTNs must be provided!")
-		if(prior.model == "K")	Top.num <- NULL
-	}
-	
-	if(!is.null(Top.num) | !is.null(Top.perc)){
-		cat(" Performing model: KAML\n")
-		cross.res <- KAML.CrossV(phe=PHENO, geno=GENO, prior.QTN=prior.QTN, prior.model=prior.model, vc.method=vc.method, K=KIN, BF.threshold=BF.threshold,
-			max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary,
-			Top.perc=Top.perc, sample.num=sample.num, crv.num=crv.num, cpu=cpu, bin.size=bin.size, bisection.loop=bisection.loop, SNP.filter=SNP.filter,
-			cor.threshold=cor.threshold, count.threshold=count.threshold, ref.gwas=ref.gwas, GWAS.npc=GWAS.npc, CV=Cov, qtn.model=qtn.model); gc()
-		cross.QTN <- cross.res$cross.QTN
-		cross.model <- cross.res$cross.model
-		cross.tp <- cross.res$cross.tp
-		cross.amp <- cross.res$cross.amp
-		cross.k <- cross.res$cross.k
-		cross.k <- cross.k/mean(diag(cross.k))
-		rm(cross.res); gc()
-	}else{
-		if(is.null(prior.QTN)){
-			cat(" Performing model: GBLUP\n")
-			cross.QTN <- NULL
-			cross.model <- "K"
-			cross.tp <- NULL
-			cross.amp <- NULL
-			cross.k <- KIN
+	if(is.null(SNP.weight)){
+		cat(" New seeds generated from:", theSeed, "\n")
+		if((N.Ind-NA.Ind) < 1000 & sample.num < 4)
+			cat(" Warning: number of individuals with observations is less than 1000, we recommend setting bigger 'sample.num'!", "\n")
+		if(is.null(kfile) & (!is.null(prior.model) && prior.model != "QTN")){
+			cat(" Calculating marker-based Kinship...")
+			KIN <- KAML.Kin(GENO, type=K.method); gc()
+			cat("Done!\n")
 		}else{
+			KIN <- NULL
+		}
+
+		if(!is.null(prior.QTN)){
+			if(is.null(prior.model))	stop("Please provid prior model!")
+			Top.num <- NULL
+			if(prior.model == "QTN"){Top.num <- NULL; Top.perc <- NULL}
+		}else{
+			if(prior.model == "QTN")	stop("QTNs must be provided!")
+			if(prior.model == "K")	Top.num <- NULL
+		}
+		
+		if(!is.null(Top.num) | !is.null(Top.perc)){
 			cat(" Performing model: KAML\n")
-			cat(" The provided QTNs:", prior.QTN, "\n")
-			cat(paste(" The provided Model: ", prior.model, "\n", sep=""))
-			cross.QTN <- prior.QTN
-			cross.model <- prior.model
-			cross.tp <- NULL
-			cross.amp <- NULL
-			cross.k <- KIN
+			cross.res <- KAML.CrossV(phe=PHENO, geno=GENO, prior.QTN=prior.QTN, prior.model=prior.model, vc.method=vc.method, K=KIN, BF.threshold=BF.threshold,
+				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary,
+				Top.perc=Top.perc, sample.num=sample.num, crv.num=crv.num, cpu=cpu, bin.size=bin.size, bisection.loop=bisection.loop, SNP.filter=SNP.filter,
+				cor.threshold=cor.threshold, count.threshold=count.threshold, ref.gwas=ref.gwas, GWAS.npc=GWAS.npc, CV=Cov, qtn.model=qtn.model); gc()
+			cross.QTN <- cross.res$cross.QTN
+			cross.model <- cross.res$cross.model
+			cross.tp <- cross.res$cross.tp
+			cross.amp <- cross.res$cross.amp
+			cross.k <- cross.res$cross.k
+			rm(cross.res); gc()
+		}else{
+			if(is.null(prior.QTN)){
+				cat(" Performing model: GBLUP\n")
+				cross.QTN <- NULL
+				cross.model <- "K"
+				cross.tp <- NULL
+				cross.amp <- NULL
+				cross.k <- KIN
+			}else{
+				cat(" Performing model: KAML\n")
+				cat(" The provided QTNs:", prior.QTN, "\n")
+				cat(paste(" The provided Model: ", prior.model, "\n", sep=""))
+				cross.QTN <- prior.QTN
+				cross.model <- prior.model
+				cross.tp <- NULL
+				cross.amp <- NULL
+				cross.k <- KIN
+			}
 		}
-	}
-	rm("KIN"); gc()
-	cat(" Predicting...\n")
-	if(is.null(cross.QTN)){
-		myest <- KAML.Mix(phe=PHENO, K=cross.k, vc.method=vc.method, CV=Cov)
+		rm("KIN"); gc()
+		cat(" Predicting...\n")
+		if(is.null(cross.QTN)){
+			myest <- KAML.Mix(phe=PHENO, K=cross.k, vc.method=vc.method, CV=Cov)
+			GEBV <- myest$ebv
+			beta <- as.vector(myest$beta)
+		}else
+		{
+			if(cross.model == "QTN+K"){
+				QTN.cv <- cbind(Cov, t(GENO[cross.QTN, , drop=FALSE]))
+				myest <- KAML.Mix(phe=PHENO, CV=QTN.cv, vc.method=vc.method, K=cross.k)
+				GEBV <- myest$ebv + t(GENO[cross.QTN, , drop=FALSE]) %*% as.matrix(myest$beta[-c(1:ncol(Cov))])
+				beta <- as.vector(myest$beta[c(1:ncol(Cov))])
+			}
+			if(cross.model == "QTN"){
+				QTN.cv <- t(GENO[cross.QTN, , drop=FALSE])
+				NA.index <- is.na(PHENO)
+				qtn.eff <- KAML.GLM(y=PHENO[!NA.index], X=Cov[!NA.index, ], qtn.matrix=QTN.cv[!NA.index, ])$QTN.eff
+				GEBV <- data.matrix(QTN.cv) %*% as.matrix(qtn.eff[-c(1:ncol(Cov))])
+				beta <- as.vector(qtn.eff[c(1:ncol(Cov))])
+			}
+		}
+	}else{
+		if(length(SNP.weight) != nrow(GENO))	stop("length of weights should equal to the number of SNPs in genotype!")
+		K <- KAML.Kin(GENO, type="center", weight = SNP.weight, SUM=nrow(geno))
+		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
 		GEBV <- myest$ebv
-		beta <- as.vector(myest$beta)
-	}else
-	{
-		if(cross.model == "QTN+K"){
-			QTN.cv <- cbind(Cov, t(GENO[cross.QTN, , drop=FALSE]))
-			myest <- KAML.Mix(phe=PHENO, CV=QTN.cv, vc.method=vc.method, K=cross.k)
-			GEBV <- myest$ebv + t(GENO[cross.QTN, , drop=FALSE]) %*% as.matrix(myest$beta[-c(1:ncol(Cov))])
-			beta <- as.vector(myest$beta[c(1:ncol(Cov))])
-		}
-		if(cross.model == "QTN"){
-			QTN.cv <- t(GENO[cross.QTN, , drop=FALSE])
-			NA.index <- is.na(PHENO)
-			qtn.eff <- KAML.GLM(y=PHENO[!NA.index], X=Cov[!NA.index, ], qtn.matrix=QTN.cv[!NA.index, ])$QTN.eff
-			GEBV <- data.matrix(QTN.cv) %*% as.matrix(qtn.eff[-c(1:ncol(Cov))])
-			beta <- as.vector(qtn.eff[c(1:ncol(Cov))])
-		}
+		beta <- as.vector(myest$beta[c(1:ncol(Cov))])
 	}
-	
 	#return the results
 	GEBV <- as.matrix(GEBV)
 	colnames(GEBV) <- TAXA
@@ -3556,19 +3466,11 @@ function(
 KAML.EIGEN.REML <- 
 function(y, X, eigenK)
 {
-    p = 0
-    Sigma <- eigenK$values
-    w <- which(Sigma < 1e-6)
-    Sigma[w] <- 1e-6
-    U <- eigenK$vectors
-    min_h2 = 0
-    max_h2 = 1
-    tol = .Machine$double.eps^0.25
-    reml <- gaston_brent(y, X, p, Sigma, U, min_h2, max_h2, tol, verbose = FALSE)
-    vg <- reml[[2]]
-    ve <- reml[[1]]
-    delta <- ve / vg
-    return(list(vg = vg, ve = ve, delta = delta))
+	reml <- lmm.diago(Y=y, X=X, eigenK=eigenK, method="brent", verbose=FALSE)
+	vg <- reml[[2]]
+	ve <- reml[[1]]
+	delta <- ve / vg
+	return(list(vg=vg, ve=ve, delta=delta))
 }
 
 Math_cpu_check <- 
