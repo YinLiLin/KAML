@@ -9,11 +9,11 @@ KAML: Kinship Adjusted Multiple Loci Best Linear Unbiased Prediction
 KAML is originally designed to predict phenotypic value using genome- or chromosome-wide SNPs for sample traits which are controled by limited major markers or complex traits that are influenced by many minor-polygene. In brief, KAML incorporates pseudo QTNs as fixed effects and a trait-specific K matrix as random effect in a mixed linear model. Both pseudo QTNs and trait-specific K matrix are optimized using a parallel-accelerated machine learning strategy.}
 \usage{
 KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
-  pheno=1, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL,
+  pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL,
   prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"),
   vc.method=c("brent", "he", "emma", "ai"),
   K.method=c("center", "scale", "vanraden"),
-  Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=10,
+  Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15,
   Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"),
   BF.threshold=NULL, binary=FALSE, bin.size=1000000, max.nQTN=TRUE,
   sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3,
@@ -28,6 +28,7 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
 \item{dcovfile}{n*x, optional, the provided discrete covariates file}
 \item{qcovfile}{n*x, optional, the provided quantitative covariates file}
 \item{pheno}{specify phenotype column in the phenotype file(default 1)}
+\item{SNP.weight}{provided weights of all SNPs}
 \item{GWAS.model}{which model will be used for GWAS(only "GLM" and "MLM" can be selected presently)}
 \item{GWAS.npc}{the number of PC that will be added as covariance to control population structure}
 \item{prior.QTN}{the prior QTNs which will be added as covariants, if provided prior QTNs,  KAML will not optimize QTNs and model during cross-validation}
