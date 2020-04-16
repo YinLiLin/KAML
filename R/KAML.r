@@ -885,7 +885,7 @@ function(
 	return (list(REML=maxLL, delta=maxdelta, ve=maxve, vg=maxva))
 }
 
-KAML.Data <- cmpfun(
+KAML.Data <-
 function(
 	hfile=NULL, vfile=NULL, numfile=NULL, mapfile=NULL, bfile=NULL, out=NULL, sep="\t", SNP.impute=c("Left", "Middle", "Right"), maxLine=10000, priority="memory"
 )
@@ -1323,7 +1323,6 @@ function(
 	gc()
 	cat(" KAML data prepration accomplished successfully!\n")
 }
-)
 
 KAML.Num <-
 function(
