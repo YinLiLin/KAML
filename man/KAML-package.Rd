@@ -58,7 +58,7 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
 \tabular{ll}{
 Package: \tab KAML\cr
 Type: \tab Package\cr
-Version: \tab 0.99.1\cr
+Version: \tab 1.0.1\cr
 Date: \tab 2019-12-11\cr
 License: \tab GPL(>=2)\cr
 }
