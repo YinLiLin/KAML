@@ -2611,7 +2611,7 @@ function(
 	return(list(QTN.eff=QTN.eff))
 }
 
-KAML.GWAS <- cmpfun(
+KAML.GWAS <- 
 function(
 	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
 )
@@ -2847,7 +2847,6 @@ function(
 	if(is.list(results)) results <- t(sapply(results, unlist))
 	return(results)
 }
-)
 
 KAML.copy <- 
 function(
