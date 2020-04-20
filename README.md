@@ -1,4 +1,4 @@
-# KAML [![](https://img.shields.io/badge/Issues-1%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.0.1-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE)
+# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.0.1-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE)
 
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
