@@ -40,9 +40,9 @@
 
  -->
 
-***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin), [***Haohao Zhang***](https://github.com/hyacz), and [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Central China) Agricultural University***](http://www.hzau.edu.cn/en/HOME.htm).
+***`KAML`*** is developed by [***Lilin Yin***](https://github.com/YinLiLin) with the help of [***Haohao Zhang***](https://github.com/hyacz), and [***Xiaolei Liu***](https://github.com/XiaoleiLiuBio)**\*** at the [***Huazhong(Central China) Agricultural University***](http://www.hzau.edu.cn/en/HOME.htm).
 
-If you have any bug reports or questions please send an email to **Xiaolei Liu** at **xiaoleiliu@mail.hzau.edu.cn**
+If you have any bug reports or questions, please feed back :point_right:[here](https://github.com/YinLiLin/SumTool/issues/new):point_left:, or send an email to **Xiaolei Liu** at **xiaoleiliu@mail.hzau.edu.cn**
 
 ---
 ## CITATION
