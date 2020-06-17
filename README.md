@@ -46,7 +46,7 @@ If you have any bug reports or questions, please feed back :point_right:[here](h
 
 ---
 ## CITATION
-(waiting for update)
+Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy of complex traits using machine learning determined parameters. Genome Biol 21, 146 (2020). https://doi.org/10.1186/s13059-020-02052-w
 
 ---
 ## GETTING STARTED
