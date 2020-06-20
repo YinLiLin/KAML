@@ -3361,7 +3361,6 @@ function(
 		if(is.null(kfile) & (!is.null(prior.model) && prior.model != "QTN")){
 			cat(" Calculating marker-based Kinship...")
 			KIN <- KAML.Kin(GENO, type=K.method); gc()
-			cat("Done!\n")
 		}else{
 			KIN <- NULL
 		}
