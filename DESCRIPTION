@@ -10,7 +10,7 @@ License: GPL-3
 SystemRequirements: C++11
 BugReports: https://github.com/YinLiLin/R-KAML
 Imports: utils, stats, methods, graphics, grDevices, Rcpp, RcppEigen,
-        BH, bigmemory, parallel, MASS
+        BH, bigmemory, parallel, MASS, gaston
 Depends:
 LinkingTo: Rcpp, RcppEigen, BH, bigmemory
 NeedsCompilation: yes
