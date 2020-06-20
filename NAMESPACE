@@ -1,5 +1,6 @@
 useDynLib(KAML, .registration=TRUE)
-exportPattern("^[[:alpha:]]+")
+export(KAML)
+export(KAML.Data)
 importFrom(Rcpp, evalCpp)
 import(BH)
 import(MASS)
