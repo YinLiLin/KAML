@@ -540,7 +540,7 @@ function(
 			LL <- reml$REML
 		}
 		if(vc.method == "he"){
-			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
+			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 			lambda <- reml$delta
 			LL <- NA
 		}
@@ -548,14 +548,14 @@ function(
 			if(math.cpu == 1){
 			
 				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
+				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 				reml <- KAML.AIEM(y, X=X, eigenK=eig, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
 				lambda <- reml$vc[2] / reml$vc[1]
 				LL <- NA
 			}else{
 			
 				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index], root=FALSE)
+				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 				reml <- KAML.AIEM(phe, X=refX, K=K, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
 				beta <- reml$beta
 				BLUP.ebv <- reml$u
@@ -2683,7 +2683,7 @@ function(
 		X0 <- cbind(matrix(1, n), pca, CV[Ind.index, ])
 	}
 	if(is.null(REML) & method == "MLM"){
-		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K, root=FALSE)
+		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K)
 		if(vc.method == "emma") REML <- KAML.EMMA.REML(ys, X=X0, K=K)
 		if(vc.method == "brent") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
 		if(vc.method == "ai") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
