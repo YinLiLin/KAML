@@ -11,13 +11,14 @@ KAML is originally designed to predict phenotypic value using genome- or chromos
 KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
   pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL,
   prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"),
-  vc.method=c("brent", "he", "emma", "ai"),
+  vc.method=c("brent", "he", "emma"),
   K.method=c("center", "scale", "vanraden"),
   Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15,
   Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"),
   BF.threshold=NULL, binary=FALSE, bin.size=1000000, max.nQTN=TRUE,
   sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3,
-  count.threshold=0.9, bisection.loop=10, ref.gwas=TRUE,
+  count.threshold=0.9, priority=c("speed", "memory"),
+  bisection.loop=10, ref.gwas=TRUE,
   theSeed=666666, file.output=TRUE, cpu=10
 )
 }
@@ -48,6 +49,7 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
 \item{crv.num}{the cross number of cross-validation}
 \item{cor.threshold}{if the top SNP which is used as covariant is in high correlation with others, it will be deleted}
 \item{count.threshold}{if the count of selected SNP for all iteration >= sample.num*crv.num*count.threshold, than it will be treated as covariance in final predicting model}
+\item{priority}{"speed" or "memory" mode}
 \item{bisection.loop}{the max loop(iteration) number of bisection algorithm}
 \item{ref.gwas}{whether to do GWAS for reference population(if not, KAML will merge all GWAS results of cross-validation by mean)}
 \item{theSeed}{the random seed}
@@ -58,9 +60,9 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
 \tabular{ll}{
 Package: \tab KAML\cr
 Type: \tab Package\cr
-Version: \tab 1.0.1\cr
-Date: \tab 2019-12-11\cr
-License: \tab GPL(>=2)\cr
+Version: \tab 1.1.0\cr
+Date: \tab 2020-06-21\cr
+License: \tab GPL(>=3)\cr
 }
 }
 \author{

@@ -1,18 +1,15 @@
 Package: KAML
 Type: Package
 Title: Kinship Adjusted Multiple Loci Best Linear Unbiased Prediction
-Version: 1.0.1
-Date: 2020-03-01
+Version: 1.1.0
+Date: 2020-06-18
 Author: Lilin Yin, Haohao Zhang and Xiaolei Liu
 Maintainer: Lilin Yin <ylilin@163.com>
 Description: Kinship Adjusted Multiple Loci Best Linear Unbiased Prediction
 License: GPL-3
 SystemRequirements: C++11
 BugReports: https://github.com/YinLiLin/R-KAML
-Imports: utils, stats, methods, graphics, grDevices, Rcpp, RcppEigen,
-        BH, bigmemory, parallel, MASS, gaston
-Depends:
-LinkingTo: Rcpp, RcppEigen, BH, bigmemory
+Imports: utils, stats, methods, bigmemory, parallel, MASS, gaston
+LinkingTo: Rcpp, RcppArmadillo, RcppEigen, RcppProgress, BH, bigmemory
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
-Packaged: 2019-07-04 06:24:12 UTC;

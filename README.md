@@ -1,4 +1,4 @@
-# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.0.1-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE)
+# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.1.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE)
 
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
@@ -57,12 +57,6 @@ Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy 
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/R-KAML")
-```
-If you get trouble in installing the **"devtools"**, please download [KAML_1.0.1.tar.gz](https://github.com/YinLiLin/KAML/releases/download/1.0.1/KAML_1.0.1.tar.gz), and then try the following steps:
-```r
-pkg <- setdiff(c("RcppEigen", "bigmemory"), installed.packages()[,c("Package")])
-install.packages(pkg)
-install.packages("KAML_1.0.1.tar.gz", repos=NULL)
 ```
 After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r

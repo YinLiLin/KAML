@@ -5,7 +5,7 @@ cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-
 cat("#    ______ _________ ______  _________                              #\n")
 cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
 cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
-cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.0.1      #\n")
+cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.1.0      #\n")
 cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
 cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
 cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
@@ -502,10 +502,6 @@ function(
 	N <- length(phe)
 	n <- length(refphe)
 	
-	if(is.null(K)){
-		K <- KAML.Kin(geno)
-	}
-	
 	if(is.null(CV)){
 		X <- matrix(1, N, 1)
 	}else{
@@ -513,7 +509,6 @@ function(
 	}
 	refX <- X
 	X <- X[ref.index, , drop=FALSE]
-	
 	#there is a error when running in Mcrosoft R open with parallel
 	if(vc.method != "ai" | (vc.method == "ai" & math.cpu == 1)){
 		if(!is.null(eigen.K)){
@@ -527,7 +522,6 @@ function(
 	}else{
 		eig <-NULL
 	}
-	
 	if(is.null(lambda)){
 		if(vc.method == "brent") {
 			reml <- KAML.EIGEN.REML(y, X=X, eigenK=eig)
@@ -585,17 +579,8 @@ function(
 	XtimesBetaHat <- X %*% beta
 	YminusXtimesBetaHat <- matrix(y)- XtimesBetaHat
 	Dt <- crossprod(U, YminusXtimesBetaHat)
-	Zt <- t(U); rm(U); gc()
-	if(X0X0[1, 1] == "NaN"){
-		Dt[which(Dt == "NaN")]=0
-		Zt[which(Zt == "NaN")]=0
-	}
-	Z <- diag(N)
-	Z[inf.index, inf.index] <- 0
-	Z <- Z[ref.index, ]
-    KZt <- tcrossprod(K, Z)
-    S <- crossprod(Zt, Dt)
-	BLUP.ebv <- as.vector(KZt %*% S)
+    S <- U %*% Dt
+    BLUP.ebv <- as.vector(K[, ref.index] %*% S)
 	return(list(beta=beta, ebv=BLUP.ebv, S=S, LL=LL, reml=reml))
 }
 
@@ -622,6 +607,7 @@ function(
 	if(!type %in% c("scale", "center", "vanraden"))	stop("please select the right kinship algorithm: 'center', 'scale', 'vanraden'!")
 	if(!is.null(weight)){
 		if(sum(is.na(weight)) != 0)	stop("'NA' is not allowed in weight")
+		if(sum(weight < 0) != 0)	stop("Negative value is not allowed in weight")
 	}
     if(is.null(dim(M))) M <- t(as.matrix(M))
 	K <- 1
@@ -747,6 +733,25 @@ function(
 	}
 	if(effect %in% c("AA", "DD"))	K <- K * K
 	return(K)
+}
+
+KAML.KinNew <- 
+function(
+	M, weight=NULL, SUM=NULL, scale=FALSE, priority=c("speed", "memory"), verbose=FALSE, threads=1
+){
+	if(!is.big.matrix(M))
+		stop("genotype must be in 'big.matrix' format.")
+	if(!is.null(weight)){
+		if(sum(is.na(weight)) != 0)	stop("'NA' is not allowed in weight")
+		if(sum(weight < 0) != 0)	stop("Negative value is not allowed in weight")
+	}
+	priority <- match.arg(priority)
+	r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+	if(priority == "speed"){
+		k <- kin_cal_s(M@address, SUM=SUM, scale=scale, wt=weight, mkl=r.open, threads=threads, verbose=verbose)
+	}else{
+		k <- kin_cal_m(M@address, SUM=SUM, scale=scale, wt=weight, threads=threads, verbose=verbose)
+	}
 }
 
 KAML.EMMA.REML <- 
@@ -1439,7 +1444,7 @@ function(
 KAML.CrossV <- 
 function(
 	phe, geno, K=NULL, CV=NULL, GWAS.model=NULL, qtn.model="SR", BF.threshold=NULL, vc.method="emma", Top.num=NULL, Top.perc=NULL, max.nQTN=TRUE, SNP.filter=0.5,
-	cor.threshold=0.99, count.threshold=0.9, sample.num=1, crv.num=5, cpu=1, theSeed=NULL, prior.QTN=NULL, K.method="center", binary=FALSE,
+	cor.threshold=0.99, count.threshold=0.9, sample.num=1, crv.num=5, cpu=1, theSeed=NULL, prior.QTN=NULL, K.method="center", binary=FALSE, priority="speed",
 	bin.size=1000000, amplify=NULL, bisection.loop=5, ref.gwas=FALSE, prior.model="QTN+K", GWAS.npc=3
 )
 {
@@ -1530,7 +1535,7 @@ function(
 		mult.run.gwas <- function(i){
 			if(r.open)	try(setMKLthreads(mkl), silent=TRUE)
 			ref.logic <- (i == sample.num * crv.num + 1)
-			cat(" GWAS of validations is ongoing...(", i,"/", gwas.num, ")\r", sep="")
+			# cat(" GWAS of validations is ongoing...(", i,"/", gwas.num, ")\r", sep="")
 			if(!ref.logic){
 				P.ref <- phe
 				P.ref[inf.index[[i]]] <- NA
@@ -1538,20 +1543,20 @@ function(
 				P.ref <- phe
 			}
 			if(!ref.logic){
-				pri <- paste(" GWAS of validations NO.", i, " finished ", sep="")
+				pri <- paste(" GWAS of validations NO.", i, sep="")
 			}else{
-				pri <- " GWAS of Total References finished "
+				pri <- " GWAS of Total References finished"
 			}
 			if(GWAS.model == "GLM"){
-				if(!is.null(SNP.filter)){
-					GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno[SNP.index, , drop=FALSE], CV=CV, method="GLM", cpu=cpus, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=0)
-					P.value <- vector("numeric", length=n.marker)
-					P.value[SNP.index] <- GLM.gwas[, 2]
-					P.value[-SNP.index] <- SNP.filter
-				}else{
-					GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", cpu=cpus, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=0)
-					P.value <- GLM.gwas[, 2]
-				}
+				# if(!is.null(SNP.filter)){
+				# 	GLM.gwas <- KAML.GWAS(phe=P.ref, geno=deepcopy(geno[SNP.index, , drop=FALSE], CV=CV, method="GLM", cpu=cpus, priority=priority, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=0)
+				# 	P.value <- vector("numeric", length=n.marker)
+				# 	P.value[SNP.index] <- GLM.gwas[, 2]
+				# 	P.value[-SNP.index] <- SNP.filter
+				# }else{
+					GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", cpu=cpus, priority=priority, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=1)
+					P.value <- GLM.gwas[, 3]
+				# }
 				rm("GLM.gwas")
 			}
 			if(GWAS.model == "RR"){
@@ -1562,18 +1567,18 @@ function(
 					rm("rr.gwas")
 			}
 			if(GWAS.model == "MLM"){
-				if(!is.null(SNP.filter)){
-					MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno[SNP.index, , drop=FALSE], CV=CV, K=K, method="MLM", vc.method=vc.method, cpu=cpus, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=0)
-					P.value <- vector("numeric", length=n.marker)
-					P.value[SNP.index] <- MLM.gwas[, 2]
-					P.value[-SNP.index] <- SNP.filter
-				}else{
-					MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, cpu=cpus, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=0)
-					P.value <- MLM.gwas[, 2]
+				# if(!is.null(SNP.filter)){
+				# 	MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno[SNP.index, , drop=FALSE], CV=CV, K=K, method="MLM", vc.method=vc.method, cpu=cpus, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=0)
+				# 	P.value <- vector("numeric", length=n.marker)
+				# 	P.value[SNP.index] <- MLM.gwas[, 2]
+				# 	P.value[-SNP.index] <- SNP.filter
+				# }else{
+					MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, cpu=cpus, priority=priority, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=1)
+					P.value <- MLM.gwas[, 3]
 					rm("MLM.gwas")
-				}
+				# }
 			}
-			if(i == gwas.num)	cat("\n")
+			# if(i == gwas.num)	cat("\n")
 			rm(list=c("P.ref")); gc()
 			P.value[is.na(P.value)] <- 1
 			P.value[P.value == 0] <- min(P.value[P.value != 0])
@@ -1585,19 +1590,19 @@ function(
 		
 		#the SNPs which are lower associated than 'SNP.filter' will be deleted to save time
 		P.value.ref <- NULL
-		if(!is.null(SNP.filter)){
-			cat(paste(" Filtering SNPs with the threshold: ", SNP.filter, "\n", sep=""))
-			GLM.gwas <- KAML.GWAS(phe=phe, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, bar.head=" Filtering finished ", bar.tail="", bar.len=0)
-			P.value.ref <- GLM.gwas[, 2]
-			P.value.ref[is.na(P.value.ref)] <- 1
-			SNP.index <- which(P.value.ref < SNP.filter)
-			cat(paste(" Number of SNPs deleted: ", n.marker-length(SNP.index), "\n", sep=""))
-			if(GWAS.model == "GLM" & ref.gwas){
-				rm("GLM.gwas"); gc()
-			}else{
-				P.value.ref=NULL; rm("GLM.gwas"); gc()
-			}
-		}
+		# if(!is.null(SNP.filter)){
+		# 	cat(paste(" Filtering SNPs with the threshold: ", SNP.filter, "\n", sep=""))
+		# 	GLM.gwas <- KAML.GWAS(phe=phe, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, bar.head=" Filtering finished ", bar.tail="", bar.len=0)
+		# 	P.value.ref <- GLM.gwas[, 2]
+		# 	P.value.ref[is.na(P.value.ref)] <- 1
+		# 	SNP.index <- which(P.value.ref < SNP.filter)
+		# 	cat(paste(" Number of SNPs deleted: ", n.marker-length(SNP.index), "\n", sep=""))
+		# 	if(GWAS.model == "GLM" & ref.gwas){
+		# 		rm("GLM.gwas"); gc()
+		# 	}else{
+		# 		P.value.ref=NULL; rm("GLM.gwas"); gc()
+		# 	}
+		# }
 		
 		if(ref.gwas & is.null(P.value.ref)){
 			gwas.num <- sample.num * crv.num + 1
@@ -1605,20 +1610,20 @@ function(
 			gwas.num <- sample.num * crv.num
 		}
 
-		if(wind & cpu > 1){
-			cpus <- 1
-			cat(" Multi-process of GWAS started...\n")
-			max.cpu <- min(cpu, gwas.num)
-			cl <- makeCluster(max.cpu, outfile = "Loop.log")
-			registerDoParallel(cl)
-			clusterExport(cl, varlist=c("KAML.GWAS", "KAML.EMMA.REML", "KAML.Mix"))
-			P.values <- foreach(x=1:gwas.num, .packages=c("bigmemory", "rfunctions")) %dopar% mult.run.gwas(x)
-			stopCluster(cl)
-			cat(" Multi-process done!\n")
-		}else{
+		# if(wind & cpu > 1){
+		# 	cpus <- 1
+		# 	cat(" Multi-process of GWAS started...\n")
+		# 	max.cpu <- min(cpu, gwas.num)
+		# 	cl <- makeCluster(max.cpu, outfile = "Loop.log")
+		# 	registerDoParallel(cl)
+		# 	clusterExport(cl, varlist=c("KAML.GWAS", "KAML.EMMA.REML", "KAML.Mix"))
+		# 	P.values <- foreach(x=1:gwas.num, .packages=c("bigmemory", "rfunctions")) %dopar% mult.run.gwas(x)
+		# 	stopCluster(cl)
+		# 	cat(" Multi-process done!\n")
+		# }else{
 			cpus <- cpu
 			P.values <- lapply(1:gwas.num, mult.run.gwas)
-		}
+		# }
 		
 		#----------debug-----------------#
 		#wrt.p <- do.call(cbind, P.values)
@@ -1657,8 +1662,8 @@ function(
 		cat(paste(" GWAS with model: ", GWAS.model, "...\n", sep=""))
 		P.ref <- phe
 		if(GWAS.model == "GLM"){
-			GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, bar.head=" GWAS of References finished ", bar.tail="", bar.len=0)
-			P.value.ref <- GLM.gwas[, 2]
+			GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, priority=priority, bar.head=" GWAS of References", bar.tail="", bar.len=1)
+			P.value.ref <- GLM.gwas[, 3]
 			rm("GLM.gwas")
 		}
 		if(GWAS.model == "RR"){
@@ -1669,8 +1674,8 @@ function(
 			rm("rr.gwas")
 		}
 		if(GWAS.model == "MLM"){
-			MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, NPC=GWAS.npc, cpu=cpu, bar.head=" GWAS of References finished ", bar.tail="", bar.len=0)
-			P.value.ref <- MLM.gwas[, 2]
+			MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, NPC=GWAS.npc, cpu=cpu, priority=priority, bar.head=" GWAS of References", bar.tail="", bar.len=1)
+			P.value.ref <- MLM.gwas[, 3]
 			rm("MLM.gwas")
 		}
 		P.value.ref[is.na(P.value.ref)] <- 1
@@ -2254,7 +2259,8 @@ function(
                 #print(sum(is.na(top.wt)))
 				#---------------------------#
 
-				Kt <- KAML.Kin(geno[mytop.perc, ], weight=top.wt, SUM=SUM, type=K.method)
+				# Kt <- KAML.Kin(geno[mytop.perc, ], weight=top.wt, SUM=SUM, type=K.method)
+				Kt <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), priority=priority, weight=top.wt, threads=1)
 				Kt <- (K + Kt)/(mean(diag(K)) + mean(diag(Kt)))
 				# Kt <- (1 - amplify[amp.index]) * K + (amplify[amp.index]) * Kt
 				
@@ -2297,6 +2303,7 @@ function(
 			return(list(acc=acc,max.wt=max.wt,KAML.ll=KAML.ll))
 		}
 		iterationN <- ((sample.num * crv.num) * length(Top.perc) * length(amplify))
+		cat(" Grid search started...\n")
 		cat(paste(" Total iteration number:", iterationN))
 		if(cpu == 1){
 			print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
@@ -2531,7 +2538,9 @@ function(
 			#---------------------------#
 			
 			cat(" Calculating optimized KINSHIP...\n")
-			optK <- KAML.Kin(geno[mytop.perc,], type=K.method, weight = top.wt, SUM=SUM)
+			# optK <- KAML.Kin(geno[mytop.perc,], type=K.method, weight = top.wt, SUM=SUM)
+            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), priority=priority, weight=top.wt, threads=cpu, verbose=TRUE)
+				
             K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
             # Kt <- (1 - amp.max) * K + (amp.max) * optK
 				
@@ -2567,7 +2576,9 @@ function(
 			#---------------------------#
 			
 			cat(" Calculating optimized KINSHIP...\n")
-			optK <- KAML.Kin(geno[mytop.perc,], type="center", weight = top.wt, SUM=nrow(geno))
+			# optK <- KAML.Kin(geno[mytop.perc,], type="center", weight = top.wt, SUM=nrow(geno))
+            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=nrow(geno), scale=(K.method=="scale"), priority=priority, weight=top.wt, threads=cpu, verbose=TRUE)
+			
             K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
 			rm(list=c("mytop.order", "mytop.perc", "top.wt", "optK"))
 			rm(list=c("P.value.ref")); gc()
@@ -2613,7 +2624,7 @@ function(
 
 KAML.GWAS <- 
 function(
-	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
+	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, priority="speed", vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
 )
 {
 #--------------------------------------------------------------------------------------------------------#
@@ -2647,15 +2658,17 @@ function(
 	Ind.index <- !is.na(phe)
 	ys <- as.numeric(phe[Ind.index])
 	if(sum(Ind.index) == length(phe)){
-		geno <- as.matrix(geno)
+		# geno <- as.matrix(geno)
 	}else{
-		geno <- geno[, Ind.index]
+		geno <- deepcopy(geno, cols=Ind.index)
 	}
 	n <- ncol(geno)
 	m <- nrow(geno)
 	if(method == "MLM"){
 		if(is.null(K)){
-			K <- KAML.Kin(geno)
+			# K <- KAML.Kin(geno, priority=priority)
+			K <- KAML.KinNew(geno, priority=priority, threads=cpu)
+			
 		}else{
 			K <- K[Ind.index, Ind.index]
 		}
@@ -2686,11 +2699,10 @@ function(
 		if(vc.method == "he") REML <- KAML.HE(ys, X=X0, K=K)
 		if(vc.method == "emma") REML <- KAML.EMMA.REML(ys, X=X0, K=K)
 		if(vc.method == "brent") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
-		if(vc.method == "ai") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
 	}
-	q0 <- ncol(X0)
-	iXX <- matrix(NA,q0+1,q0+1)
-	Xt <- matrix(NA,n, q0+1)
+	# q0 <- ncol(X0)
+	# iXX <- matrix(NA,q0+1,q0+1)
+	# Xt <- matrix(NA,n, q0+1)
 	
 	#parallel function for MLM model
 	eff.mlm <- function(i){
@@ -2752,99 +2764,111 @@ function(
         vgs <- REML$vg
         lambda <- ves/vgs
         U <- eig$vectors * matrix(sqrt(1/(eig$values + lambda)), n, length(eig$values), byrow=TRUE); rm(eig); gc()
-		y <- matrix(ys)
-		yt <- crossprod(U, y)
-		X0t <- crossprod(U, X0)
-		X0X0 <- KAML.Crossprod(X0t)
-		X0Y <- crossprod(X0t, yt)
-		iX0X0 <- ginv(X0X0)
-		Xt[1:n,1:q0] <- X0t
+		# y <- matrix(ys)
+		# yt <- crossprod(U, y)
+		# X0t <- crossprod(U, X0)
+		# X0X0 <- KAML.Crossprod(X0t)
+		# X0Y <- crossprod(X0t, yt)
+		# iX0X0 <- ginv(X0X0)
+		# Xt[1:n,1:q0] <- X0t
     }
 	
-    if(method == "GLM"){
-		y <- matrix(ys)
-        X0X0 <- KAML.Crossprod(X0)
-		X0Y <- crossprod(X0, y)
-		YY <- KAML.Crossprod(y)
-		X0X0i <- ginv(X0X0)
-    }
+  #   if(method == "GLM"){
+		# y <- matrix(ys)
+  #       X0X0 <- KAML.Crossprod(X0)
+		# X0Y <- crossprod(X0, y)
+		# YY <- KAML.Crossprod(y)
+		# X0X0i <- ginv(X0X0)
+  #   }
 	
-	options(warn = -1)
-    if(cpu == 1){
-		if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
-		if(r.open)	try(setMKLthreads(mkl.cpu), silent=TRUE)
-		if(method == "MLM") results <- lapply(1:m, eff.mlm)
-		if(method == "GLM")	results <- lapply(1:m, eff.glm)
-		if(r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
-	}else
-	{
-		if(method == "MLM"){
-			if(wind){
-				if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-				#foreach function
-				#print(" *  *  *  *  *  * test foreach parallel *  *  *  *  *  * ")
-				#cl <- makeCluster(cpu)
-				#registerDoParallel(cl)
-				#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
-				#results <- foreach(x=1:m) %dopar% eff.mlm(x)
-				#stopCluster(cl)
+	# options(warn = -1)
+ #    if(cpu == 1){
+	# 	if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
+	# 	mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
+	# 	if(r.open)	try(setMKLthreads(mkl.cpu), silent=TRUE)
+	# 	if(method == "MLM") results <- lapply(1:m, eff.mlm)
+	# 	if(method == "GLM")	results <- lapply(1:m, eff.glm)
+	# 	if(r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+	# }else
+	# {
+	# 	if(method == "MLM"){
+	# 		if(wind){
+	# 			if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
+	# 			#foreach function
+	# 			#print(" *  *  *  *  *  * test foreach parallel *  *  *  *  *  * ")
+	# 			#cl <- makeCluster(cpu)
+	# 			#registerDoParallel(cl)
+	# 			#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
+	# 			#results <- foreach(x=1:m) %dopar% eff.mlm(x)
+	# 			#stopCluster(cl)
 				
-				#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
-				cl <- makeCluster(getOption("cl.cores", cpu))
-				clusterExport(cl, varlist=c("geno", "yt", "X0", "U", "vgs", "ves", "mkl"), envir=environment())
-				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
-				results <- parallel::parLapply(cl, 1:m, eff.mlm)
-				stopCluster(cl)
-			}else{
-				if(bar){
-					tmpf.name <- tempfile()
-					tmpf <- fifo(tmpf.name, open="w+b", blocking=TRUE)
-					writeBin(0, tmpf)
-					print.f <- function(i){KAML.Bar(n=m, type="type3", tmp.file=tmpf, symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}		
-				}
-				if(r.open){
-					if(R.ver == 'Linux' && r.open)	try(setMKLthreads(1), silent=TRUE)
-					results <- parallel::mclapply(1:m, eff.mlm, mc.cores=cpu)
-					if(R.ver == 'Linux' && r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
-				}else{
-					results <- parallel::mclapply(1:m, eff.mlm, mc.cores=cpu)
-				}
-				#Sys.sleep(0.5)
-				if(bar){close(tmpf); unlink(tmpf.name); cat('\n');}
-			}
-		}
-		if(method  == "GLM"){
-			if(wind){
-				if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-				#parLapply function
-				#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
-				cl <- makeCluster(getOption("cl.cores", cpu))
-				clusterExport(cl, varlist=c("geno", "ys", "X0", "math.cpu"), envir=environment())
-				Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
-				results <- parallel::parLapply(cl, 1:m, eff.glm)
-				stopCluster(cl)
-			}else{
-				if(bar){
-					tmpf.name <- tempfile()
-					tmpf <- fifo(tmpf.name, open="w+b", blocking=T)
-					writeBin(0, tmpf)
-					print.f <- function(i){KAML.Bar(n=m, type="type3", tmp.file=tmpf, symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-				}
-				if(r.open){
-					if(R.ver == 'Linux' && r.open)	try(setMKLthreads(1), silent=TRUE)
-					results <- parallel::mclapply(1:m, eff.glm, mc.cores=cpu)
-					if(R.ver == 'Linux' && r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
-				}else{
-					results <- parallel::mclapply(1:m, eff.glm, mc.cores=cpu)
-				}
-				#Sys.sleep(0.5)
-				if(bar){close(tmpf); unlink(tmpf.name); cat('\n');}
-			}
-		}
+	# 			#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
+	# 			cl <- makeCluster(getOption("cl.cores", cpu))
+	# 			clusterExport(cl, varlist=c("geno", "yt", "X0", "U", "vgs", "ves", "mkl"), envir=environment())
+	# 			Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
+	# 			results <- parallel::parLapply(cl, 1:m, eff.mlm)
+	# 			stopCluster(cl)
+	# 		}else{
+	# 			if(bar){
+	# 				tmpf.name <- tempfile()
+	# 				tmpf <- fifo(tmpf.name, open="w+b", blocking=TRUE)
+	# 				writeBin(0, tmpf)
+	# 				print.f <- function(i){KAML.Bar(n=m, type="type3", tmp.file=tmpf, symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}		
+	# 			}
+	# 			if(r.open){
+	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(1), silent=TRUE)
+	# 				results <- parallel::mclapply(1:m, eff.mlm, mc.cores=cpu)
+	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+	# 			}else{
+	# 				results <- parallel::mclapply(1:m, eff.mlm, mc.cores=cpu)
+	# 			}
+	# 			#Sys.sleep(0.5)
+	# 			if(bar){close(tmpf); unlink(tmpf.name); cat('\n');}
+	# 		}
+	# 	}
+	# 	if(method  == "GLM"){
+	# 		if(wind){
+	# 			if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
+	# 			#parLapply function
+	# 			#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
+	# 			cl <- makeCluster(getOption("cl.cores", cpu))
+	# 			clusterExport(cl, varlist=c("geno", "ys", "X0", "math.cpu"), envir=environment())
+	# 			Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
+	# 			results <- parallel::parLapply(cl, 1:m, eff.glm)
+	# 			stopCluster(cl)
+	# 		}else{
+	# 			if(bar){
+	# 				tmpf.name <- tempfile()
+	# 				tmpf <- fifo(tmpf.name, open="w+b", blocking=T)
+	# 				writeBin(0, tmpf)
+	# 				print.f <- function(i){KAML.Bar(n=m, type="type3", tmp.file=tmpf, symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
+	# 			}
+	# 			if(r.open){
+	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(1), silent=TRUE)
+	# 				results <- parallel::mclapply(1:m, eff.glm, mc.cores=cpu)
+	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+	# 			}else{
+	# 				results <- parallel::mclapply(1:m, eff.glm, mc.cores=cpu)
+	# 			}
+	# 			#Sys.sleep(0.5)
+	# 			if(bar){close(tmpf); unlink(tmpf.name); cat('\n');}
+	# 		}
+	# 	}
+	# }
+	# options(warn = 0)
+
+	if(method == "GLM"){
+		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
+		results <- glm_c(y=ys, X=X0, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
+		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+	}else if(method == "MLM"){
+		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
+		results <- mlm_c(y=ys, X=X0, U=U, vgs=vgs, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
+		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+	}else{
+		stop("Unknown gwas model.")
 	}
-	options(warn = 0)
-	if(is.list(results)) results <- t(sapply(results, unlist))
+
 	return(results)
 }
 
@@ -3205,10 +3229,10 @@ function(
 
 KAML <- 
 function(
-	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma", "ai"), 
+	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma"), 
 	K.method=c("center", "scale", "vanraden"), Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
 	bin.size=1000000, max.nQTN=TRUE, sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3, count.threshold=0.9,
-	bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
+	priority=c("speed", "memory"), bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
 )
 {
 #--------------------------------------------------------------------------------------------------------#
@@ -3266,6 +3290,7 @@ function(
 	vc.method <- match.arg(vc.method)
 	prior.model <- match.arg(prior.model)
 	qtn.model <- match.arg(qtn.model)
+	priority <- match.arg(priority)
 	if(crv.num < 2) stop("'crv.num' must be bigger than 2!")
     if(sample.num < 1) stop("'sample.num' must be bigger than 1!")
 
@@ -3356,11 +3381,14 @@ function(
 
 	if(is.null(SNP.weight)){
 		cat(" New seeds generated from:", theSeed, "\n")
-		if((N.Ind-NA.Ind) < 1000 & sample.num < 4)
-			cat(" Warning: number of individuals with observations is less than 1000, we recommend setting bigger 'sample.num'!", "\n")
+		if((N.Ind-NA.Ind) < 1000 & sample.num < 4){
+			cat(" [Warning: Number of individuals with observations is less than 1000,\n")
+			cat("     the predicted GEBV maybe unstable, we recommend setting bigger 'sample.num'!]", "\n")
+		}
 		if(is.null(kfile) & (!is.null(prior.model) && prior.model != "QTN")){
-			cat(" Calculating marker-based Kinship...")
-			KIN <- KAML.Kin(GENO, type=K.method); gc()
+			# cat(" Calculating marker-based Kinship...\n")
+			# KIN <- KAML.Kin(GENO, type=K.method, verbose=TRUE); gc()
+			KIN <- KAML.KinNew(GENO, scale=(K.method=="scale"), priority=priority, verbose=TRUE, threads=cpu)
 		}else{
 			KIN <- NULL
 		}
@@ -3377,7 +3405,7 @@ function(
 		if(!is.null(Top.num) | !is.null(Top.perc)){
 			cat(" Performing model: KAML\n")
 			cross.res <- KAML.CrossV(phe=PHENO, geno=GENO, prior.QTN=prior.QTN, prior.model=prior.model, vc.method=vc.method, K=KIN, BF.threshold=BF.threshold,
-				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary,
+				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary, priority=priority, 
 				Top.perc=Top.perc, sample.num=sample.num, crv.num=crv.num, cpu=cpu, bin.size=bin.size, bisection.loop=bisection.loop, SNP.filter=SNP.filter,
 				cor.threshold=cor.threshold, count.threshold=count.threshold, ref.gwas=ref.gwas, GWAS.npc=GWAS.npc, CV=Cov, qtn.model=qtn.model); gc()
 			cross.QTN <- cross.res$cross.QTN
@@ -3429,7 +3457,9 @@ function(
 		}
 	}else{
 		if(length(SNP.weight) != nrow(GENO))	stop("length of weights should equal to the number of SNPs in genotype!")
-		K <- KAML.Kin(GENO, type="center", weight = SNP.weight, SUM=nrow(geno))
+		# K <- KAML.Kin(GENO, type="center", priority, weight = SNP.weight, SUM=nrow(geno))
+		K <- KAML.KinNew(GENO, SUM=nrow(geno), scale=(K.method=="scale"), priority=priority, weight = SNP.weight, verbose=TRUE, threads=cpu)
+			
 		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
 		GEBV <- myest$ebv
 		beta <- as.vector(myest$beta[c(1:ncol(Cov))])
