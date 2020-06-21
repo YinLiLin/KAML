@@ -1726,7 +1726,7 @@ function(
 		#print(Top.index)
 		#-------------------------#
 		
-		cat(" Pick up pseudo QTNs at threshold(", cor.threshold, ") as following: \n", sep="")
+		cat(" Pick up pseudo QTNs at LD threshold(", cor.threshold, ") as following: \n", sep="")
 		
 		for(g in 1: length(P.value[1:(sample.num * crv.num)])){
 			P.value.index <- order(P.value[[g]])
