@@ -3328,6 +3328,9 @@ function(
 		if(!is.numeric(KIN)){
 			stop("Some none numerical values appear in KINSHIP!")
 		}
+		if(sum(is.na(KIN))!=0){
+			stop("NAs are not allowed in Kinship matrix")
+		}
 	}
 	Cov <- matrix(1, N.Ind)
 	if(!is.null(dcovfile)){
@@ -3385,10 +3388,12 @@ function(
 			cat(" [Warning: Number of individuals with observations is less than 1000,\n")
 			cat("     the predicted GEBV maybe unstable, we recommend setting bigger 'sample.num'!]", "\n")
 		}
-		if(is.null(kfile) & (!is.null(prior.model) && prior.model != "QTN")){
+		if((!is.null(prior.model) && prior.model != "QTN")){
 			# cat(" Calculating marker-based Kinship...\n")
 			# KIN <- KAML.Kin(GENO, type=K.method, verbose=TRUE); gc()
-			KIN <- KAML.KinNew(GENO, scale=(K.method=="scale"), priority=priority, verbose=TRUE, threads=cpu)
+			if(is.null(kfile)){
+				KIN <- KAML.KinNew(GENO, scale=(K.method=="scale"), priority=priority, verbose=TRUE, threads=cpu)
+			}
 		}else{
 			KIN <- NULL
 		}
