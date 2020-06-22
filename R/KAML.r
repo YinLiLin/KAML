@@ -3384,7 +3384,7 @@ function(
 
 	if(is.null(SNP.weight)){
 		cat(" New seeds generated from:", theSeed, "\n")
-		if((N.Ind-NA.Ind) < 1000 & sample.num < 4){
+		if((N.Ind-NA.Ind) < 1000 & sample.num < 4 & (!is.null(Top.num) | !is.null(Top.perc))){
 			cat(" [Warning: Number of individuals with observations is less than 1000,\n")
 			cat("     the predicted GEBV maybe unstable, we recommend setting bigger 'sample.num'!]", "\n")
 		}
