@@ -68,7 +68,7 @@ Typing `?KAML` could get the details of all parameters. Some related functions f
 
 The example data can be downloaded by typing:
 ```bash
-wget https://github.com/YinLiLin/KAML/releases/download/1.0.1/Data_example.zip
+wget https://github.com/YinLiLin/KAML/releases/download/1.0.1/example.zip
 unzip example.zip
 ```
 
