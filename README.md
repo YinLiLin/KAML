@@ -21,7 +21,8 @@
 
 ---
 ## OVERVIEW
-***`KAML`*** is designed to predict genetic values using genome-wide or chromosome-wide SNPs for either simple traits that controlled by a limited number of major genes or complex traits that influenced by many polygenes with minor effects. In brief, ***`KAML`*** provides a flexible assumption to accommodate traits of various genetic architectures and incorporates pseudo-QTNs as fixed effect terms and a trait-specific random effect term under the LMM framework. The model parameters are optimized using the information of bootstrap strategy based GWAS results in a parallel accelerated machine learning procedure combing cross-validation, grid search and bisection algorithms.
+***`KAML`*** is designed to predict genetic values using genome-wide or chromosome-wide SNPs for either simple traits that controlled by a limited number of major genes or complex traits that influenced by many polygenes with minor effects. In brief, ***`KAML`*** provides a flexible assumption to accommodate traits of various genetic architectures and incorporates pseudo-QTNs as fixed effect terms and a trait-specific random effect term under the LMM framework. The model parameters are optimized using the information of bootstrap strategy based GWAS results in a parallel accelerated machine learning procedure combing cross-validation, grid search and bisection algorithms.</br>
+Integrated analysis extending ***`KAML`*** to BLUP could be found at our developed package HIBLUP (https://hiblup.github.io).
 
 <!-- <p align="center">
 <a target="_blank" href="https://camo.githubusercontent.com/6af206ddeaf9b5fdd9b944e82e7b5d698f29ccbf/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f253742793d58622b253742253543636f6c6f7225374252656425374451712537442b5a253742253543636f6c6f722537425265642537442535436d752537442b653b2535436d7525354373696d2537424e25374428302c253742253543636f6c6f722537425265642537444b2537442535437369676d612535452537423225374429253744"><img src="https://camo.githubusercontent.com/6af206ddeaf9b5fdd9b944e82e7b5d698f29ccbf/687474703a2f2f6c617465782e636f6465636f67732e636f6d2f6769662e6c617465783f253742793d58622b253742253543636f6c6f7225374252656425374451712537442b5a253742253543636f6c6f722537425265642537442535436d752537442b653b2535436d7525354373696d2537424e25374428302c253742253543636f6c6f722537425265642537444b2537442535437369676d612535452537423225374429253744" alt="equation" data-canonical-src="http://latex.codecogs.com/gif.latex?%7By=Xb+%7B%5Ccolor%7BRed%7DQq%7D+Z%7B%5Ccolor%7BRed%7D%5Cmu%7D+e;%5Cmu%5Csim%7BN%7D(0,%7B%5Ccolor%7BRed%7DK%7D%5Csigma%5E%7B2%7D)%7D" style="max-width:100%;">
@@ -62,7 +63,7 @@ After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
 library(KAML)
 ```
-Typing `?KAML` could get the details of all parameters. Some related functions for ***`KAML`*** could be refered to our developed GWAS package rMVP (https://github.com/XiaoleiLiuBio/rMVP), and integrated analysis extending ***`KAML`*** to BLUP could be found at our flexible GP/GS package HIBLUP (https://hiblup.github.io).
+Typing `?KAML` could get the details of all parameters. Some related functions (Data preparation） for ***`KAML`*** could be refered to our developed GWAS package rMVP (https://github.com/XiaoleiLiuBio/rMVP).
 
 ### Test Datasets
 
