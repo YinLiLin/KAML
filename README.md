@@ -56,7 +56,7 @@ Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy 
 ***`KAML`*** can be installed with **"devtools"** by using the following R codes:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
-devtools::install_github("YinLiLin/R-KAML")
+devtools::install_github("YinLiLin/KAML")
 ```
 After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
