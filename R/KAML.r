@@ -3406,7 +3406,7 @@ function(
 			if(prior.model == "QTN")	stop("QTNs must be provided!")
 			if(prior.model == "K")	Top.num <- NULL
 		}
-		
+		cat(" Estimate variance components using:", vc.method,"\n")
 		if(!is.null(Top.num) | !is.null(Top.perc)){
 			cat(" Performing model: KAML\n")
 			cross.res <- KAML.CrossV(phe=PHENO, geno=GENO, prior.QTN=prior.QTN, prior.model=prior.model, vc.method=vc.method, K=KIN, BF.threshold=BF.threshold,
