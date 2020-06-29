@@ -441,8 +441,8 @@ SEXP kin_cal_s(XPtr<BigMatrix> pMat, const Nullable<double> SUM = R_NilValue, bo
     }
   }
   
-  arma::fmat kin(n, n);
-  arma::fmat geno(m, n);
+  arma::mat kin(n, n);
+  arma::mat geno(m, n);
 
   if(verbose)
     Rcout << " Scale the genotype matrix" << endl;
@@ -474,7 +474,7 @@ SEXP kin_cal_s(XPtr<BigMatrix> pMat, const Nullable<double> SUM = R_NilValue, bo
   }else{
 
     Progress p(n, verbose, pb);
-    arma::fcolvec coli;
+    arma::colvec coli;
 
     #pragma omp parallel for schedule(dynamic) private(i, j, coli)
     for(i = 0; i < n; i++){
