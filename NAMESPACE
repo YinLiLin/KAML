@@ -1,6 +1,7 @@
 useDynLib(KAML, .registration=TRUE)
 export(KAML)
 export(KAML.Data)
+export(KAML.Impute)
 importFrom(Rcpp, evalCpp)
 import(BH)
 import(MASS)
