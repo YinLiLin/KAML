@@ -890,6 +890,19 @@ function(
 	return (list(REML=maxLL, delta=maxdelta, ve=maxve, vg=maxva))
 }
 
+KAML.Impute <- 
+function(
+	bigm, threads=0
+){
+	if(is.character(bigm)){
+		bigm=attach.big.matrix(paste0(bigm,".geno.desc"))
+	}
+	if(hasNA(bigm@address)){
+		cat(" Imputing missings...\n")
+		impute_marker(bigm@address, threads=threads, verbose=FALSE)
+	}
+}
+
 KAML.Data <-
 function(
 	hfile=NULL, vfile=NULL, numfile=NULL, mapfile=NULL, bfile=NULL, out=NULL, sep="\t", SNP.impute=c("Left", "Middle", "Right"), maxLine=10000, priority="memory"
@@ -1112,11 +1125,11 @@ function(
     }
 	
 	if(!is.null(bfile)){
-		map <- read.table(paste(bfile, ".bim", sep=""), head=FALSE)
+		map <- read.table(paste(bfile, ".bim", sep=""), head=FALSE, stringsAsFactors=FALSE)
 		map <- map[, c(2, 1, 4)]
 		cat(" Reading binary files...\n")
 		write.table(map, paste(out, ".map", sep=""), row.names=FALSE, col.names=FALSE, sep=sep, quote=FALSE)
-		fam <- read.table(paste(bfile, ".fam", sep=""), head=FALSE)
+		fam <- read.table(paste(bfile, ".fam", sep=""), head=FALSE, stringsAsFactors=FALSE)
 		bck <- paste(out, ".geno.bin", sep="")
 		dsc <- paste(out, ".geno.desc", sep="")
 		nmarkers <- nrow(map)
@@ -1126,6 +1139,7 @@ function(
 			backingfile=bck, descriptorfile=dsc)
 		cat(" Output BIG genotype...\n")
 		TransData_c(bfile = bfile, pBigMat = myGeno.backed@address, maxLine = maxLine, threads = 0)
+		KAML.Impute(myGeno.backed)
 		# inGENOFile=TRUE
 		# i <- 0
 		# #printN <- unlist(strsplit(x=as.character(nmarkers), split="", fixed=TRUE))
@@ -1239,7 +1253,7 @@ function(
 			close.connection(fileNumCon)
 			close.connection(fileMapCon)
 			for(theFile in 1: nFile){
-				myFile <- read.table(hfile[theFile], colClasses="character", sep=sep, head=FALSE, skip=1)
+				myFile <- read.table(hfile[theFile], stringsAsFactors=FALSE, colClasses="character", sep=sep, head=FALSE, skip=1)
 				nM <- nrow(myFile)
 				write.table(myFile[, c(1, 3, 4)], paste(out, ".map", sep=""), append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE, sep=sep)
 				myFile <- myFile[, -c(1:11)];gc()
@@ -1257,9 +1271,9 @@ function(
 	if((!is.null(numfile))|(!is.null(hfile))|(!is.null(vfile))){
 		if(is.null(numfile)){
 			numfile <- paste(out, ".Numeric.txt", sep="")
-			MAP <- read.table(paste(out, ".map", sep=""), head=FALSE, sep=sep)
+			MAP <- read.table(paste(out, ".map", sep=""), stringsAsFactors=FALSE, head=FALSE, sep=sep)
 		}else{
-			MAP <- read.table(mapfile, head=FALSE, sep=sep)
+			MAP <- read.table(mapfile, head=FALSE, sep=sep, stringsAsFactors=FALSE)
 			#write.table(MAP, paste(out, ".map", sep=""), row.names=FALSE, col.names=FALSE, sep=sep, quote=FALSE)
 		}
 		nmarkers <- nrow(MAP); rm(MAP); gc()
@@ -1313,6 +1327,7 @@ function(
 			if(!geno.flush){
 				stop("flush failed")
 			}
+			KAML.Impute(myGeno.backed)
 			rm(myGeno.backed)
 			
 			#Close GENO file
@@ -1321,6 +1336,7 @@ function(
 		if(priority == "speed"){
 			myGeno <- read.big.matrix(numfile, type="char", head=FALSE, sep=sep,
 				backingfile=bck, descriptorfile=dsc)
+			KAML.Impute(myGeno)
 			rm("myGeno")
 		}
 		cat(" Preparation for BIG data is done!\n")
@@ -3302,6 +3318,9 @@ function(
 	GEBV <- PHENO
 	GENO <- attach.big.matrix(paste(gfile, ".geno.desc", sep=""))
 	if(length(PHENO) != ncol(GENO))	stop("Number of individuals don't match between pfile and gfile!")
+	if(hasNA(GENO@address)){
+		stop("NA is not allowed in genotype, use 'KAML.Impute' to impute missings.")
+	}
 	# MAP <-  try(read.table(paste(gfile, ".map", sep=""), head=FALSE), silent=TRUE)
 	# if((!is.null(Top.num) | !is.null(Top.perc)) & class(MAP) == "try-error"){
 		# stop("Please provid the Map information for all SNPs!")
@@ -3323,7 +3342,7 @@ function(
 	# MAP <- matrix(as.numeric(MAP), nrow(MAP))
 	# options(warn = 0)
 	if(!is.null(kfile)){
-		KIN <- read.table(kfile, head=FALSE, colClasses="numeric")
+		KIN <- read.table(kfile, head=FALSE, colClasses="numeric", stringsAsFactors=FALSE)
 		KIN <- as.matrix(KIN)
 		if(nrow(KIN) != N.Ind)	stop("Number of individuals don't match between pfile and kfile!")
 		if(!is.numeric(KIN)){
@@ -3335,7 +3354,7 @@ function(
 	}
 	Cov <- matrix(1, N.Ind)
 	if(!is.null(dcovfile)){
-		dCov <- read.table(dcovfile, head=FALSE)
+		dCov <- read.table(dcovfile, head=FALSE, stringsAsFactors=FALSE)
 		if(nrow(dCov) != N.Ind)	stop("Number of individuals don't match between pfile and dcovfile!")
 		if(sum(is.na(dCov)) != 0){
 			stop("'NA' isn't allowed in 'dcovfile'")
@@ -3363,7 +3382,7 @@ function(
 	}
 	
 	if(!is.null(qcovfile)){
-		qCov <- read.table(qcovfile, head=FALSE)
+		qCov <- read.table(qcovfile, head=FALSE, stringsAsFactors=FALSE)
 		if(nrow(qCov) != N.Ind)	stop("Number of individuals don't match between pfile and qcovfile!")
 		if(sum(is.na(qCov)) != 0){
 			stop("'NA' isn't allowed in 'qcovfile'")

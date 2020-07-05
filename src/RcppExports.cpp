@@ -62,6 +62,30 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// impute_marker
+void impute_marker(SEXP pBigMat, int threads, bool verbose);
+RcppExport SEXP _KAML_impute_marker(SEXP pBigMatSEXP, SEXP threadsSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    impute_marker(pBigMat, threads, verbose);
+    return R_NilValue;
+END_RCPP
+}
+// hasNA
+bool hasNA(SEXP pBigMat, const int threads);
+RcppExport SEXP _KAML_hasNA(SEXP pBigMatSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const int >::type threads(threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(hasNA(pBigMat, threads));
+    return rcpp_result_gen;
+END_RCPP
+}
 // glm_c
 SEXP glm_c(const arma::vec& y, const arma::mat& X, SEXP pBigMat, std::string barhead, const bool verbose, const int threads);
 RcppExport SEXP _KAML_glm_c(SEXP ySEXP, SEXP XSEXP, SEXP pBigMatSEXP, SEXP barheadSEXP, SEXP verboseSEXP, SEXP threadsSEXP) {
@@ -149,6 +173,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_KAML_crossprodcpp", (DL_FUNC) &_KAML_crossprodcpp, 1},
     {"_KAML_geninv", (DL_FUNC) &_KAML_geninv, 1},
     {"_KAML_TransData_c", (DL_FUNC) &_KAML_TransData_c, 5},
+    {"_KAML_impute_marker", (DL_FUNC) &_KAML_impute_marker, 3},
+    {"_KAML_hasNA", (DL_FUNC) &_KAML_hasNA, 2},
     {"_KAML_glm_c", (DL_FUNC) &_KAML_glm_c, 6},
     {"_KAML_mlm_c", (DL_FUNC) &_KAML_mlm_c, 8},
     {"_KAML_BigStat", (DL_FUNC) &_KAML_BigStat, 2},

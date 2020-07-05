@@ -19,11 +19,7 @@ void TransData_c(std::string bed_file, XPtr<BigMatrix> pMat, long maxLine, doubl
 		0 != bed_file.compare(bed_file.length() - ending.length(), ending.length(), ending))
 		bed_file += ending;
 
-	if (threads == 0) {
-		omp_set_num_threads(omp_get_num_procs());
-	}else if(threads > 0) {
-		omp_set_num_threads(threads);
-	}
+	omp_setup(threads);
 
 	long n = pMat->ncol() / 4;  // 4 individual = 1 bit
 	if (pMat->ncol() % 4 != 0) 

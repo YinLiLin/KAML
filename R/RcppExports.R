@@ -17,6 +17,14 @@ TransData_c <- function(bfile, pBigMat, maxLine, threads = 0L, verbose = TRUE) {
     invisible(.Call(`_KAML_TransData_c`, bfile, pBigMat, maxLine, threads, verbose))
 }
 
+impute_marker <- function(pBigMat, threads = 0L, verbose = TRUE) {
+    invisible(.Call(`_KAML_impute_marker`, pBigMat, threads, verbose))
+}
+
+hasNA <- function(pBigMat, threads = 0L) {
+    .Call(`_KAML_hasNA`, pBigMat, threads)
+}
+
 glm_c <- function(y, X, pBigMat, barhead = "GWAS in process", verbose = TRUE, threads = 0L) {
     .Call(`_KAML_glm_c`, y, X, pBigMat, barhead, verbose, threads)
 }
