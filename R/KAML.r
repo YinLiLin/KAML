@@ -3301,6 +3301,7 @@ function(
 	N.Ind <- length(PHENO)
 	GEBV <- PHENO
 	GENO <- attach.big.matrix(paste(gfile, ".geno.desc", sep=""))
+	if(length(PHENO) != ncol(GENO))	stop("Number of individuals don't match between pfile and gfile!")
 	# MAP <-  try(read.table(paste(gfile, ".map", sep=""), head=FALSE), silent=TRUE)
 	# if((!is.null(Top.num) | !is.null(Top.perc)) & class(MAP) == "try-error"){
 		# stop("Please provid the Map information for all SNPs!")
