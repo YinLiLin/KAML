@@ -1,6 +1,6 @@
 .onAttach <- function(...){
     packageStartupMessage("Full description, Bug report, Suggestion and the latest codes:")
-    packageStartupMessage("https://github.com/YinLiLin/R-KAML")
+    packageStartupMessage("https://github.com/YinLiLin/KAML")
 }
 
 .onLoad <- function(libname, pkgname) {
