@@ -53,12 +53,12 @@ Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy 
 ***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would [reduce the time consumption significantly](https://mran.microsoft.com/documents/rro/multithread/#mt-bench) as many matrix operations could be computed in parallel by using all the available processing power.
 
 ### Installation
-***`KAML`*** can be installed with **"devtools"** by using the following R codes:
+(1) ***`KAML`*** can be installed with **"devtools"** by using the following R codes:
 ```r
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/KAML")
 ```
-If you get trouble in installing **"devtools"**, try to download [KAML_1.1.0.tar.gz](https://github.com/YinLiLin/KAML/releases/download/1.1.0/KAML_1.1.0.tar.gz), and install it locally as following:
+(2) If you get trouble in installing **"devtools"**, try to download [KAML_1.1.0.tar.gz](https://github.com/YinLiLin/KAML/releases/download/1.1.0/KAML_1.1.0.tar.gz), and install it locally as following:
 ```r
 # install required packages first
 pkg <- c("RcppArmadillo", "RcppEigen", "RcppProgress", "bigmemory", "gaston")
