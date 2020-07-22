@@ -58,6 +58,16 @@ Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy 
 #if "devtools" isn't installed, please "install.packages(devtools)" first.
 devtools::install_github("YinLiLin/KAML")
 ```
+If you get trouble in installing **"devtools"**, try to download [KAML_1.1.0.tar.gz](https://github.com/YinLiLin/KAML/releases/download/1.1.0/KAML_1.1.0.tar.gz), and install it locally as following:
+```r
+# install required packages first
+pkg <- c("RcppArmadillo", "RcppEigen", "RcppProgress", "bigmemory", "gaston")
+new.pkg <- pkg[!(pkg %in% installed.packages()[,"Package"])]
+if(length(new.pkg)) install.packages(new.pkg)
+
+# move the downloaded package into your work directory, then install KAML
+install.package("KAML_1.1.0.tar.gz", repos=NULL)
+```
 After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
 library(KAML)
