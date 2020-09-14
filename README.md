@@ -66,7 +66,7 @@ new.pkg <- pkg[!(pkg %in% installed.packages()[,"Package"])]
 if(length(new.pkg)) install.packages(new.pkg)
 
 # move the downloaded package into your work directory, then install KAML
-install.package("KAML_1.1.0.tar.gz", repos=NULL)
+install.packages("KAML_1.1.0.tar.gz", repos=NULL)
 ```
 After installed successfully, the ***`KAML`*** package can be loaded by typing
 ```r
