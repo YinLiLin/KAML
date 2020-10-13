@@ -454,7 +454,10 @@ This type of file can be transformed by the following codes:
 ```r
 KAML.Data(numfile="mouse.Numeric.txt", mapfile="mouse.map", out="mouse")
 ```
-
+If there are missing values in your genotype, please impute as following:
+```r
+KAML.Impute("mouse")
+```
 After transformed from one of four types of format above, two needed files will be generated, all with the same prefix which is assigned by users in the *`KAML.Data`* function.
 
 > *The example mouse datasets:* `mouse.geno.desc, mouse.geno.bin`
