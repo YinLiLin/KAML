@@ -312,7 +312,6 @@ SEXP kin_cal_m(XPtr<BigMatrix> pMat, const Nullable<double> SUM = R_NilValue, bo
   int n = pMat->ncol();
   int m = pMat->nrow();
   int i = 0, j = 0, k = 0;
-  double p12 = 0.0;
 
   double M;
   if(SUM.isNotNull()){
