@@ -3311,7 +3311,7 @@ function(
     if(sample.num < 1) stop("'sample.num' must be bigger than 1!")
 
 	cat(" Attaching data...")
-	PHENO <- read.delim(pfile, head=TRUE)
+	PHENO <- read.table(pfile, head=TRUE)
 	TAXA <- colnames(PHENO)[pheno]
 	PHENO <- PHENO[, pheno]
 	N.Ind <- length(PHENO)
