@@ -1597,7 +1597,7 @@ function(
 			# if(i == gwas.num)	cat("\n")
 			rm(list=c("P.ref")); gc()
 			P.value[is.na(P.value)] <- 1
-			P.value[P.value == 0] <- min(P.value[P.value != 0])
+			#P.value[P.value == 0] <- min(P.value[P.value != 0])
 			return(P.value)
 		}
 		
