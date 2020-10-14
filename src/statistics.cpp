@@ -94,7 +94,7 @@ SEXP glm_c(const arma::vec &y, const arma::mat &X, XPtr<BigMatrix> pMat, std::st
   arma::mat iXX = GInv(X.t() * X);
   arma::mat xy = X.t() * y;
   double yy = sum(y % y);
-  arma::mat res(mkr, 1 + 1 + q0);
+  arma::mat res(mkr, 3);
   arma::vec snp(ind);
   arma::mat iXXs(q0 + 1, q0 + 1);
 
@@ -126,18 +126,13 @@ SEXP glm_c(const arma::vec &y, const arma::mat &X, XPtr<BigMatrix> pMat, std::st
     arma::mat beta = iXXs * rhs;
     int df = ind - q0 - 1;
     double ve = (yy - as_scalar(beta.t() * rhs)) / df;
-    arma::vec se(q0 + 1);
-    arma::vec pvalue(q0 + 1);
-    for(int ff = 0; ff < (q0 + 1); ff++){
-      se[ff] = sqrt(iXXs(ff, ff) * ve);
-      pvalue[ff] = 2 * R::pt(abs(beta[ff] / se[ff]), df, false, false);
-      if(ff > 0)  res(i, ff + 1) = pvalue[ff];
-    }
+
     res(i, 0) = beta[q0];
-    res(i, 1) = se[q0]; 
+    res(i, 1) = sqrt(iXXs(q0, q0) * ve);
+    res(i, 2) = 2 * R::pt(abs(res(i, 0) / res(i, 1)), df, false, false);
     progress.increment();
   }
-
+    
   return wrap(res);
 }
 
