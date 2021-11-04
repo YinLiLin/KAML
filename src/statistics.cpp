@@ -395,6 +395,132 @@ SEXP kin_cal_m(SEXP pBigMat, const Nullable<double> SUM = R_NilValue, bool scale
 }
 
 template <typename T>
+SEXP kin_cal(XPtr<BigMatrix> pMat, const Nullable<size_t> step0 = R_NilValue, const Nullable<double> SUM = R_NilValue, bool scale = false, const Nullable<NumericVector> wt = R_NilValue, int threads = 0, bool mkl = false, bool verbose = false){
+
+  omp_setup(threads);
+
+  MatrixAccessor<T> bigm = MatrixAccessor<T>(*pMat);
+
+  #ifdef _OPENMP
+  #else
+    if(!mkl)
+      mkl = true;
+  #endif
+  if(threads == 1)
+    mkl = true;
+
+  size_t n = pMat->ncol();
+  size_t m = pMat->nrow();
+
+  double M;
+  if(SUM.isNotNull()){
+    M = as<double>(SUM);
+  }else{
+    M = m;
+  }
+
+  size_t step;
+  if(step0.isNotNull()){
+    step = as<size_t>(step0);
+  }else{
+    step = m;
+  }
+  if(verbose) Rcout << " Computing GRM at step of " << step << " ..." << endl;
+
+  NumericVector wt_;
+  if(wt.isNotNull()){
+    wt_ = as<NumericVector>(wt);
+  }
+
+  List Stat = BigStat(pMat, threads);
+  NumericVector Mean =  Stat[0];
+  NumericVector Sd =  Stat[1];
+  
+  if(!scale){
+    for(size_t i = 0; i < m; i++){
+      Sd[i] = 1;
+    }
+  }
+
+  arma::mat kin = zeros<mat>(n, n);
+  arma::mat Z_buffer(n, step, fill::none);
+
+  size_t i = 0, j = 0;
+  size_t i_marker = 0;
+  while (i < m) {
+      
+      size_t cnt = 0;
+      for (; j < m && cnt < step; j++)
+      {
+        cnt++;
+      }
+
+      if (cnt != step) {
+          Z_buffer.resize(n, cnt);
+      }
+
+      if(wt.isNotNull()){
+
+        #pragma omp parallel for
+        for(size_t k = 0; k < n; k++){
+          for(size_t l = 0; l < cnt; l++){
+            size_t indx = i_marker + l;
+            Z_buffer(k, l) = sqrt(wt_[indx]) * (bigm[k][indx] - Mean[indx]) / Sd[indx];
+          }
+        }
+      }else{
+
+        #pragma omp parallel for
+        for(size_t k = 0; k < n; k++){
+          for(size_t l = 0; l < cnt; l++){
+            size_t indx = i_marker + l;
+            Z_buffer(k, l) = (bigm[k][indx] - Mean[indx]) / Sd[indx];
+          }
+        }
+      }
+
+      if(mkl){
+        kin += Z_buffer * Z_buffer.t();
+      }else{
+        arma::rowvec rowi;
+        #pragma omp parallel for schedule(dynamic) private(rowi)
+        for(size_t k = 0; k < n; k++){
+          rowi = Z_buffer.row(k);
+          for(size_t l = k; l < n; l++){
+            kin(k, l) += sum(rowi % Z_buffer.row(l));
+            kin(l, k) = kin(k, l);
+          }
+        }
+      }
+
+      i = j;
+      i_marker += cnt;
+  }
+
+  kin /= M;
+  return Rcpp::wrap(kin);
+}
+
+// [[Rcpp::export]]
+SEXP kin_cal(SEXP pBigMat, const Nullable<size_t> step0 = R_NilValue, const Nullable<double> SUM = R_NilValue, bool scale = false, const Nullable<NumericVector> wt = R_NilValue, int threads = 0, bool mkl = false, bool verbose = false){
+
+  XPtr<BigMatrix> xpMat(pBigMat);
+
+  switch(xpMat->matrix_type()){
+  case 1:
+    return kin_cal<char>(xpMat, step0, SUM, scale, wt, threads, mkl, verbose);
+  case 2:
+    return kin_cal<short>(xpMat, step0, SUM, scale, wt, threads, mkl, verbose);
+  case 4:
+    return kin_cal<int>(xpMat, step0, SUM, scale, wt, threads, mkl, verbose);
+  case 8:
+    return kin_cal<double>(xpMat, step0, SUM, scale, wt, threads, mkl, verbose);
+  default:
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+template <typename T>
 SEXP kin_cal_s(XPtr<BigMatrix> pMat, const Nullable<double> SUM = R_NilValue, bool scale = false, const Nullable<NumericVector> wt = R_NilValue, int threads = 0, bool mkl = false, std::string barhead = " Computing in process", bool verbose = true){
 
   omp_setup(threads);

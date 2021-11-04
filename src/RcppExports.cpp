@@ -7,6 +7,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // gaston_brent
 List gaston_brent(NumericVector Y, NumericMatrix X, IntegerVector p_, NumericVector Sigma, NumericMatrix U, double min_h2, double max_h2, double tol, double verbose);
 RcppExport SEXP _KAML_gaston_brent(SEXP YSEXP, SEXP XSEXP, SEXP p_SEXP, SEXP SigmaSEXP, SEXP USEXP, SEXP min_h2SEXP, SEXP max_h2SEXP, SEXP tolSEXP, SEXP verboseSEXP) {
@@ -149,6 +154,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// kin_cal
+SEXP kin_cal(SEXP pBigMat, const Nullable<size_t> step0, const Nullable<double> SUM, bool scale, const Nullable<NumericVector> wt, int threads, bool mkl, bool verbose);
+RcppExport SEXP _KAML_kin_cal(SEXP pBigMatSEXP, SEXP step0SEXP, SEXP SUMSEXP, SEXP scaleSEXP, SEXP wtSEXP, SEXP threadsSEXP, SEXP mklSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const Nullable<size_t> >::type step0(step0SEXP);
+    Rcpp::traits::input_parameter< const Nullable<double> >::type SUM(SUMSEXP);
+    Rcpp::traits::input_parameter< bool >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const Nullable<NumericVector> >::type wt(wtSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< bool >::type mkl(mklSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(kin_cal(pBigMat, step0, SUM, scale, wt, threads, mkl, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // kin_cal_s
 SEXP kin_cal_s(SEXP pBigMat, const Nullable<double> SUM, bool scale, const Nullable<NumericVector> wt, int threads, bool mkl, std::string barhead, bool verbose);
 RcppExport SEXP _KAML_kin_cal_s(SEXP pBigMatSEXP, SEXP SUMSEXP, SEXP scaleSEXP, SEXP wtSEXP, SEXP threadsSEXP, SEXP mklSEXP, SEXP barheadSEXP, SEXP verboseSEXP) {
@@ -179,6 +202,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_KAML_mlm_c", (DL_FUNC) &_KAML_mlm_c, 8},
     {"_KAML_BigStat", (DL_FUNC) &_KAML_BigStat, 2},
     {"_KAML_kin_cal_m", (DL_FUNC) &_KAML_kin_cal_m, 7},
+    {"_KAML_kin_cal", (DL_FUNC) &_KAML_kin_cal, 8},
     {"_KAML_kin_cal_s", (DL_FUNC) &_KAML_kin_cal_s, 8},
     {NULL, NULL, 0}
 };

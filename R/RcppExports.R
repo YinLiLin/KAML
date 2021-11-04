@@ -41,6 +41,10 @@ kin_cal_m <- function(pBigMat, SUM = NULL, scale = FALSE, wt = NULL, threads = 0
     .Call(`_KAML_kin_cal_m`, pBigMat, SUM, scale, wt, threads, barhead, verbose)
 }
 
+kin_cal <- function(pBigMat, step0 = NULL, SUM = NULL, scale = FALSE, wt = NULL, threads = 0L, mkl = FALSE, verbose = FALSE) {
+    .Call(`_KAML_kin_cal`, pBigMat, step0, SUM, scale, wt, threads, mkl, verbose)
+}
+
 kin_cal_s <- function(pBigMat, SUM = NULL, scale = FALSE, wt = NULL, threads = 0L, mkl = FALSE, barhead = " Computing in process", verbose = TRUE) {
     .Call(`_KAML_kin_cal_s`, pBigMat, SUM, scale, wt, threads, mkl, barhead, verbose)
 }

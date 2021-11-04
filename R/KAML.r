@@ -5,7 +5,7 @@ cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-
 cat("#    ______ _________ ______  _________                              #\n")
 cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
 cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
-cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.1.0      #\n")
+cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.2.0      #\n")
 cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
 cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
 cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
@@ -41,39 +41,6 @@ function(
 		}
 	)
 	return(res)
-}
-
-KAML.Crossprod <- 
-function(
-	x
-){
-
-	r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
-	if(is.null(x)){
-		stop("Please assign the matrix!")
-	}
-	if(r.open){
-		cpd <- crossprod(x)
-	}else{
-		cpd <- crossprodcpp(x)
-	}
-	return(cpd)
-}
-
-KAML.ginv <- 
-function(
-	x
-){
-	r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
-	if(is.null(x)){
-		stop("Please assign the matrix!")
-	}
-	if(r.open){
-		gv <- ginv(x)
-	}else{
-		gv <- geninv(x)
-	}
-	return(gv)
 }
 
 KAML.Bar <- 
@@ -335,7 +302,7 @@ function(
 		v_traceG = mean(diag(K))
 		
 		# center and scale K by X
-		WtW = KAML.Crossprod(X)
+		WtW = crossprod(X)
 		WtWi = solve(WtW)
 		WtWiWt = tcrossprod(WtWi, X)
 		GW = K %*% X
@@ -384,7 +351,7 @@ function(
 		# compuate yKrKKry, which is used later for confidence interval
 		KKry = K %*% Kry
 		yKrKKry = crossprod(Kry, KKry)
-		d = KAML.Crossprod(Kry)
+		d = crossprod(Kry)
 		yKrKKry = c(yKrKKry, d)
 
 		# compute Sij (*n^2)
@@ -466,7 +433,7 @@ function(
 		
 		# calculate dev1=-0.5*trace(PK_i)+0.5*yPKPy
 		c(para1 = (-0.5 * sum(t(P) * K) + 0.5 * crossprod(Py, KPy)) * exp(log_sigma2[1]),
-			para2 = (-0.5 * sum(diag(P)) + 0.5 * KAML.Crossprod(Py)) * exp(log_sigma2[2]))
+			para2 = (-0.5 * sum(diag(P)) + 0.5 * crossprod(Py)) * exp(log_sigma2[2]))
 	}
 
 	vg = exp(log_sigma2[1])
@@ -562,17 +529,17 @@ function(
 	yt <- crossprod(U, y)
     X0t <- crossprod(U, X)
 	Xt <- X0t
-	X0X0 <- KAML.Crossprod(X0t)
+	X0X0 <- crossprod(X0t)
 	if(X0X0[1, 1] == "NaN"){
 		Xt[which(Xt == "NaN")]=0
 		yt[which(yt == "NaN")]=0
-		XX=KAML.Crossprod(Xt)
+		XX=crossprod(Xt)
 	}
 	X0Y <- crossprod(X0t, yt)
 	XY <- X0Y
 	iX0X0 <- try(solve(X0X0), silent = TRUE)
 	if(inherits(iX0X0, "try-error")){
-		iX0X0 <- KAML.ginv(X0X0)
+		iX0X0 <- ginv(X0X0)
 	}
 	iXX <- iX0X0
 	beta <- crossprod(iXX, XY)
@@ -642,7 +609,7 @@ function(
 				if(!is.null(weight))	M <- M * sqrt(as.vector(weight))
 				
 				#crossprodcpp is much faster than crossprod in base R
-				K <- K * (KAML.Crossprod(M)/SUM)
+				K <- K * (crossprodcpp(M)/SUM)
 			}, 
 			"memory" = {
 				if(!is.big.matrix(M)) stop("Must be big.matrix.")
@@ -737,7 +704,7 @@ function(
 
 KAML.KinNew <- 
 function(
-	M, weight=NULL, SUM=NULL, scale=FALSE, priority=c("speed", "memory"), verbose=FALSE, threads=1
+	M, step=NULL, weight=NULL, SUM=NULL, scale=FALSE, threads=1, verbose = FALSE
 ){
 	if(!is.big.matrix(M))
 		stop("genotype must be in 'big.matrix' format.")
@@ -745,13 +712,14 @@ function(
 		if(sum(is.na(weight)) != 0)	stop("'NA' is not allowed in weight")
 		if(sum(weight < 0) != 0)	stop("Negative value is not allowed in weight")
 	}
-	priority <- match.arg(priority)
+	# priority <- match.arg(priority)
 	r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
-	if(priority == "speed"){
-		k <- kin_cal_s(M@address, SUM=SUM, scale=scale, wt=weight, mkl=r.open, threads=threads, verbose=verbose)
-	}else{
-		k <- kin_cal_m(M@address, SUM=SUM, scale=scale, wt=weight, threads=threads, verbose=verbose)
-	}
+	# if(priority == "speed"){
+	# 	k <- kin_cal_s(M@address, SUM=SUM, scale=scale, wt=weight, mkl=r.open, threads=threads, verbose=verbose)
+	# }else{
+	# 	k <- kin_cal_m(M@address, SUM=SUM, scale=scale, wt=weight, threads=threads, verbose=verbose)
+	# }
+	k <- kin_cal(M@address, step=step, SUM=SUM, scale=scale, wt=weight, threads=threads, mkl=r.open, verbose=verbose)
 }
 
 KAML.EMMA.REML <- 
@@ -783,10 +751,10 @@ function(
 	emma.eigen.R.wo.Z=function(K, X) {
 		n <- nrow(X)
 		q <- ncol(X)
-		cXX <- KAML.Crossprod(X)
+		cXX <- crossprod(X)
 		iXX <- try(solve(cXX), silent = TRUE)
 		if(inherits(iXX, "try-error")){
-			iXX <- KAML.ginv(cXX)
+			iXX <- ginv(cXX)
 		}
 		multiply <- function(X, Y){
 			myf1 <- function(x){
@@ -812,7 +780,7 @@ function(
 	#  stopifnot(nrow(K) == t)
 	stopifnot(ncol(K) == t)
 	stopifnot(nrow(X) == n)
-	cXX <- KAML.Crossprod(X)
+	cXX <- crossprod(X)
 	if( det(cXX == 0 )){
 		warning("X is singular")
 		return (list(REML=0, delta=0, ve=0, vg=0))
@@ -1460,7 +1428,7 @@ function(
 KAML.CrossV <- 
 function(
 	phe, geno, K=NULL, CV=NULL, GWAS.model=NULL, qtn.model="SR", BF.threshold=NULL, vc.method="emma", Top.num=NULL, Top.perc=NULL, max.nQTN=TRUE, SNP.filter=0.5,
-	cor.threshold=0.99, count.threshold=0.9, sample.num=1, crv.num=5, cpu=1, theSeed=NULL, prior.QTN=NULL, K.method="center", binary=FALSE, priority="speed",
+	cor.threshold=0.99, count.threshold=0.9, sample.num=1, crv.num=5, cpu=1, theSeed=NULL, prior.QTN=NULL, K.method="center", binary=FALSE, step=NULL,
 	bin.size=1000000, amplify=NULL, bisection.loop=5, ref.gwas=FALSE, prior.model="QTN+K", GWAS.npc=3
 )
 {
@@ -1570,7 +1538,7 @@ function(
 				# 	P.value[SNP.index] <- GLM.gwas[, 2]
 				# 	P.value[-SNP.index] <- SNP.filter
 				# }else{
-					GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", cpu=cpus, priority=priority, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=1)
+					GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", cpu=cpus, step=step, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=1)
 					P.value <- GLM.gwas[, 3]
 				# }
 				rm("GLM.gwas")
@@ -1589,7 +1557,7 @@ function(
 				# 	P.value[SNP.index] <- MLM.gwas[, 2]
 				# 	P.value[-SNP.index] <- SNP.filter
 				# }else{
-					MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, cpu=cpus, priority=priority, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=1)
+					MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, cpu=cpus, step=step, NPC=GWAS.npc, bar.head=pri, bar.tail="", bar.len=1)
 					P.value <- MLM.gwas[, 3]
 					rm("MLM.gwas")
 				# }
@@ -1678,7 +1646,7 @@ function(
 		cat(paste(" GWAS with model: ", GWAS.model, "...\n", sep=""))
 		P.ref <- phe
 		if(GWAS.model == "GLM"){
-			GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, priority=priority, bar.head=" GWAS of References", bar.tail="", bar.len=1)
+			GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, step=step, bar.head=" GWAS of References", bar.tail="", bar.len=1)
 			P.value.ref <- GLM.gwas[, 3]
 			rm("GLM.gwas")
 		}
@@ -1690,7 +1658,7 @@ function(
 			rm("rr.gwas")
 		}
 		if(GWAS.model == "MLM"){
-			MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, NPC=GWAS.npc, cpu=cpu, priority=priority, bar.head=" GWAS of References", bar.tail="", bar.len=1)
+			MLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, K=K, method="MLM", vc.method=vc.method, NPC=GWAS.npc, cpu=cpu, step=step, bar.head=" GWAS of References", bar.tail="", bar.len=1)
 			P.value.ref <- MLM.gwas[, 3]
 			rm("MLM.gwas")
 		}
@@ -2276,7 +2244,7 @@ function(
 				#---------------------------#
 
 				# Kt <- KAML.Kin(geno[mytop.perc, ], weight=top.wt, SUM=SUM, type=K.method)
-				Kt <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), priority=priority, weight=top.wt, threads=1)
+				Kt <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), step=step, weight=top.wt, threads=1)
 				Kt <- (K + Kt)/(mean(diag(K)) + mean(diag(Kt)))
 				# Kt <- (1 - amplify[amp.index]) * K + (amplify[amp.index]) * Kt
 				
@@ -2529,6 +2497,7 @@ function(
 			K.opt <- FALSE
 			top.index.max <- NULL
 			amp.max <- NULL
+			cross.wt <- NULL
 			cat("\r", paste("Posterior top percentage:", paste(rep(" ", 20), collapse=""), "\n", sep=""))
 			cat(" NULL", "\n")
 			cat(paste(" Posterior Logx:", "\n", sep=""))
@@ -2542,8 +2511,10 @@ function(
 			mytop.num <- ceiling(n.marker * top.index.max)
 			mytop.perc <- mytop.order[1 : mytop.num]
             mytop.sub <- mytop.order[mytop.num + 1]
+            cross.wt <- rep(1, length(P.value.ref))
             
             top.wt <- log(P.value.ref[mytop.sub], base=amp.max) - log(P.value.ref[mytop.perc], base=amp.max)
+            cross.wt[mytop.perc] <- top.wt
 			# top.wt <- -log(P.value.ref[mytop.perc], base=amp.max)
 			# top.wt <- -log(P.value.ref[mytop.perc])
 			
@@ -2555,7 +2526,7 @@ function(
 			
 			cat(" Calculating optimized KINSHIP...\n")
 			# optK <- KAML.Kin(geno[mytop.perc,], type=K.method, weight = top.wt, SUM=SUM)
-            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), priority=priority, weight=top.wt, threads=cpu, verbose=TRUE)
+            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), step=step, weight=top.wt, threads=cpu, verbose = TRUE)
 				
             K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
             # Kt <- (1 - amp.max) * K + (amp.max) * optK
@@ -2577,6 +2548,7 @@ function(
 			cat(" ", amplify, "\n")
 			top.index.max <- Top.perc
 			amp.max <- amplify
+			cross.wt <- rep(1, length(P.value.ref))
 			
 			mytop.order <- order(P.value.ref, decreasing = FALSE)
 			mytop.num <- ceiling(n.marker * Top.perc)
@@ -2584,7 +2556,7 @@ function(
             mytop.sub <- mytop.order[mytop.num + 1]
             
             top.wt <- log(P.value.ref[mytop.sub], base=amplify) - log(P.value.ref[mytop.perc], base=amplify)
-			
+			cross.wt[mytop.perc] <- top.wt
 			#top.wt <- top.wt*1.5
 			
 			#-----------debug-----------#
@@ -2593,7 +2565,7 @@ function(
 			
 			cat(" Calculating optimized KINSHIP...\n")
 			# optK <- KAML.Kin(geno[mytop.perc,], type="center", weight = top.wt, SUM=nrow(geno))
-            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=nrow(geno), scale=(K.method=="scale"), priority=priority, weight=top.wt, threads=cpu, verbose=TRUE)
+            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=nrow(geno), scale=(K.method=="scale"), step=step, weight=top.wt, threads=cpu, verbose = TRUE)
 			
             K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
 			rm(list=c("mytop.order", "mytop.perc", "top.wt", "optK"))
@@ -2601,11 +2573,13 @@ function(
 		}else{
 			cat(" No Kinship optimization\n")
 			top.index.max <- NULL
+			cross.wt <- NULL
 			amp.max <- NULL
 		}
 	}
 	cat(" Cross-validation DONE!\n")
-	return(list(cross.QTN = cross.QTN, cross.model=cross.model, cross.tp=top.index.max, cross.amp=amp.max, cross.k=K))
+	if(!is.null(cross.wt))	cross.wt <- cross.wt / mean(cross.wt)
+	return(list(cross.QTN = cross.QTN, cross.model=cross.model, cross.tp=top.index.max, cross.wt=cross.wt, cross.amp=amp.max, cross.k=K))
 }
 
 KAML.GLM <- 
@@ -2626,12 +2600,12 @@ function(
 	if(!is.numeric(y))	y <- as.numeric(as.character(y))
 	Y<-matrix(y)
 	X<-cbind(X, qtn.matrix)
-	XX <- KAML.Crossprod(X)
+	XX <- crossprod(X)
 	XY<-crossprod(X, Y)
-	YY <- KAML.Crossprod(Y)
+	YY <- crossprod(Y)
 	XXi <- try(solve(XX), silent = TRUE)
 	if(inherits(XXi, "try-error")){
-		XXi <- KAML.ginv(XX)
+		XXi <- ginv(XX)
 	}
 	beta<-crossprod(XXi, XY)
 	QTN.eff<-as.numeric(beta)
@@ -2640,7 +2614,7 @@ function(
 
 KAML.GWAS <- 
 function(
-	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, priority="speed", vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
+	phe, geno, K=NULL, CV=NULL, NPC=NULL, REML=NULL, cpu=1, step=NULL, vc.method="emma", method="MLM", bar.head="|", bar.tail=">", bar.len=50
 )
 {
 #--------------------------------------------------------------------------------------------------------#
@@ -2683,7 +2657,7 @@ function(
 	if(method == "MLM"){
 		if(is.null(K)){
 			# K <- KAML.Kin(geno, priority=priority)
-			K <- KAML.KinNew(geno, priority=priority, threads=cpu)
+			K <- KAML.KinNew(geno, step=step, threads=cpu)
 			
 		}else{
 			K <- K[Ind.index, Ind.index]
@@ -2751,14 +2725,14 @@ function(
 	eff.glm <- function(i){
 		SNP <- geno[i, ]
 		sy <- crossprod(SNP,y)
-		ss <- crossprodcpp(SNP)
+		ss <- crossprod(SNP)
 		xs <- crossprod(X0,SNP)
 		B21 <- crossprod(xs, X0X0i)
 		t2 <- B21 %*% xs
 		B22 <- ss - t2
 		invB22 <- 1/B22
 		NeginvB22B21 <- crossprod(-invB22,B21)
-		B21B21 <- crossprodcpp(B21)
+		B21B21 <- crossprod(B21)
 		iXX11 <- X0X0i + as.numeric(invB22) * B21B21
 		iXX[1:q0,1:q0] <- iXX11
 		iXX[(q0+1),(q0+1)] <- invB22
@@ -2783,7 +2757,7 @@ function(
 		# y <- matrix(ys)
 		# yt <- crossprod(U, y)
 		# X0t <- crossprod(U, X0)
-		# X0X0 <- KAML.Crossprod(X0t)
+		# X0X0 <- crossprod(X0t)
 		# X0Y <- crossprod(X0t, yt)
 		# iX0X0 <- ginv(X0X0)
 		# Xt[1:n,1:q0] <- X0t
@@ -2791,9 +2765,9 @@ function(
 	
   #   if(method == "GLM"){
 		# y <- matrix(ys)
-  #       X0X0 <- KAML.Crossprod(X0)
+  #       X0X0 <- crossprod(X0)
 		# X0Y <- crossprod(X0, y)
-		# YY <- KAML.Crossprod(y)
+		# YY <- crossprod(y)
 		# X0X0i <- ginv(X0X0)
   #   }
 	
@@ -3248,7 +3222,7 @@ function(
 	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma"), 
 	K.method=c("center", "scale", "vanraden"), Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
 	bin.size=1000000, max.nQTN=TRUE, sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3, count.threshold=0.9,
-	priority=c("speed", "memory"), bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
+	step=NULL, bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
 )
 {
 #--------------------------------------------------------------------------------------------------------#
@@ -3306,7 +3280,7 @@ function(
 	vc.method <- match.arg(vc.method)
 	prior.model <- match.arg(prior.model)
 	qtn.model <- match.arg(qtn.model)
-	priority <- match.arg(priority)
+	# priority <- match.arg(priority)
 	if(crv.num < 2) stop("'crv.num' must be bigger than 2!")
     if(sample.num < 1) stop("'sample.num' must be bigger than 1!")
 
@@ -3412,7 +3386,7 @@ function(
 			# cat(" Calculating marker-based Kinship...\n")
 			# KIN <- KAML.Kin(GENO, type=K.method, verbose=TRUE); gc()
 			if(is.null(kfile)){
-				KIN <- KAML.KinNew(GENO, scale=(K.method=="scale"), priority=priority, verbose=TRUE, threads=cpu)
+				KIN <- KAML.KinNew(GENO, scale=(K.method=="scale"), step=step, threads=cpu, verbose = TRUE)
 			}
 		}else{
 			KIN <- NULL
@@ -3430,12 +3404,13 @@ function(
 		if(!is.null(Top.num) | !is.null(Top.perc)){
 			cat(" Performing model: KAML\n")
 			cross.res <- KAML.CrossV(phe=PHENO, geno=GENO, prior.QTN=prior.QTN, prior.model=prior.model, vc.method=vc.method, K=KIN, BF.threshold=BF.threshold,
-				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary, priority=priority, 
+				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary, step=step, 
 				Top.perc=Top.perc, sample.num=sample.num, crv.num=crv.num, cpu=cpu, bin.size=bin.size, bisection.loop=bisection.loop, SNP.filter=SNP.filter,
 				cor.threshold=cor.threshold, count.threshold=count.threshold, ref.gwas=ref.gwas, GWAS.npc=GWAS.npc, CV=Cov, qtn.model=qtn.model); gc()
 			cross.QTN <- cross.res$cross.QTN
 			cross.model <- cross.res$cross.model
 			cross.tp <- cross.res$cross.tp
+			cross.wt <- cross.res$cross.wt
 			cross.amp <- cross.res$cross.amp
 			cross.k <- cross.res$cross.k
 			rm(cross.res); gc()
@@ -3445,6 +3420,7 @@ function(
 				cross.QTN <- NULL
 				cross.model <- "K"
 				cross.tp <- NULL
+				cross.wt <- NULL
 				cross.amp <- NULL
 				cross.k <- KIN
 			}else{
@@ -3454,6 +3430,7 @@ function(
 				cross.QTN <- prior.QTN
 				cross.model <- prior.model
 				cross.tp <- NULL
+				cross.wt <- NULL
 				cross.amp <- NULL
 				cross.k <- KIN
 			}
@@ -3483,7 +3460,7 @@ function(
 	}else{
 		if(length(SNP.weight) != nrow(GENO))	stop("length of weights should equal to the number of SNPs in genotype!")
 		# K <- KAML.Kin(GENO, type="center", priority, weight = SNP.weight, SUM=nrow(geno))
-		K <- KAML.KinNew(GENO, SUM=nrow(geno), scale=(K.method=="scale"), priority=priority, weight = SNP.weight, verbose=TRUE, threads=cpu)
+		K <- KAML.KinNew(GENO, SUM=nrow(geno), scale=(K.method=="scale"), step=step, weight = SNP.weight, threads=cpu, verbose = TRUE)
 			
 		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
 		GEBV <- myest$ebv
@@ -3491,6 +3468,7 @@ function(
 		cross.QTN <- NULL
 		cross.model <- "K"
 		cross.tp <- NULL
+		cross.wt <- NULL
 		cross.amp <- NULL
 		cross.k <- K
 	}
@@ -3517,7 +3495,7 @@ function(
 	}
 	cat(paste(" ", TAXA, " is DONE within total run time: ", times(time.cal), "\n", sep=""))
 	cat(paste(c("#", rep("-", 19), "KAML ACCOMPLISHED SUCCESSFULLY", rep("-", 19), "#"), collapse=""),"\n\r")
-	return(list(y=yHat, beta=beta, gebv=GEBV, qtn=cross.QTN, model=cross.model, top.perc=cross.tp, logx=cross.amp, K=cross.k))
+	return(list(y=yHat, beta=beta, gebv=GEBV, qtn=cross.QTN, model=cross.model, weight = cross.wt, top.perc=cross.tp, logx=cross.amp, K=cross.k))
 }
 
 KAML.EIGEN.REML <- 
