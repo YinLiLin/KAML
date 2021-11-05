@@ -213,7 +213,7 @@ The **Covariate file** is **optional**, in order to fit the model for raw phenot
 
 
 ### Kinship file 
-***`KAML`*** requires a n×n matrix that represents the relationship among individuals. By default, it could be automatically calculated by using one of the three algorithms (***"scale","center","vanraden"***) that implemented in ***`KAML`*** package. It could be also supplied by the users, however, in this case, the order of individuals in either row or column should be the same as phenotype file, the column and row names are not needed.
+***`KAML`*** requires a n×n matrix that represents the relationship among individuals. It could be also supplied by the users, however, in this case, the order of individuals in either row or column should be the same as phenotype file, the column and row names are not needed.
 
 > `mouse.Kin.txt` ***(optional)***
 

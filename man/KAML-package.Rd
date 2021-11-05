@@ -12,7 +12,6 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
   pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL,
   prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"),
   vc.method=c("brent", "he", "emma"),
-  K.method=c("center", "scale", "vanraden"),
   Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15,
   Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"),
   BF.threshold=NULL, binary=FALSE, bin.size=1000000, max.nQTN=TRUE,
@@ -35,7 +34,6 @@ KAML(pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL,
 \item{prior.QTN}{the prior QTNs which will be added as covariants, if provided prior QTNs,  KAML will not optimize QTNs and model during cross-validation}
 \item{prior.model}{the prior Model for the prior.QTN that added as covariants}
 \item{vc.method}{method for variance components estimation("brent", "he", "emma", "ai")}
-\item{K.method}{which algorithm will be applied("center", "scale", "vanraden")}
 \item{Top.perc}{a vector, a subset of top SNPs for each iteration are amplified when calculating KINSHIP}
 \item{Top.num}{a number, a subset of top SNPs for each iteration are used as covariants}
 \item{Logx}{a vector, the base for LOG}

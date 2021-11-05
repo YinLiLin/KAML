@@ -443,7 +443,7 @@ SEXP kin_cal(XPtr<BigMatrix> pMat, const Nullable<size_t> step0 = R_NilValue, co
   }
 
   arma::mat kin = zeros<mat>(n, n);
-  arma::mat Z_buffer(n, step, fill::none);
+  arma::mat Z_buffer(step, n, fill::none);
 
   size_t i = 0, j = 0;
   size_t i_marker = 0;
@@ -456,7 +456,7 @@ SEXP kin_cal(XPtr<BigMatrix> pMat, const Nullable<size_t> step0 = R_NilValue, co
       }
 
       if (cnt != step) {
-          Z_buffer.resize(n, cnt);
+          Z_buffer.resize(cnt, n);
       }
 
       if(wt.isNotNull()){
@@ -465,7 +465,7 @@ SEXP kin_cal(XPtr<BigMatrix> pMat, const Nullable<size_t> step0 = R_NilValue, co
         for(size_t k = 0; k < n; k++){
           for(size_t l = 0; l < cnt; l++){
             size_t indx = i_marker + l;
-            Z_buffer(k, l) = sqrt(wt_[indx]) * (bigm[k][indx] - Mean[indx]) / Sd[indx];
+            Z_buffer(l, k) = sqrt(wt_[indx]) * (bigm[k][indx] - Mean[indx]) / Sd[indx];
           }
         }
       }else{
@@ -474,20 +474,20 @@ SEXP kin_cal(XPtr<BigMatrix> pMat, const Nullable<size_t> step0 = R_NilValue, co
         for(size_t k = 0; k < n; k++){
           for(size_t l = 0; l < cnt; l++){
             size_t indx = i_marker + l;
-            Z_buffer(k, l) = (bigm[k][indx] - Mean[indx]) / Sd[indx];
+            Z_buffer(l, k) = (bigm[k][indx] - Mean[indx]) / Sd[indx];
           }
         }
       }
 
       if(mkl){
-        kin += Z_buffer * Z_buffer.t();
+        kin += Z_buffer.t() * Z_buffer;
       }else{
-        arma::rowvec rowi;
-        #pragma omp parallel for schedule(dynamic) private(rowi)
+        arma::colvec coli;
+        #pragma omp parallel for schedule(dynamic) private(coli)
         for(size_t k = 0; k < n; k++){
-          rowi = Z_buffer.row(k);
+          coli = Z_buffer.col(k);
           for(size_t l = k; l < n; l++){
-            kin(k, l) += sum(rowi % Z_buffer.row(l));
+            kin(k, l) += sum(coli % Z_buffer.col(l));
             kin(l, k) = kin(k, l);
           }
         }

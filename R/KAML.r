@@ -458,7 +458,7 @@ function(
 # K: Kinship for all individuals(row and column orders must be the same with y)							 #
 # eigen.K: a priori calculated eigen for K																 #
 # vc.method: the methods for estimating variance component						 						 #
-# lambda：ve/vg, ve is the variance of residual, vg is the variance of additive effect					 #
+# lambda: ve/vg, ve is the variance of residual, vg is the variance of additive effect					 #
 #--------------------------------------------------------------------------------------------------------#
     r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
 	math.cpu <- Math_cpu_check()
@@ -568,7 +568,7 @@ function(
 # priority: choose the calculation speed or memory														 #
 # memo: the names of temporary files																	 #
 # SUM: the sum will be used to scale the matrix						 									 #
-# maxLine：this parameter can control the memory size when using big.matrix								 #
+# maxLine: this parameter can control the memory size when using big.matrix								 #
 #--------------------------------------------------------------------------------------------------------#
 	if(!effect %in% c("A", "D", "AA", "AD", "DD")) stop("Please select the right effect: 'A', 'D', 'AA', 'AD', 'DD'!")
 	if(!type %in% c("scale", "center", "vanraden"))	stop("please select the right kinship algorithm: 'center', 'scale', 'vanraden'!")
@@ -891,7 +891,7 @@ function(
 # out: Name of output files																				 #
 # sep: seperator for hapmap, numeric, map, and phenotype												 #
 # SNP.impute: "Left", "Middle", "Right"								 									 #
-# maxLine：this parameter can control the memory size when using big.matrix								 #
+# maxLine: this parameter can control the memory size when using big.matrix								 #
 # priority: choose take 'speed' or 'memory' into consideration											 #
 #--------------------------------------------------------------------------------------------------------#	
 	
@@ -1428,7 +1428,7 @@ function(
 KAML.CrossV <- 
 function(
 	phe, geno, K=NULL, CV=NULL, GWAS.model=NULL, qtn.model="SR", BF.threshold=NULL, vc.method="emma", Top.num=NULL, Top.perc=NULL, max.nQTN=TRUE, SNP.filter=0.5,
-	cor.threshold=0.99, count.threshold=0.9, sample.num=1, crv.num=5, cpu=1, theSeed=NULL, prior.QTN=NULL, K.method="center", binary=FALSE, step=NULL,
+	cor.threshold=0.99, count.threshold=0.9, sample.num=1, crv.num=5, cpu=1, theSeed=NULL, prior.QTN=NULL, binary=FALSE, step=NULL,
 	bin.size=1000000, amplify=NULL, bisection.loop=5, ref.gwas=FALSE, prior.model="QTN+K", GWAS.npc=3
 )
 {
@@ -1459,7 +1459,6 @@ function(
 # prior.QTN: the prior QTNs which will be added as covariants, if provided prior QTNs, 	KAML will not	 #
 # 			optimize QTNs and model during cross-validation												 #
 # prior.model: the prior MODEL(only "K", "QTN+K", "QTN" can be selected presently)						 #
-# K.method: which algorithm will be applied("center", "scale", "vanraden")								 #
 # bin.size: the size of each bin																		 #
 # amplify: a vector, the base for LOG																	 #
 # bisection: whether using bisection algorithm to optimize KINSHIP										 #
@@ -1987,7 +1986,7 @@ function(
 					}
 				}else
 				{
-					#1：mclapply doesn't work at windows system
+					#1: mclapply doesn't work at windows system
 					#2: there are always some errors when use multi-process in microsoft r open
 					
 					#get the user-specific cpu number
@@ -2174,15 +2173,6 @@ function(
 	
 	if((!is.null(Top.perc) && (length(Top.perc) > 1 | length(amplify) > 1)) & cross.model!="QTN"){
 		cat(" Optimizing KINSHIP...\n")
-		if(K.method %in% c("center", "scale")){
-			SUM <- n.marker
-		}
-		if(K.method == "vanraden"){
-			geno.matrix <- as.matrix(geno)
-			Pi <- 0.5 * rowMeans(geno.matrix)
-			SUM <- sum(Pi * (1-Pi))
-			rm(geno.matrix); rm(Pi); gc()
-		}
 		
 		Top.perc <- sort(Top.perc)
 		if(!0 %in% Top.perc)	Top.perc <- c(0, Top.perc)
@@ -2243,8 +2233,7 @@ function(
                 #print(sum(is.na(top.wt)))
 				#---------------------------#
 
-				# Kt <- KAML.Kin(geno[mytop.perc, ], weight=top.wt, SUM=SUM, type=K.method)
-				Kt <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), step=step, weight=top.wt, threads=1)
+				Kt <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=n.marker, scale=FALSE, step=step, weight=top.wt, threads=1)
 				Kt <- (K + Kt)/(mean(diag(K)) + mean(diag(Kt)))
 				# Kt <- (1 - amplify[amp.index]) * K + (amplify[amp.index]) * Kt
 				
@@ -2525,12 +2514,10 @@ function(
 			#---------------------------#
 			
 			cat(" Calculating optimized KINSHIP...\n")
-			# optK <- KAML.Kin(geno[mytop.perc,], type=K.method, weight = top.wt, SUM=SUM)
-            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=SUM, scale=(K.method=="scale"), step=step, weight=top.wt, threads=cpu, verbose = TRUE)
+			optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=n.marker, scale=FALSE, step=step, weight=top.wt, threads=cpu, verbose = TRUE)
 				
-            K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
-            # Kt <- (1 - amp.max) * K + (amp.max) * optK
-				
+            K <- K + optK
+			K <- K / mean(diag(K))
             
             #-----------debug-----------#
             #print(K[1:5,1:5])
@@ -2564,10 +2551,10 @@ function(
 			#---------------------------#
 			
 			cat(" Calculating optimized KINSHIP...\n")
-			# optK <- KAML.Kin(geno[mytop.perc,], type="center", weight = top.wt, SUM=nrow(geno))
-            optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=nrow(geno), scale=(K.method=="scale"), step=step, weight=top.wt, threads=cpu, verbose = TRUE)
+			optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=n.marker, scale=FALSE, step=step, weight=top.wt, threads=cpu, verbose = TRUE)
 			
-            K <- (K + optK)/(mean(diag(K)) + mean(diag(optK)))
+            K <- K + optK
+			K <- K / mean(diag(K))
 			rm(list=c("mytop.order", "mytop.perc", "top.wt", "optK"))
 			rm(list=c("P.value.ref")); gc()
 		}else{
@@ -3220,7 +3207,7 @@ function(
 KAML <- 
 function(
 	pfile="", gfile="", kfile=NULL, dcovfile=NULL, qcovfile=NULL, pheno=1, SNP.weight=NULL, GWAS.model=c("MLM","GLM", "RR"), GWAS.npc=NULL, prior.QTN=NULL, prior.model=c("QTN+K", "QTN", "K"), vc.method=c("brent", "he", "emma"), 
-	K.method=c("center", "scale", "vanraden"), Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
+	Top.perc=c(1e-4, 1e-3, 1e-2, 1e-1), Top.num=15, Logx=c(1.01, 1.11, exp(1), 10), qtn.model=c("MR", "SR", "BF"), BF.threshold=NULL, binary=FALSE,
 	bin.size=1000000, max.nQTN=TRUE, sample.num=2, SNP.filter=NULL, crv.num=5, cor.threshold=0.3, count.threshold=0.9,
 	step=NULL, bisection.loop=10, ref.gwas=TRUE, theSeed=666666, file.output=TRUE, cpu=10
 )
@@ -3234,14 +3221,13 @@ function(
 # kfile: n*n, optional, provided KINSHIP file for all individuals										 #
 # dcovfile: n*x, optional, the provided discrete covariates file										 #
 # qcovfile: n*x, optional, the provided quantitative covariates file									 #
-# pheno：specify phenotype column in the phenotype file(default 1)										 #
+# pheno: specify phenotype column in the phenotype file(default 1)										 #
 # GWAS.model: which model will be used for GWAS(only "GLM" and "MLM" can be selected presently)			 #
 # GWAS.npc: the number of PC that will be added as covariance to control population structure			 #
 # prior.QTN: the prior QTNs which will be added as covariants, if provided prior QTNs, 	KAML will not	 #
 # 			optimize QTNs and model during cross-validation												 #
 # prior.model: the prior Model for the prior.QTN that added as covariants								 #
 # vc.method: method for variance components estimation("emma" or "gemma")								 #
-# K.method: which algorithm will be applied("center", "scale", "vanraden")								 #
 # Top.perc: a vector, a subset of top SNPs for each iteration are amplified when calculating KINSHIP	 #
 # Top.num: a number, a subset of top SNPs for each iteration are used as covariants						 #
 # Logx: a vector, the base for LOG																		 #
@@ -3276,7 +3262,6 @@ function(
 	
     #check the parameters
     GWAS.model <- match.arg(GWAS.model)
-	K.method <- match.arg(K.method)
 	vc.method <- match.arg(vc.method)
 	prior.model <- match.arg(prior.model)
 	qtn.model <- match.arg(qtn.model)
@@ -3384,9 +3369,8 @@ function(
 		}
 		if((!is.null(prior.model) && prior.model != "QTN")){
 			# cat(" Calculating marker-based Kinship...\n")
-			# KIN <- KAML.Kin(GENO, type=K.method, verbose=TRUE); gc()
 			if(is.null(kfile)){
-				KIN <- KAML.KinNew(GENO, scale=(K.method=="scale"), step=step, threads=cpu, verbose = TRUE)
+				KIN <- KAML.KinNew(GENO, scale=FALSE, step=step, threads=cpu, verbose = TRUE)
 			}
 		}else{
 			KIN <- NULL
@@ -3404,7 +3388,7 @@ function(
 		if(!is.null(Top.num) | !is.null(Top.perc)){
 			cat(" Performing model: KAML\n")
 			cross.res <- KAML.CrossV(phe=PHENO, geno=GENO, prior.QTN=prior.QTN, prior.model=prior.model, vc.method=vc.method, K=KIN, BF.threshold=BF.threshold,
-				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, K.method=K.method, Top.num=Top.num, binary=binary, step=step, 
+				max.nQTN=max.nQTN, GWAS.model=GWAS.model, theSeed=theSeed, amplify=Logx, Top.num=Top.num, binary=binary, step=step, 
 				Top.perc=Top.perc, sample.num=sample.num, crv.num=crv.num, cpu=cpu, bin.size=bin.size, bisection.loop=bisection.loop, SNP.filter=SNP.filter,
 				cor.threshold=cor.threshold, count.threshold=count.threshold, ref.gwas=ref.gwas, GWAS.npc=GWAS.npc, CV=Cov, qtn.model=qtn.model); gc()
 			cross.QTN <- cross.res$cross.QTN
@@ -3458,9 +3442,12 @@ function(
 			}
 		}
 	}else{
+		if(is.vector(SNP.weight))	stop("weights of SNPs must be a vector in digits.")
+		if(any(SNP.weight < 0))	stop("weights of SNPs must be positive values.")
 		if(length(SNP.weight) != nrow(GENO))	stop("length of weights should equal to the number of SNPs in genotype!")
+		if(mean(SNP.weight) != 1)	SNP.weight <- SNP.weight / mean(SNP.weight)
 		# K <- KAML.Kin(GENO, type="center", priority, weight = SNP.weight, SUM=nrow(geno))
-		K <- KAML.KinNew(GENO, SUM=nrow(geno), scale=(K.method=="scale"), step=step, weight = SNP.weight, threads=cpu, verbose = TRUE)
+		K <- KAML.KinNew(GENO, scale=FALSE, step=step, weight=SNP.weight, threads=cpu, verbose = TRUE)
 			
 		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
 		GEBV <- myest$ebv
