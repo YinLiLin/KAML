@@ -3442,7 +3442,7 @@ function(
 			}
 		}
 	}else{
-		if(is.vector(SNP.weight))	stop("weights of SNPs must be a vector in digits.")
+		if(!is.vector(SNP.weight))	stop("weights of SNPs must be a vector in digits.")
 		if(any(SNP.weight < 0))	stop("weights of SNPs must be positive values.")
 		if(length(SNP.weight) != nrow(GENO))	stop("length of weights should equal to the number of SNPs in genotype!")
 		if(mean(SNP.weight) != 1)	SNP.weight <- SNP.weight / mean(SNP.weight)
