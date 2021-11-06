@@ -651,7 +651,7 @@ function(
 				loop.index <- seq(0, m, maxLine)[-1]
 				if(max(loop.index) < m) loop.index <- c(loop.index, m)
 				loop.len <- length(loop.index)
-				cat(" Z assignment...\n")
+				cat(" Z assignment ...\n")
 				for(cc in 1:loop.len){
 					if(loop.len == 1){
 						c1 <- 1
@@ -866,7 +866,7 @@ function(
 		bigm=attach.big.matrix(paste0(bigm,".geno.desc"))
 	}
 	if(hasNA(bigm@address)){
-		cat(" Imputing missings...\n")
+		cat(" Imputing missings ...\n")
 		impute_marker(bigm@address, threads=threads, verbose=FALSE)
 	}
 }
@@ -896,7 +896,7 @@ function(
 #--------------------------------------------------------------------------------------------------------#	
 	
 	KAML.version()
-	cat(" Preparing data for KAML...\n")
+	cat(" Preparing data for KAML ...\n")
 	#if(is.null(hfile)&is.null(numfile))
 	#stop("Hapmap or Numeric genotype is needed.")
 	if(!is.null(hfile)&!is.null(numfile))
@@ -1033,7 +1033,7 @@ function(
         nFile=length(vfile)
         
         #Iteration among file
-        cat(" Numericilization...\n")
+        cat(" Numericilization ...\n")
         #if(priority == "memory"){
             for (theFile in 1:nFile){
 			
@@ -1095,7 +1095,7 @@ function(
 	if(!is.null(bfile)){
 		map <- read.table(paste(bfile, ".bim", sep=""), head=FALSE, stringsAsFactors=FALSE)
 		map <- map[, c(2, 1, 4)]
-		cat(" Reading binary files...\n")
+		cat(" Reading binary files ...\n")
 		write.table(map, paste(out, ".map", sep=""), row.names=FALSE, col.names=FALSE, sep=sep, quote=FALSE)
 		fam <- read.table(paste(bfile, ".fam", sep=""), head=FALSE, stringsAsFactors=FALSE)
 		bck <- paste(out, ".geno.bin", sep="")
@@ -1105,7 +1105,7 @@ function(
 		cat(paste(" Number of Ind: ", ns, "; Number of markers: ", nmarkers, ";\n", sep=""))
 		myGeno.backed<-big.matrix(nmarkers, ns, type="char",
 			backingfile=bck, descriptorfile=dsc)
-		cat(" Output BIG genotype...\n")
+		cat(" Output BIG genotype ...\n")
 		TransData_c(bfile = bfile, pBigMat = myGeno.backed@address, maxLine = maxLine, threads = 0)
 		KAML.Impute(myGeno.backed)
 		# inGENOFile=TRUE
@@ -1150,7 +1150,7 @@ function(
 		nFile=length(hfile)
 
 		#Iteration among file
-		cat(" Output NUMERIC genotype...\n")
+		cat(" Output NUMERIC genotype ...\n")
 		if(priority == "memory"){
 			for (theFile in 1:nFile){
 
@@ -1250,7 +1250,7 @@ function(
 		tt2 <- unlist(strsplit(x=tt2, split=sep, fixed=TRUE))
 		ns <- length(tt2)
 		cat(paste(" Number of Ind: ", ns, "; Number of markers: ", nmarkers, ";\n", sep=""))
-		cat(" Output BIG genotype...\n")
+		cat(" Output BIG genotype ...\n")
 		close.connection(fileGenoCon)
 		bck <- paste(out, ".geno.bin", sep="")
 		dsc <- paste(out, ".geno.desc", sep="")
@@ -1499,7 +1499,7 @@ function(
 	P.value <- list()
 	if(!is.null(Top.num) | (!is.null(Top.perc) && (length(Top.perc) > 1 | length(amplify) > 1))){
 		
-		cat(paste(" Cross-validation(", sample.num, "*", crv.num, ") Started...\n", sep=""))
+		cat(paste(" Cross-validation(", sample.num, "*", crv.num, ") Started ...\n", sep=""))
 		#get the inference population index for cross-validation
 		for(s in 1:sample.num){
 			CrossVindex <- sample(which(!NA.index), n.ref)
@@ -1518,7 +1518,7 @@ function(
 		mult.run.gwas <- function(i){
 			if(r.open)	try(setMKLthreads(mkl), silent=TRUE)
 			ref.logic <- (i == sample.num * crv.num + 1)
-			# cat(" GWAS of validations is ongoing...(", i,"/", gwas.num, ")\r", sep="")
+			# cat(" GWAS of validations is ongoing ...(", i,"/", gwas.num, ")\r", sep="")
 			if(!ref.logic){
 				P.ref <- phe
 				P.ref[inf.index[[i]]] <- NA
@@ -1595,7 +1595,7 @@ function(
 
 		# if(wind & cpu > 1){
 		# 	cpus <- 1
-		# 	cat(" Multi-process of GWAS started...\n")
+		# 	cat(" Multi-process of GWAS started ...\n")
 		# 	max.cpu <- min(cpu, gwas.num)
 		# 	cl <- makeCluster(max.cpu, outfile = "Loop.log")
 		# 	registerDoParallel(cl)
@@ -1641,8 +1641,8 @@ function(
 		}
 		cat(paste(" Benchmark of Performance:", mytext1, "\r\n"))
 	}else{
-		cat(paste(" Cross-validation(References only) Started...\n", sep=""))
-		cat(paste(" GWAS with model: ", GWAS.model, "...\n", sep=""))
+		cat(paste(" Cross-validation(References only) Started ...\n", sep=""))
+		cat(paste(" GWAS with model: ", GWAS.model, " ...\n", sep=""))
 		P.ref <- phe
 		if(GWAS.model == "GLM"){
 			GLM.gwas <- KAML.GWAS(phe=P.ref, geno=geno, CV=CV, method="GLM", NPC=GWAS.npc, cpu=cpu, step=step, bar.head=" GWAS of References", bar.tail="", bar.len=1)
@@ -1729,7 +1729,7 @@ function(
 		}
 		rm(list=c("P.value.index"));gc()
 		cat(" QTNs are confirmed!\n")
-		cat(" Optimizing pseudo QTNs and MODEL...\n")
+		cat(" Optimizing pseudo QTNs and MODEL ...\n")
 		bin.qtn.unique <- unique(unlist(bin.qtn))
 		bin.qtn.unique <- bin.qtn.unique[order(P.value.ref[bin.qtn.unique])]
 		bin.count <- table(unlist(bin.qtn))
@@ -1993,7 +1993,7 @@ function(
 					if(wind){
 						print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 						#print(paste("Cross-validation NO.", paste(c(1:(sample.num * crv.num)), collapse=", "), sep=""))
-						cat(" Multi-process started...\n")
+						cat(" Multi-process started ...\n")
 						cat(" (Note: There needs to wait some time! See iteration details in 'Loop.log')\n")
 						cl <- makeCluster(cpu, outfile = "Loop.log")
 						registerDoParallel(cl)
@@ -2172,7 +2172,7 @@ function(
 	sample.num <- sam
 	
 	if((!is.null(Top.perc) && (length(Top.perc) > 1 | length(amplify) > 1)) & cross.model!="QTN"){
-		cat(" Optimizing KINSHIP...\n")
+		cat(" Optimizing KINSHIP ...\n")
 		
 		Top.perc <- sort(Top.perc)
 		if(!0 %in% Top.perc)	Top.perc <- c(0, Top.perc)
@@ -2276,7 +2276,7 @@ function(
 			return(list(acc=acc,max.wt=max.wt,KAML.ll=KAML.ll))
 		}
 		iterationN <- ((sample.num * crv.num) * length(Top.perc) * length(amplify))
-		cat(" Grid search started...\n")
+		cat(" Grid search started ...\n")
 		cat(paste(" Total iteration number:", iterationN))
 		if(cpu == 1){
 			print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
@@ -2285,7 +2285,7 @@ function(
 		{
 			if(wind){
 				print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
-				cat(" Multi-process started...\n")
+				cat(" Multi-process started ...\n")
 				cat(" (Note: There needs to wait some time! See iteration details in 'Loop.log')\n")
 				if(is.null(Top.index)){
 					cl <- makeCluster(cpu, outfile = "Loop.log")
@@ -2355,7 +2355,7 @@ function(
 		
 		bisection <- ifelse(bisection.loop != 0, TRUE, FALSE)
 		if(bisection){
-			cat(" Bisection algorithm started...\n")
+			cat(" Bisection algorithm started ...\n")
 			TOP <- Top.perc
 			AMP <- amplify
 			K.COR <- K.cor.store
@@ -2513,7 +2513,7 @@ function(
             # print(range(top.wt))
 			#---------------------------#
 			
-			cat(" Calculating optimized KINSHIP...\n")
+			cat(" Calculating optimized KINSHIP ...\n")
 			optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=n.marker, scale=FALSE, step=step, weight=top.wt, threads=cpu, verbose = TRUE)
 				
             K <- K + optK
@@ -2549,7 +2549,7 @@ function(
             # print(range(top.wt))
 			#---------------------------#
 			
-			cat(" Calculating optimized KINSHIP...\n")
+			cat(" Calculating optimized KINSHIP ...\n")
 			optK <- KAML.KinNew(deepcopy(geno, rows=mytop.perc), SUM=n.marker, scale=FALSE, step=step, weight=top.wt, threads=cpu, verbose = TRUE)
 			
             K <- K + optK
@@ -3268,7 +3268,7 @@ function(
 	if(crv.num < 2) stop("'crv.num' must be bigger than 2!")
     if(sample.num < 1) stop("'sample.num' must be bigger than 1!")
 
-	cat(" Attaching data...")
+	cat(" Attaching data ...")
 	PHENO <- read.table(pfile, head=TRUE)
 	TAXA <- colnames(PHENO)[pheno]
 	PHENO <- PHENO[, pheno]
@@ -3367,7 +3367,7 @@ function(
 			cat("     the predicted GEBV maybe unstable, we recommend setting bigger 'sample.num'!]", "\n")
 		}
 		if((!is.null(prior.model) && prior.model != "QTN")){
-			# cat(" Calculating marker-based Kinship...\n")
+			# cat(" Calculating marker-based Kinship ...\n")
 			if(is.null(kfile)){
 				KIN <- KAML.KinNew(GENO, scale=FALSE, step=step, threads=cpu, verbose = TRUE)
 			}
@@ -3419,7 +3419,7 @@ function(
 			}
 		}
 		rm("KIN"); gc()
-		cat(" Predicting...\n")
+		cat(" Predicting ...\n")
 		if(is.null(cross.QTN)){
 			myest <- KAML.Mix(phe=PHENO, K=cross.k, vc.method=vc.method, CV=Cov)
 			GEBV <- myest$ebv
@@ -3447,7 +3447,9 @@ function(
 		if(mean(SNP.weight) != 1)	SNP.weight <- SNP.weight / mean(SNP.weight)
 		# K <- KAML.Kin(GENO, type="center", priority, weight = SNP.weight, SUM=nrow(geno))
 		K <- KAML.KinNew(GENO, scale=FALSE, step=step, weight=SNP.weight, threads=cpu, verbose = TRUE)
-			
+		K <- K / mean(diag(K))
+		
+		cat(" Predicting ...\n")
 		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
 		GEBV <- myest$ebv
 		beta <- as.vector(myest$beta[c(1:ncol(Cov))])

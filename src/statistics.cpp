@@ -425,11 +425,13 @@ SEXP kin_cal(XPtr<BigMatrix> pMat, const Nullable<size_t> step0 = R_NilValue, co
   }else{
     step = m;
   }
-  if(verbose) Rcout << " Computing GRM at step of " << step << " ..." << endl;
-
+  
   NumericVector wt_;
   if(wt.isNotNull()){
     wt_ = as<NumericVector>(wt);
+    if(verbose) Rcout << " Computing weighted GRM at step of " << step << " ..." << endl;
+  }else{
+    if(verbose) Rcout << " Computing general GRM at step of " << step << " ..." << endl;
   }
 
   List Stat = BigStat(pMat, threads);
