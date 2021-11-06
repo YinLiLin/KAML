@@ -2834,7 +2834,6 @@ function(
 	# options(warn = 0)
 
 	if(method == "GLM"){
-		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
 		if(cpu == 1 & r.open){
 			if(inherits(try(getMKLthreads(), silent=TRUE),"try-error")){
 				cpu <- 1
@@ -2842,10 +2841,10 @@ function(
 				cpu <- getMKLthreads()
 			}
 		}
+		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
 		results <- glm_c(y=ys, X=X0, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
 		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
 	}else if(method == "MLM"){
-		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
 		if(cpu == 1 & r.open){
 			if(inherits(try(getMKLthreads(), silent=TRUE),"try-error")){
 				cpu <- 1
@@ -2853,6 +2852,7 @@ function(
 				cpu <- getMKLthreads()
 			}
 		}
+		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
 		results <- mlm_c(y=ys, X=X0, U=U, vgs=vgs, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
 		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
 	}else{
