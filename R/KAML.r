@@ -3272,8 +3272,8 @@ function(
 
 	if(wind)	cpu <- 1
 	if(r.open & mac & cpu > 1)	Sys.setenv("VECLIB_MAXIMUM_THREADS" = "1")
-	setMKLthreads(getMKLthreads())
-
+	try(setMKLthreads(getMKLthreads()), silent=TRUE)
+	
     #check the parameters
     GWAS.model <- match.arg(GWAS.model)
 	vc.method <- match.arg(vc.method)
