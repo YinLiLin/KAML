@@ -2835,10 +2835,24 @@ function(
 
 	if(method == "GLM"){
 		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
+		if(cpu == 1 & r.open){
+			if(inherits(try(getMKLthreads(), silent=TRUE),"try-error")){
+				cpu <- 1
+			}else{
+				cpu <- getMKLthreads()
+			}
+		}
 		results <- glm_c(y=ys, X=X0, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
 		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
 	}else if(method == "MLM"){
 		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
+		if(cpu == 1 & r.open){
+			if(inherits(try(getMKLthreads(), silent=TRUE),"try-error")){
+				cpu <- 1
+			}else{
+				cpu <- getMKLthreads()
+			}
+		}
 		results <- mlm_c(y=ys, X=X0, U=U, vgs=vgs, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
 		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
 	}else{
@@ -3258,7 +3272,8 @@ function(
 
 	if(wind)	cpu <- 1
 	if(r.open & mac & cpu > 1)	Sys.setenv("VECLIB_MAXIMUM_THREADS" = "1")
-	
+	setMKLthreads(getMKLthreads())
+
     #check the parameters
     GWAS.model <- match.arg(GWAS.model)
 	vc.method <- match.arg(vc.method)
