@@ -2503,7 +2503,7 @@ function(
             cross.wt <- rep(1, length(P.value.ref))
             
             top.wt <- log(P.value.ref[mytop.sub], base=amp.max) - log(P.value.ref[mytop.perc], base=amp.max)
-            cross.wt[mytop.perc] <- top.wt
+            cross.wt[mytop.perc] <- cross.wt[mytop.perc] + top.wt
 			# top.wt <- -log(P.value.ref[mytop.perc], base=amp.max)
 			# top.wt <- -log(P.value.ref[mytop.perc])
 			
@@ -2543,8 +2543,7 @@ function(
             mytop.sub <- mytop.order[mytop.num + 1]
             
             top.wt <- log(P.value.ref[mytop.sub], base=amplify) - log(P.value.ref[mytop.perc], base=amplify)
-			cross.wt[mytop.perc] <- top.wt
-			#top.wt <- top.wt*1.5
+			cross.wt[mytop.perc] <- cross.wt[mytop.perc] + top.wt
 			
 			#-----------debug-----------#
             # print(range(top.wt))
