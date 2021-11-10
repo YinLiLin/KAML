@@ -1,14 +1,14 @@
 KAML.version <-
 function()
 {
-cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-", 26), collapse=""), "#", sep=""), "\n")
-cat("#    ______ _________ ______  _________                              #\n")
-cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
-cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
-cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.2.0      #\n")
-cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
-cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
-cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
+	cat(paste("#", paste(rep("-", 27), collapse=""), "Welcome to KAML", paste(rep("-", 26), collapse=""), "#", sep=""), "\n")
+	cat("#    ______ _________ ______  _________                              #\n")
+	cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
+	cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
+	cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.2.0      #\n")
+	cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
+	cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
+	cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
 }
 
 KAML.stas.cal <- 
@@ -477,17 +477,13 @@ function(
 	refX <- X
 	X <- X[ref.index, , drop=FALSE]
 	#there is a error when running in Mcrosoft R open with parallel
-	if(vc.method != "ai" | (vc.method == "ai" & math.cpu == 1)){
-		if(!is.null(eigen.K)){
-			eig <- eigen.K
-		}else{
-			# mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
-			# try(setMKLthreads(mkl.cpu), silent=TRUE)
-			eig <- eigen((K[ref.index, ref.index]), symmetric=TRUE)
-			# try(setMKLthreads(math.cpu), silent=TRUE)
-		}
+	if(!is.null(eigen.K)){
+		eig <- eigen.K
 	}else{
-		eig <-NULL
+		# mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
+		# try(setMKLthreads(mkl.cpu), silent=TRUE)
+		eig <- eigen((K[ref.index, ref.index]), symmetric=TRUE)
+		# try(setMKLthreads(math.cpu), silent=TRUE)
 	}
 	if(is.null(lambda)){
 		if(vc.method == "brent") {
@@ -504,25 +500,6 @@ function(
 			reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
 			lambda <- reml$delta
 			LL <- NA
-		}
-		if(vc.method == "ai"){
-			if(math.cpu == 1){
-			
-				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
-				reml <- KAML.AIEM(y, X=X, eigenK=eig, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
-				lambda <- reml$vc[2] / reml$vc[1]
-				LL <- NA
-			}else{
-			
-				# using HE-AI algorithm
-				reml <- KAML.HE(y, X=X, K=K[ref.index, ref.index])
-				reml <- KAML.AIEM(phe, X=refX, K=K, cpu=math.cpu, start=c(reml$vg, reml$ve), verbose=FALSE)
-				beta <- reml$beta
-				BLUP.ebv <- reml$u
-				LL <- NA
-				return(list(beta=beta, ebv=BLUP.ebv, LL=LL, reml=reml))
-			}
 		}
 	}
 	U <- eig$vectors * matrix(sqrt(1/(eig$values + lambda)), n, length(eig$values), byrow=TRUE);rm(eig); gc()
@@ -2595,7 +2572,8 @@ function(
 	}
 	beta<-crossprod(XXi, XY)
 	QTN.eff<-as.numeric(beta)
-	return(list(QTN.eff=QTN.eff))
+	res<-Y-X%*%beta
+	return(list(QTN.eff=QTN.eff, res=res))
 }
 
 KAML.GWAS <- 
@@ -2676,10 +2654,7 @@ function(
 		if(vc.method == "emma") REML <- KAML.EMMA.REML(ys, X=X0, K=K)
 		if(vc.method == "brent") REML <- KAML.EIGEN.REML(ys, X=X0, eigenK=eig)
 	}
-	# q0 <- ncol(X0)
-	# iXX <- matrix(NA,q0+1,q0+1)
-	# Xt <- matrix(NA,n, q0+1)
-	
+
 	#parallel function for MLM model
 	eff.mlm <- function(i){
 		SNP <- as.matrix(geno[i, ])
@@ -2740,99 +2715,8 @@ function(
         vgs <- REML$vg
         lambda <- ves/vgs
         U <- eig$vectors * matrix(sqrt(1/(eig$values + lambda)), n, length(eig$values), byrow=TRUE); rm(eig); gc()
-		# y <- matrix(ys)
-		# yt <- crossprod(U, y)
-		# X0t <- crossprod(U, X0)
-		# X0X0 <- crossprod(X0t)
-		# X0Y <- crossprod(X0t, yt)
-		# iX0X0 <- ginv(X0X0)
-		# Xt[1:n,1:q0] <- X0t
     }
 	
-  #   if(method == "GLM"){
-		# y <- matrix(ys)
-  #       X0X0 <- crossprod(X0)
-		# X0Y <- crossprod(X0, y)
-		# YY <- crossprod(y)
-		# X0X0i <- ginv(X0X0)
-  #   }
-	
-	# options(warn = -1)
- #    if(cpu == 1){
-	# 	if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-	# 	mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
-	# 	if(r.open)	try(setMKLthreads(mkl.cpu), silent=TRUE)
-	# 	if(method == "MLM") results <- lapply(1:m, eff.mlm)
-	# 	if(method == "GLM")	results <- lapply(1:m, eff.glm)
-	# 	if(r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
-	# }else
-	# {
-	# 	if(method == "MLM"){
-	# 		if(wind){
-	# 			if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-	# 			#foreach function
-	# 			#print(" *  *  *  *  *  * test foreach parallel *  *  *  *  *  * ")
-	# 			#cl <- makeCluster(cpu)
-	# 			#registerDoParallel(cl)
-	# 			#Exp.packages <- clusterEvalQ(cl, c(library(bigmemory)))
-	# 			#results <- foreach(x=1:m) %dopar% eff.mlm(x)
-	# 			#stopCluster(cl)
-				
-	# 			#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
-	# 			cl <- makeCluster(getOption("cl.cores", cpu))
-	# 			clusterExport(cl, varlist=c("geno", "yt", "X0", "U", "vgs", "ves", "mkl"), envir=environment())
-	# 			Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
-	# 			results <- parallel::parLapply(cl, 1:m, eff.mlm)
-	# 			stopCluster(cl)
-	# 		}else{
-	# 			if(bar){
-	# 				tmpf.name <- tempfile()
-	# 				tmpf <- fifo(tmpf.name, open="w+b", blocking=TRUE)
-	# 				writeBin(0, tmpf)
-	# 				print.f <- function(i){KAML.Bar(n=m, type="type3", tmp.file=tmpf, symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}		
-	# 			}
-	# 			if(r.open){
-	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(1), silent=TRUE)
-	# 				results <- parallel::mclapply(1:m, eff.mlm, mc.cores=cpu)
-	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
-	# 			}else{
-	# 				results <- parallel::mclapply(1:m, eff.mlm, mc.cores=cpu)
-	# 			}
-	# 			#Sys.sleep(0.5)
-	# 			if(bar){close(tmpf); unlink(tmpf.name); cat('\n');}
-	# 		}
-	# 	}
-	# 	if(method  == "GLM"){
-	# 		if(wind){
-	# 			if(bar)	print.f <- function(i){KAML.Bar(i=i, n=m, type="type1", symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-	# 			#parLapply function
-	# 			#print(" *  *  *  *  *  * test parLapply parallel *  *  *  *  *  * ")
-	# 			cl <- makeCluster(getOption("cl.cores", cpu))
-	# 			clusterExport(cl, varlist=c("geno", "ys", "X0", "math.cpu"), envir=environment())
-	# 			Exp.packages <- clusterEvalQ(cl, c(library(bigmemory),library(rfunctions)))
-	# 			results <- parallel::parLapply(cl, 1:m, eff.glm)
-	# 			stopCluster(cl)
-	# 		}else{
-	# 			if(bar){
-	# 				tmpf.name <- tempfile()
-	# 				tmpf <- fifo(tmpf.name, open="w+b", blocking=T)
-	# 				writeBin(0, tmpf)
-	# 				print.f <- function(i){KAML.Bar(n=m, type="type3", tmp.file=tmpf, symbol.len=bar.len, symbol.head=bar.head, symbol.tail=bar.tail)}
-	# 			}
-	# 			if(r.open){
-	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(1), silent=TRUE)
-	# 				results <- parallel::mclapply(1:m, eff.glm, mc.cores=cpu)
-	# 				if(R.ver == 'Linux' && r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
-	# 			}else{
-	# 				results <- parallel::mclapply(1:m, eff.glm, mc.cores=cpu)
-	# 			}
-	# 			#Sys.sleep(0.5)
-	# 			if(bar){close(tmpf); unlink(tmpf.name); cat('\n');}
-	# 		}
-	# 	}
-	# }
-	# options(warn = 0)
-
 	if(method == "GLM"){
 		if(cpu == 1 & r.open){
 			if(inherits(try(getMKLthreads(), silent=TRUE),"try-error")){
@@ -2896,325 +2780,6 @@ function(
 		copy.r <- deepcopy(x, cols=cols, rows=rows)
 	}
 	return(copy.r)
-}
-
-KAML.AIEM <- 
-function(
-	y, X=NULL, R=NULL, K=NULL, eigenK=NULL, start=NULL, method=c("AI", "EM", "EMAI", "AIEM"), nEMiter=1, nAIiter=20, tol=1e-6, verbose=TRUE, cpu=NULL
-)
-{
-
-#To: variance component estimation by "AIREML" and "EMREML"
-#Author: Lilin Yin
-#Time: 2018/07/18
-#y: numeric vector
-#X: fixed effect
-#R: random effect
-#K: list or matrix, single or multiple Kinships of genotyped individuals
-#eigenK: list, the eigen of Kinship
-#method: reml method
-#nEMiter: the max number of EM step
-#nAIiter: the max number of AI step
-#tol: the stop standard
-#verbose: wether to print iteration step
-#cpu: the cpu number with MKL 
-
-#NOTE: NAs are allowed in y, the order of individuals must be same between y and K
-	
-	if(inherits(try(Revo.version,silent=TRUE),"try-error"))	cpu=1
-	if(!inherits(try(Revo.version,silent=TRUE),"try-error") && !is.null(cpu)){
-		try(setMKLthreads(cpu),silent = TRUE)
-	}
-	
-	nan_index <- !is.na(y)
-	#sample size
-	n <- sum(nan_index)
-	Y <- as.matrix(y[nan_index])
-	
-	if(!is.null(K)){
-	
-		if(is.data.frame(K))	K <- as.matrix(K)
-		if(is.matrix(K))	K <- list(K)
-		lencheck <- lapply(K, function(x){if(nrow(x) != length(y) && ncol(x) != length(y))	stop("Rank of K not equals to length of y")})
-		
-		#scale diag of all Kinship to 1
-		if(is.list(K))	K <- lapply(K, 
-			function(x){
-				if(!is.matrix(x)){
-					x <- as.matrix(x)
-					x <- x/mean(diag(x))
-				}else{
-					x <- x/mean(diag(x))
-				}
-			}
-		)
-		eigenK <- NULL
-	}else{
-		if(is.null(eigenK)){
-			if(is.null(R))	stop("K or eigen of K must be provided!")
-		}else{
-			if(n != length(y))	stop("'NAs' is not allowed in y when eigenK provided!")
-			if(!all(names(eigenK) == c("values", "vectors")))	stop("Not supporting multiple random when eigenK provided!")
-			if(nrow(eigenK$vectors) != length(y))	stop("Rank of eigenK not equals to length of y")
-			m <- 1
-		}
-	}
-	
-	#fixed effect
-	if(!is.null(X)){
-		X <- as.matrix(X)
-		if(nrow(X) != length(y))	stop("Rows not match between y and X!")
-		if(sum(is.na(X)) != 0)	stop("NAs are not allowed in X!")
-		X.index <- apply(X, 2, function(x) length(unique(x)) > 1)
-		X <- X[, X.index, drop=FALSE]
-		X <- cbind(1, X)
-		X <- X[nan_index, ]
-	}else{
-		X<- matrix(1, nrow(Y))
-	}
-	
-	#random effect
-	if(!is.null(R)){
-		R.cov <- function(y){
-			indexM <- data.frame(1:length(y), y)
-			k <- diag(1, length(y))
-			index <- t(
-				do.call(
-					cbind,tapply(indexM[, 1], indexM[, 2], function(x){
-						if(length(x)>1){
-							return(combn(x, 2))
-						}else{
-							return(NULL)
-						}
-					}
-					)
-				)
-			)
-			k[index] <- 1
-			k[index[, c(2,1)]] <- 1
-			return(k)
-		}
-		R <- as.matrix(R)
-		if(nrow(R) != length(y))	stop("Rows not match between y and R!")
-		if(sum(is.na(R)) != 0)	stop("NAs are not allowed in R!")
-		if(!all(apply(R, 2, function(x) length(unique(x)) > 1)))	stop("Group number must be more than 1!")
-		if(!all(apply(R, 2, function(x) length(unique(x)) < length(x))))	stop("Group number must be less than the row number of R!")
-		R.k <- list()
-		for(r in 1:ncol(R)){
-			R.k[[r]] <- R.cov(R[, r, drop=TRUE])
-		}
-		K <- c(R.k, K)
-	}else{
-		R.k <- NULL
-	}
-	m <- length(K)
-	
-	# check for starting values
-	if(!is.null(start)){
-		if(length(start) != (m+1)){
-			stop("length of start must equal to ncol(R) + length(K) + 1")
-		}
-	}
-	
-	switch(
-		match.arg(method),
-		"AI"={
-			IterM <- rep("AI", nAIiter)
-		},
-		"EM"={
-			IterM <- rep("EM", nEMiter)
-		},
-		"AIEM"={
-			IterM <- rep(c("AI", "EM"), c(nAIiter, nEMiter))
-		},
-		"EMAI"={
-			IterM <- rep(c("EM", "AI"), c(nEMiter, nAIiter))
-		}
-	)
-	
-	#return the prediction, so store original K
-	if(!is.null(K)){
-		K_ori <- K
-		if(n != length(y)){
-			for(i in 1:m){
-				# subset matrix
-				K_ori[[i]] <- K_ori[[i]][,nan_index]
-				K[[i]] <- K[[i]][nan_index,nan_index]
-			}
-		}
-		
-		if(!is.null(cpu) && cpu == 1 && is.null(eigenK) && m == 1){
-			if(verbose)	message("Vinv with Eigen decomposition!")
-			for(i in 1:m){
-				eigenK <- eigen(K[[i]], symmetric=TRUE)
-			}
-		}
-		
-	}else{
-		if(verbose)	message("Vinv with Eigen decomposition!")
-		K <- K_ori <- list(Vinv <- eigenK$vectors %*% diag(eigenK$values) %*% t(eigenK$vectors))
-	}
-	
-	# initial values
-	sigma2.p <- var(Y)
-	tol <- as.vector(tol*sigma2.p)  # set convergence tolerance dependent on trait
-	
-	if(is.null(start)){
-		sigma2.k <- rep((1/(m+1))*sigma2.p, (m+1))
-	}else{
-		sigma2.k <- as.vector(start)
-	}
-	zeroFLAG <- rep(FALSE, m+1) # indicator of elements that have converged to "0"
-	
-	sigma2.kplus1 <- NULL
-	reps <- 0
-	
-	if(verbose){
-		if(is.null(R)){
-			cat("        ",
-				paste(paste("Var_K", 1:length(K), "(SE)", sep="", collapse="       "), "Var_e(SE)",
-				paste("h2_K", 1:length(K), "(SE)", sep="", collapse="       "), sep="       "),"\n", sep=""
-			)
-		}else{
-			if(m == ncol(R)){
-				cat("        ",
-					paste(paste("Var_R",  1:ncol(R), "(SE)", sep="", collapse="       "), "Var_e(SE)",
-					paste("h2_R", 1:ncol(R), "(SE)", sep="", collapse="       "), sep="       "),"\n", sep=""
-				)
-			}else{
-				cat("        ",
-					paste(paste(paste("Var_R", 1:ncol(R), "(SE)", sep="", collapse="       "), "       ", "Var_K", 1:(length(K)-ncol(R)), "(SE)", sep="", collapse="       "), "Var_e(SE)",
-					paste(paste("h2_R", 1:ncol(R), "(SE)", sep="", collapse="       "), "       ", "h2_K", 1:(length(K)-ncol(R)), "(SE)", sep="", collapse="       "), sep="       "),"\n", sep=""
-				)
-			}
-		}
-	}
-			
-	repeat({
-		reps <- reps+1
-
-		# variance matrix
-		if(is.null(eigenK)){
-			V <- 0
-			for(i in 1:m){
-				V <- V + K[[i]]*sigma2.k[i]
-			}
-			diag(V) <- diag(V) + sigma2.k[m+1]
-			
-			# inverse
-			#Vinv <- chol2inv(chol(V))
-			Vinv <- solve(V)
-			
-		}else{
-			
-			#Vinv=U(1/(vg*D+ve))U
-			eigenVinv <- tcrossprod(eigenK$vectors, diag(1/(sigma2.k[1] * eigenK$values + sigma2.k[2])))
-			Vinv <- tcrossprod(eigenVinv, eigenK$vectors); rm(eigenVinv)
-
-		}
-		
-		# projection matrix
-		tXVinv <- crossprod(X, Vinv)
-		XVinvXinv <- ginv(tXVinv %*% X)
-		P <- Vinv - Vinv %*% X %*% XVinvXinv %*% tXVinv
-
-		# matrices for later use
-		PY <- crossprod(P,Y)
-		PPY <- crossprod(P,PY)
-		
-		if(IterM[reps] == "AI"){
-		
-			# Average Information and Scores
-			AI <- matrix(NA, nrow=(m+1), ncol=(m+1))
-			score <- rep(NA,(m+1))        
-			for(i in 1:m){
-				PAPY <- crossprod(P,crossprod(K[[i]],PY))
-				score[i] <- -0.5*(sum(P*K[[i]]) - crossprod(Y, PAPY)) 
-				AI[i,i] <- 0.5*crossprod(PY, crossprod(K[[i]],PAPY)) # YPAPAPY
-					if((i+1) <= m){
-						for(j in (i+1):m){
-							AI[i,j] <- 0.5*crossprod(PY, crossprod(K[[j]],PAPY)) # YPDPAPY, YPSPAPY
-							AI[j,i] <- AI[i,j]
-						}
-					}
-				AI[i,(m+1)] <- 0.5*crossprod(PY, crossprod(K[[i]],PPY)) # YPAPPY
-				AI[(m+1),i] <- AI[i,(m+1)]
-			}
-			score[m+1] <- -0.5*(sum(diag(P)) - crossprod(Y, PPY))
-			AI[(m+1),(m+1)] <- 0.5*crossprod(PY,PPY) # YPPPY        	
-			
-			# update
-			AIinv <- try(solve(AI), silent=TRUE)
-			if(inherits(AIinv, "try-error"))	AIinv <- MASS::ginv(AI)
-			
-			AIinvScore <- AIinv %*% score
-			sigma2.kplus1 <- sigma2.k + AIinvScore
-			
-			sigma2.kplus1[zeroFLAG & sigma2.kplus1 < tol] <- 0 # set elements that were previously "0" and are still < 0 back to 0 (prevents step-halving due to this component)
-			
-			# step-halving if step too far
-			k <- 1
-			while(!all(sigma2.kplus1 >= 0)){
-				k <- 0.5*k
-				sigma2.kplus1 <- sigma2.k + k*AIinvScore
-				sigma2.kplus1[zeroFLAG & sigma2.kplus1 < tol] <- 0
-			}
-			SE.cal <- function(vc, Vvc){
-				VR <- function(v1, vv1, v2, vv2, c12){
-					nv <- v2^2 * vv1 + v1^2 * vv2 - 2 * v1 * v2 * c12
-					dv <- v2^4
-					nv/dv
-				}
-				n <- length(vc)
-				VarV <- diag(Vvc)
-				P <- sum(vc)
-				VarP <- sum(Vvc)
-				GGE <- vc[-n]
-				h2 <- GGE/P
-				SEGE <- sqrt(VarV)
-				SEh2 <- vector()
-				for (j in 1:(n - 1)){
-					SEh2[j] <- VR(GGE[j], VarV[j], P, VarP, sum(Vvc[j, ]))
-				}
-				SEh2 <- sqrt(SEh2)
-				return(list(SEGE=SEGE, h2=h2, SEh2=SEh2))
-			}
-			SE.res <- SE.cal(sigma2.kplus1, AIinv)
-			if(verbose){
-				cat("[", IterM[reps], "] ",
-					paste(paste(sprintf("%.6f", sigma2.kplus1), "(", sprintf("%.4f", SE.res$SEGE), ")", sep="", collapse=" "),
-					paste(sprintf("%.4f", SE.res$h2), "(", sprintf("%.4f", SE.res$SEh2), ")", sep="", collapse=" "), sep=" "),"\n", sep=""
-				)
-			}
-		}
-		
-		if(IterM[reps] == "EM"){
-			for(i in 1:m){
-				PAPY <- crossprod(P,crossprod(K[[i]],PY))
-				sigma2.kplus1[i] <- (1/n)*((sigma2.k[i])^2*crossprod(Y,PAPY) + (n*sigma2.k[i] - (sigma2.k[i])^2*sum(P*K[[i]])))
-			}
-			sigma2.kplus1[m+1] <- (1/n)*((sigma2.k[m+1])^2*crossprod(Y,PPY) + (n*sigma2.k[m+1] - (sigma2.k[m+1])^2*sum(diag(P))))
-
-			# print current estimates
-			if(verbose) message("[", IterM[reps], "] ", paste(round(sigma2.kplus1, 4), collapse=" "))
-		}
-
-		# test for convergence
-		#stat <- max(abs(sigma2.kplus1 - sigma2.k))
-		stat <- sqrt(sum((sigma2.kplus1 - sigma2.k)^2))
-		sigma2.k <- sigma2.kplus1
-		if(stat < tol | reps == length(IterM)) break()
-		zeroFLAG <- sigma2.k < tol # which elements have converged to "0"
-		sigma2.k[zeroFLAG] <- 0 # set these to 0
-	})
-
-	beta <- XVinvXinv %*% tXVinv %*% Y
-	u <- NULL
-	for(i in 1:m){
-		u <-  cbind(u, K_ori[[i]] %*% Vinv %*% (Y-X%*%beta) * sigma2.k[[i]])
-	}
-	
-	return(list(vc = sigma2.k, h2=SE.res$h2, vcse=SE.res$SEGE, h2se=SE.res$SEh2, beta=beta, u=u))
 }
 
 KAML <- 
@@ -3294,26 +2859,6 @@ function(
 	if(hasNA(GENO@address)){
 		stop("NA is not allowed in genotype, use 'KAML.Impute' to impute missings.")
 	}
-	# MAP <-  try(read.table(paste(gfile, ".map", sep=""), head=FALSE), silent=TRUE)
-	# if((!is.null(Top.num) | !is.null(Top.perc)) & class(MAP) == "try-error"){
-		# stop("Please provid the Map information for all SNPs!")
-	# }
-	# if(nrow(MAP) != nrow(GENO)){
-		# stop("The number of SNPs in genotype and map doesn't match!")
-	# }
-	# MAP <- as.matrix(MAP)
-	# options(warn = -1)
-	# max.chr <- max(as.numeric(MAP[, 2]), na.rm=TRUE)
-	# if(is.infinite(max.chr))	max.chr <- 0
-	# map.xy.index <- which(!as.numeric(MAP[, 2]) %in% c(0 : max.chr))
-	# if(length(map.xy.index) != 0){
-		# chr.xy <- unique(MAP[map.xy.index, 2])
-		# for(i in 1:length(chr.xy)){
-			# MAP[MAP[, 2] == chr.xy[i], 2] <- max.chr + i
-		# }
-	# }
-	# MAP <- matrix(as.numeric(MAP), nrow(MAP))
-	# options(warn = 0)
 	if(!is.null(kfile)){
 		KIN <- read.table(kfile, head=FALSE, colClasses="numeric", stringsAsFactors=FALSE)
 		KIN <- as.matrix(KIN)
@@ -3437,6 +2982,8 @@ function(
 		cat(" Predicting ...\n")
 		if(is.null(cross.QTN)){
 			myest <- KAML.Mix(phe=PHENO, K=cross.k, vc.method=vc.method, CV=Cov)
+			vg <- myest$reml$vg
+			ve <- myest$reml$ve
 			GEBV <- myest$ebv
 			beta <- as.vector(myest$beta)
 		}else
@@ -3444,14 +2991,19 @@ function(
 			if(cross.model == "QTN+K"){
 				QTN.cv <- cbind(Cov, t(GENO[cross.QTN, , drop=FALSE]))
 				myest <- KAML.Mix(phe=PHENO, CV=QTN.cv, vc.method=vc.method, K=cross.k)
-				GEBV <- myest$ebv + t(GENO[cross.QTN, , drop=FALSE]) %*% as.matrix(myest$beta[-c(1:ncol(Cov))])
-				beta <- as.vector(myest$beta[c(1:ncol(Cov))])
+				fix_eff <- t(GENO[cross.QTN, , drop=FALSE]) %*% as.matrix(myest$beta[-c(1:ncol(Cov))])
+				vg <- myest$reml$vg + var(fix_eff)
+				ve <- myest$reml$ve
+				GEBV <- myest$ebv + fix_eff
 			}
 			if(cross.model == "QTN"){
 				QTN.cv <- t(GENO[cross.QTN, , drop=FALSE])
 				NA.index <- is.na(PHENO)
-				qtn.eff <- KAML.GLM(y=PHENO[!NA.index], X=Cov[!NA.index, ], qtn.matrix=QTN.cv[!NA.index, ])$QTN.eff
+				glm_fit <- KAML.GLM(y=PHENO[!NA.index], X=Cov[!NA.index, ], qtn.matrix=QTN.cv[!NA.index, ])
+				qtn.eff <- glm_fit$QTN.eff
 				GEBV <- data.matrix(QTN.cv) %*% as.matrix(qtn.eff[-c(1:ncol(Cov))])
+				vg <- var(GEBV)
+				ve <- var(glm_fit$res)
 				beta <- as.vector(qtn.eff[c(1:ncol(Cov))])
 			}
 		}
@@ -3466,6 +3018,8 @@ function(
 		
 		cat(" Predicting ...\n")
 		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
+		vg <- myest$reml$vg
+		ve <- myest$reml$ve
 		GEBV <- myest$ebv
 		beta <- as.vector(myest$beta[c(1:ncol(Cov))])
 		cross.QTN <- NULL
@@ -3498,7 +3052,7 @@ function(
 	}
 	cat(paste(" ", TAXA, " is DONE within total run time: ", times(time.cal), "\n", sep=""))
 	cat(paste(c("#", rep("-", 19), "KAML ACCOMPLISHED SUCCESSFULLY", rep("-", 19), "#"), collapse=""),"\n\r")
-	return(list(y=yHat, beta=beta, gebv=GEBV, qtn=cross.QTN, model=cross.model, weight = cross.wt, top.perc=cross.tp, logx=cross.amp, K=cross.k))
+	return(list(y=yHat, beta=beta, gebv=GEBV, vg=vg, ve=ve, qtn=cross.QTN, model=cross.model, weight = cross.wt, top.perc=cross.tp, logx=cross.amp, K=cross.k))
 }
 
 KAML.EIGEN.REML <- 
