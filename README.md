@@ -1,4 +1,4 @@
-# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.2.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>
+# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.3.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>
 
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
@@ -499,7 +499,7 @@ To run ***`KAML`***, you should provide two basic files: the phenotype file (val
 # Top.num: max number of top LD-filtered SNPs before pseudo QTNs optimization
 # GWAS.model: select the model of Genome-Wide Association Study
 ```
-**Change the methods of variance components estimation ***vc.method*** ***(the options are "brent", "emma", "he", "ai")***:**
+**Change the methods of variance components estimation ***vc.method*** ***(the options are "brent", "emma", "he")***:**
 ```r
 > mykaml <- KAML(pfile="mouse.Pheno.txt", pheno=1, gfile="mouse", GWAS.model="MLM", vc.method="brent")
 # vc.method: select the method of variance components estimation
@@ -567,24 +567,27 @@ fit <- hiblup(pheno=pheno, pedigree=pedigree, geno=NULL, G=G, geno.ind=G.ind)
 
 ---
 ## OUTPUT
-***`KAML`*** returns total 8 lists of results including: predicted phenotype, coefficients of fixed effects, predicted GEBVs, pseudo QTNs, the used model, the optimized top percentage of GWAS results, the optimized base value of Log and the optimized Kinship matrix.
+***`KAML`*** returns total 11 lists of results including: predicted phenotype, coefficients of all fixed effects, predicted GEBVs, genetic variance, residual variance, pseudo QTNs, the used model, the weights of all SNPs when constructing GRM, the optimized top percentage, the optimized base value of Log function and the optimized Kinship matrix.
 ```r
 > str(mykaml)
-List of 8
- $ y       : num [1:1940, 1] -0.109 -0.362 -0.149 -1.101 0.114 ...
+List of 11
+ $ y       : num [1:1631, 1] 1541 1632 1568 1726 1749 ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : NULL
-  .. ..$ : chr "Trait1"
- $ beta    : num -0.0801
- $ gebv    : num [1:1940, 1] -0.0286 -0.2823 -0.0691 -1.0205 0.1943 ...
+  .. ..$ : chr "t1"
+ $ beta    : num 1631
+ $ gebv    : num [1:1631, 1] -90.019 0.997 -63.775 94.4 117.305 ...
   ..- attr(*, "dimnames")=List of 2
   .. ..$ : NULL
-  .. ..$ : chr "Trait1"
- $ qtn     : num [1:2] 9358 9375
- $ model   : chr "QTN+K"
- $ top.perc: num 0.0277
- $ logx    : num 3.11
- $ K       : num [1:1940, 1:1940] 0.8989 -0.0996 0.0538 0.0372 0.1102 ...
+  .. ..$ : chr "t1"
+ $ vg      : num 20665
+ $ ve      : num 1773
+ $ qtn     : NULL
+ $ model   : chr "K"
+ $ weight  : num [1:45426] 0.984 0.984 0.984 0.984 0.984 ...
+ $ top.perc: num 0.00775
+ $ logx    : num 15.5
+ $ K       : num [1:1631, 1:1631] 0.94824 -0.00781 -0.00558 -0.02665 -0.01755 ...
 ```
 
 ## FAQ and Hints

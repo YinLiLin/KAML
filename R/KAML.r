@@ -5,7 +5,7 @@ function()
 	cat("#    ______ _________ ______  _________                              #\n")
 	cat("#    ___/ //_/___/   |___/  |/  /___/ /  Kinship Adjusted Mult-Locus #\n")
 	cat("#    __/ ,<   __/ /| |__/ /|_/ / __/ /                BLUP           #\n")
-	cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.2.0      #\n")
+	cat("#    _/ /| |  _/ __| |_/ /  / /  _/ /___         Version: 1.3.0      #\n")
 	cat("#    /_/ |_|  /_/  |_|/_/  /_/   /_____/", "            _\\\\|//_         #\n")
 	cat("#  Website: https://github.com/YinLiLin/R-KAML      //^. .^\\\\        #\n")
 	cat(paste("#", paste(rep("-", 47), collapse=""), "ooO-( (00) )-Ooo", paste(rep("-", 5), collapse=""), "#", sep=""), "\n")
@@ -480,10 +480,10 @@ function(
 	if(!is.null(eigen.K)){
 		eig <- eigen.K
 	}else{
-		# mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
-		# try(setMKLthreads(mkl.cpu), silent=TRUE)
+		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
+		try(setMKLthreads(mkl.cpu), silent=TRUE)
 		eig <- eigen((K[ref.index, ref.index]), symmetric=TRUE)
-		# try(setMKLthreads(math.cpu), silent=TRUE)
+		try(setMKLthreads(math.cpu), silent=TRUE)
 	}
 	if(is.null(lambda)){
 		if(vc.method == "brent") {
@@ -742,11 +742,11 @@ function(
 		SS1 <- X %*% iXX
         SS2 <- tcrossprod(SS1, X)
 		S <- diag(n)-SS2
-		# math.cpu <- try(getMKLthreads(), silent=TRUE)
-		# mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
-		# try(setMKLthreads(mkl.cpu), silent=TRUE)
+		math.cpu <- Math_cpu_check()
+		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
+		try(setMKLthreads(mkl.cpu), silent=TRUE)
 		eig <- eigen(S %*% (K + diag(1, n)) %*% S, symmetric=TRUE)#S4 error here
-		# try(setMKLthreads(math.cpu), silent=TRUE)
+		try(setMKLthreads(math.cpu), silent=TRUE)
 		stopifnot(!is.complex(eig$values))
 		return(list(values=eig$values[1:(n-q)]-1, vectors=eig$vectors[, 1:(n-q)]))
 	}
@@ -2628,10 +2628,10 @@ function(
 		}
 	}
 	if(method == "MLM"){
-		# mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
-		# try(setMKLthreads(mkl.cpu), silent=TRUE)
+		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
+		try(setMKLthreads(mkl.cpu), silent=TRUE)
         eig <- eigen(K, symmetric=TRUE)
-		# try(setMKLthreads(math.cpu), silent=TRUE)
+		try(setMKLthreads(math.cpu), silent=TRUE)
 	}else{
 		eig <- NULL
 	}

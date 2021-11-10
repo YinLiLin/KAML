@@ -1,8 +1,8 @@
 Package: KAML
 Type: Package
 Title: Kinship Adjusted Multiple Loci Best Linear Unbiased Prediction
-Version: 1.2.0
-Date: 2021-11-04
+Version: 1.3.0
+Date: 2021-11-11
 Author: Lilin Yin, Haohao Zhang and Xiaolei Liu
 Maintainer: Lilin Yin <ylilin@163.com>
 Description: Kinship Adjusted Multiple Loci Best Linear Unbiased Prediction
