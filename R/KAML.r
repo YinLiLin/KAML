@@ -2986,6 +2986,7 @@ function(
 			ve <- myest$reml$ve
 			GEBV <- myest$ebv
 			beta <- as.vector(myest$beta)
+			qtn.eff <- NULL
 		}else
 		{
 			if(cross.model == "QTN+K"){
@@ -2995,6 +2996,8 @@ function(
 				vg <- myest$reml$vg + var(fix_eff)
 				ve <- myest$reml$ve
 				GEBV <- myest$ebv + fix_eff
+				beta <- as.vector(myest$beta[c(1:ncol(Cov))])
+				qtn.eff <- as.vector(myest$beta[-c(1:ncol(Cov))])
 			}
 			if(cross.model == "QTN"){
 				QTN.cv <- t(GENO[cross.QTN, , drop=FALSE])
@@ -3005,6 +3008,7 @@ function(
 				vg <- var(GEBV)
 				ve <- var(glm_fit$res)
 				beta <- as.vector(qtn.eff[c(1:ncol(Cov))])
+				qtn.eff <- as.vector(qtn.eff[-c(1:ncol(Cov))])
 			}
 		}
 	}else{
@@ -3017,17 +3021,35 @@ function(
 		K <- K / mean(diag(K))
 		
 		cat(" Predicting ...\n")
-		myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
-		vg <- myest$reml$vg
-		ve <- myest$reml$ve
-		GEBV <- myest$ebv
-		beta <- as.vector(myest$beta[c(1:ncol(Cov))])
-		cross.QTN <- NULL
-		cross.model <- "K"
-		cross.tp <- NULL
-		cross.wt <- NULL
-		cross.amp <- NULL
-		cross.k <- K
+		if(is.null(prior.QTN)){
+			myest <- KAML.Mix(phe=PHENO, CV=Cov, vc.method=vc.method, K=K)
+			vg <- myest$reml$vg
+			ve <- myest$reml$ve
+			GEBV <- myest$ebv
+			beta <- as.vector(myest$beta[c(1:ncol(Cov))])
+			qtn.eff <- NULL
+			cross.QTN <- NULL
+			cross.model <- "K"
+			cross.tp <- NULL
+			cross.wt <- SNP.weight
+			cross.amp <- NULL
+			cross.k <- K
+		}else{
+			QTN.cv <- cbind(Cov, t(GENO[prior.QTN, , drop=FALSE]))
+			myest <- KAML.Mix(phe=PHENO, CV=QTN.cv, vc.method=vc.method, K=K)
+			fix_eff <- t(GENO[prior.QTN, , drop=FALSE]) %*% as.matrix(myest$beta[-c(1:ncol(Cov))])
+			vg <- myest$reml$vg + var(fix_eff)
+			ve <- myest$reml$ve
+			GEBV <- myest$ebv + fix_eff
+			beta <- as.vector(myest$beta[c(1:ncol(Cov))])
+			qtn.eff <- as.vector(myest$beta[-c(1:ncol(Cov))])
+			cross.QTN <- prior.QTN
+			cross.model <- "Q+K"
+			cross.tp <- NULL
+			cross.wt <- SNP.weight
+			cross.amp <- NULL
+			cross.k <- K
+		}
 	}
 	#return the results
 	GEBV <- as.matrix(GEBV)
@@ -3052,7 +3074,7 @@ function(
 	}
 	cat(paste(" ", TAXA, " is DONE within total run time: ", times(time.cal), "\n", sep=""))
 	cat(paste(c("#", rep("-", 19), "KAML ACCOMPLISHED SUCCESSFULLY", rep("-", 19), "#"), collapse=""),"\n\r")
-	return(list(y=yHat, beta=beta, gebv=GEBV, vg=vg, ve=ve, qtn=cross.QTN, model=cross.model, weight = cross.wt, top.perc=cross.tp, logx=cross.amp, K=cross.k))
+	return(list(y=yHat, beta=beta, gebv=GEBV, vg=vg, ve=ve, qtn=cross.QTN, qtn.eff=qtn.eff, model=cross.model, weight = cross.wt, top.perc=cross.tp, logx=cross.amp, K=cross.k))
 }
 
 KAML.EIGEN.REML <- 
