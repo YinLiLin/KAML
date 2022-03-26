@@ -1,23 +1,31 @@
-# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.3.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>
+# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.4.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>
 
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
 ## Contents
 
-* [OVERVIEW](#overview)
-* [CITATION](#citation)
-* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML_log.png" height="250" align="right" />
-  - [Installation](#installation)
-  - [Test Datasets](#test-datasets)
-* [INPUT](#input)
-  - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file) 
-  - [Genotype file](#genotype-file)
-    * [Hapmap](#hapmap)/[VCF](#vcf)/[PLINK Binary](#plink-binary)/[Numeric](#numeric)
-* [USAGE](#usage)
-  - [Basic](#basic)
-  - [Advanced](#advanced)
-* [OUTPUT](#output)
-* [FAQ AND HINTS](#faq-and-hints)
+- [KAML ![](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.4.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>](#kaml----)
+  - [*Kinship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*](#kinship-adjusted-multiple-loci-best-linear-unbiased-prediction)
+  - [Contents](#contents)
+  - [OVERVIEW](#overview)
+  - [CITATION](#citation)
+  - [GETTING STARTED](#getting-started)
+    - [Installation](#installation)
+    - [Test Datasets](#test-datasets)
+  - [INPUT](#input)
+    - [Phenotype file](#phenotype-file)
+    - [Covariate file](#covariate-file)
+    - [Kinship file](#kinship-file)
+    - [Genotype file](#genotype-file)
+      - [Hapmap](#hapmap)
+      - [VCF](#vcf)
+      - [PLINK Binary](#plink-binary)
+      - [Numeric](#numeric)
+  - [USAGE](#usage)
+    - [Basic](#basic)
+    - [Advanced](#advanced)
+  - [OUTPUT](#output)
+  - [FAQ and Hints](#faq-and-hints)
 
 ---
 ## OVERVIEW
