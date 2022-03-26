@@ -3,10 +3,6 @@
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
 ## Contents
-
-- [KAML ![](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.4.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>](#kaml----)
-  - [*Kinship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*](#kinship-adjusted-multiple-loci-best-linear-unbiased-prediction)
-  - [Contents](#contents)
   - [OVERVIEW](#overview)
   - [CITATION](#citation)
   - [GETTING STARTED](#getting-started)
