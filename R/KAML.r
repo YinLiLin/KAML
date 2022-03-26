@@ -69,19 +69,19 @@ function(
 			if(fixed.points){
 				point.index <- points
 				point.index <- point.index[point.index > floor(100*(i-1)/n)]
-				if(floor(100*i/n) %in% point.index){
-					if(floor(100*i/n) != max(point.index)){
-						print.len <- floor(symbol.len*i/n)
+				if(round(100*i/n, 1) %in% point.index){
+					if(round(100*i/n) != max(point.index)){
+						print.len <- round(symbol.len*i/n)
 						cat(paste("\r", 
 							paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
 							paste(rep(" ", symbol.len-print.len), collapse=""),
-							sprintf("%.2f%%", 100*i/n), sep="")
+							sprintf("%.0f%%", 100*i/n), sep="")
 						)
 					}else{
-						print.len <- floor(symbol.len*i/n)
+						print.len <- round(symbol.len*i/n)
 						cat(paste("\r", 
 							paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
-							sprintf("%.2f%%", 100*i/n), sep="")
+							sprintf("%.0f%%", 100*i/n), sep="")
 						)
 					}
 				}
@@ -110,11 +110,11 @@ function(
 					progress <- progress + as.numeric(msg)
 					print.len <- round(symbol.len * progress / n)
 					if(fixed.points){
-						if(progress %in% round(points * n / 100)){
+						if(round(progress * 100 / n, 1)  %in% points){
 							cat(paste("\r", 
 							paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
 							paste(rep(" ", symbol.len-print.len), collapse=""),
-							sprintf("%.2f%%", progress * 100 / n), sep=""))
+							sprintf("%.0f%%", progress * 100 / n), sep=""))
 						}
 					}else{
 						cat(paste("\r", 
@@ -131,11 +131,11 @@ function(
 			writeBin(progress, tmp.file)
 			print.len <- round(symbol.len * progress / n)
 			if(fixed.points){
-				if(progress %in% round(points * n / 100)){
+				if(round(progress * 100 / n, 1) %in% points){
 					cat(paste("\r", 
 					paste(c(symbol.head, rep("-", print.len), symbol.tail), collapse=""), 
 					paste(rep(" ", symbol.len-print.len), collapse=""),
-					sprintf("%.2f%%", progress * 100 / n), sep=""))
+					sprintf("%.0f%%", progress * 100 / n), sep=""))
 				}
 			}else{
 				cat(paste("\r", 
@@ -1258,7 +1258,7 @@ function(
 				#Identify end of file
 				if(is.null(tt[1])) inGENOFile=FALSE
 				if(inGENOFile){
-					KAML.Bar(i=i, n=nmarkers, fixed.points=FALSE)
+					KAML.Bar(i=i, n=nmarkers, fixed.points=TRUE)
 					if(i == nmarkers)	cat("\n")
 					if(i == nmarkers){
 						myGeno.backed [(i-nn + 1):i, ] = tt; rm(tt); gc()
@@ -1360,8 +1360,7 @@ function(
 	max.pos <-which.max(COR)
 	if(max.pos == 1){
 		qtn.inc=NULL;qtn.dec=NULL
-	}else
-	{
+	}else{
 		cor.new <- COR[1:max.pos]
 		qtn.new <- QTN.list[1:(max.pos-1)]
 		cor.a <- rep(1, length(cor.new))
@@ -1522,7 +1521,9 @@ function(
 			if(GWAS.model == "RR"){
 					rr.gwas <- KAML.Mix(phe=P.ref, geno=geno, CV=CV, K=K, vc.method=vc.method)$S
 					P.value <- as.vector(geno[, !is.na(P.ref), drop=FALSE] %*% rr.gwas)/nrow(geno)
-					P.value <- -(abs(P.value)/mean(abs(P.value)))
+					# P.value <- -(abs(P.value)/mean(abs(P.value)))
+					P.value <- P.value^2
+					P.value <- -(P.value/mean(P.value))
 					P.value <- 10^(P.value)
 					rm("rr.gwas")
 			}
@@ -1888,12 +1889,18 @@ function(
 			if(qtn.model != "BF"){
 				cat(paste(" Total iteration number:", iterationN))
 				if(cpu == 1){
-					print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
+					print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 					if(qtn.model == "MR"){
 						mult.res <- lapply(1:loop, mult.run); gc()
 						res <- do.call(rbind, mult.res)
 						cor.store.k <- matrix(unlist(res[, 1]), length(Top.index))		
 						cor.store.qtn <- matrix(unlist(res[, 2]), length(Top.index))
+						
+						cor.store.k <- scale(cor.store.k)
+						cor.store.qtn <- scale(cor.store.qtn)
+						
+						# cor.store.k <- apply(cor.store.k, 2, order)
+						# cor.store.qtn <- apply(cor.store.qtn, 2, order)
 						
 						#----------debug----------#
 						# print(cor.store.k)
@@ -1919,10 +1926,11 @@ function(
 						k.inc.index <- (cor.store.k[2:nrow(cor.store.k), , drop=FALSE] - cor.store.k[1:(nrow(cor.store.k)-1), , drop=FALSE]) > 0
 						k.inc.index <- apply(k.inc.index, 1, sum)
 						inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num * count.threshold)])
+						# inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num)])
 						qtn.inc.index <- (cor.store.qtn[2:nrow(cor.store.qtn), , drop=FALSE] - cor.store.qtn[1:(nrow(cor.store.qtn)-1), , drop=FALSE]) > 0
 						qtn.inc.index <- apply(qtn.inc.index, 1, sum)
 						inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num * count.threshold)])
-
+						# inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num)])
 					}
 					if(qtn.model == "SR"){
 						glm.cor.store <- NULL
@@ -1968,7 +1976,7 @@ function(
 					
 					#get the user-specific cpu number
 					if(wind){
-						print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
+						print.f <- function(i){KAML.Bar(i=i, n=iterationN, type="type1", fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 						#print(paste("Cross-validation NO.", paste(c(1:(sample.num * crv.num)), collapse=", "), sep=""))
 						cat(" Multi-process started ...\n")
 						cat(" (Note: There needs to wait some time! See iteration details in 'Loop.log')\n")
@@ -1990,13 +1998,19 @@ function(
 							tmpf.name <- tempfile()
 							tmpf <- fifo(tmpf.name, open="w+b", blocking=TRUE)
 							writeBin(0, tmpf)
-							print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
+							print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 							mult.res <- parallel::mclapply(1:loop, mult.run, mc.cores = cpus)
 							close(tmpf); unlink(tmpf.name)
 							res <- do.call(rbind, mult.res)
 							cor.store.k <- matrix(unlist(res[, 1]), length(Top.index))		
 							cor.store.qtn <- matrix(unlist(res[, 2]), length(Top.index))
 							
+							cor.store.k <- scale(cor.store.k)
+							cor.store.qtn <- scale(cor.store.qtn)
+
+							# cor.store.k <- apply(cor.store.k, 2, order)
+							# cor.store.qtn <- apply(cor.store.qtn, 2, order)
+						
 							#----------debug----------#
 							# print(cor.store.k)
 							# print(cor.store.qtn)
@@ -2021,10 +2035,11 @@ function(
 							k.inc.index <- (cor.store.k[2:nrow(cor.store.k), , drop=FALSE] - cor.store.k[1:(nrow(cor.store.k)-1), , drop=FALSE]) > 0
 							k.inc.index <- apply(k.inc.index, 1, sum)
 							inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num * count.threshold)])
+							# inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num)])
 							qtn.inc.index <- (cor.store.qtn[2:nrow(cor.store.qtn), , drop=FALSE] - cor.store.qtn[1:(nrow(cor.store.qtn)-1), , drop=FALSE]) > 0
 							qtn.inc.index <- apply(qtn.inc.index, 1, sum)
 							inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num * count.threshold)])
-						
+							# inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num)])
 						}
 						if(qtn.model == "SR"){
 							glm.cor.store <- NULL
@@ -2042,7 +2057,7 @@ function(
 								tmpf.name <- tempfile()
 								tmpf <- fifo(tmpf.name, open="w+b", blocking=TRUE)
 								writeBin(0, tmpf)
-								print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
+								print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 								mult.res <- parallel::mclapply(1:loop, mult.run, mc.cores = cpus)
 								close(tmpf); unlink(tmpf.name)
 								res <- do.call(rbind, mult.res)
@@ -2090,15 +2105,30 @@ function(
 			}
 						
 			if(qtn.model == "MR"){
-				cor.gblup <- cor.store.k[1, ]
+				# cor.gblup <- cor.store.k[1, ]
 				cor.mean.k <- rowMeans(cor.store.k)
 				cor.mean.qtn <- rowMeans(cor.store.qtn)
 				cor.mean.k.max <- max(cor.mean.k[-1])
+				# cor.mean.k.mean <- mean(cor.mean.k[-1])
 				cor.mean.qtn.max <- max(cor.mean.qtn[-1])
-				model.index <- which.max(c(cor.mean.k[1], cor.mean.k.max, cor.mean.qtn.max))
-				cor.mean <- rbind(cor.mean.qtn, cor.mean.k)
-				rownames(cor.mean)=c("QTN", "QTN+K")
-				colnames(cor.mean)=Top.index
+				# cor.mean.qtn.mean <- mean(cor.mean.qtn[-1])
+				# model.index <- which.max(c(cor.mean.k[1], cor.mean.k.max, cor.mean.qtn.max))
+				if((cor.mean.k.max - cor.mean.k[1]) < 0.005 & (cor.mean.qtn.max - cor.mean.qtn[1]) < 0.005){
+				# if((cor.mean.k.mean - cor.mean.k[1]) < 0 & (cor.mean.qtn.mean - cor.mean.qtn[1]) < 0){
+					model.index <- 1
+				}else{
+					if((cor.mean.k.max - cor.mean.k[1] + 0.005) > (cor.mean.qtn.max - cor.mean.qtn[1])){
+					# if((cor.mean.k.mean - cor.mean.k[1]) > (cor.mean.qtn.mean - cor.mean.qtn[1])){
+						model.index <- 2
+					}else{
+						model.index <- 3
+					}
+				}
+				# model.index <- which.max(c(cor.mean.k[1], cor.mean.k.mean, cor.mean.qtn.mean))
+				
+				# cor.mean <- rbind(cor.mean.qtn, cor.mean.k)
+				# rownames(cor.mean)=c("QTN", "QTN+K")
+				# colnames(cor.mean)=Top.index
 				#-----------debug-----------#
 				#print(round(cor.mean, 4))
 				#---------------------------#
@@ -2116,7 +2146,7 @@ function(
 				}
 			}
 			
-			model <- ifelse((is.null(inc.QTN.store.k) & is.null(inc.QTN.store.qtn))|model.index == 1, "K", ifelse(model.index == 2, "QTN+K", "QTN"))
+			model <- ifelse((is.null(inc.QTN.store.k) & model.index == 2) | (is.null(inc.QTN.store.qtn) & model.index == 3) | model.index == 1, "K", ifelse(model.index == 2, "QTN+K", "QTN"))
 			
 			if(model == "K"){
 				cross.QTN = NULL
@@ -2283,7 +2313,7 @@ function(
 				# KAML.Bar(n=iterationN, type="type2", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")
 				
 				writeBin(0, tmpf)
-				print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
+				print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 				
 				if(r.open)	setMKLthreads(1)
 				mult.res <- parallel::mclapply(1:iterationN, mult.run, mc.cores = cpu)
@@ -2309,9 +2339,9 @@ function(
 		
         #-----------debug-----------#
         #write.csv(K.cor.store,"K.store.debug.csv")
-        #print(K.cor.store)
-        #print(Max.wt.store)
-		#print(LL.store)
+        # print(K.cor.store)
+        # print(Max.wt.store)
+		# print(LL.store)
         #---------------------------#
 		
 		K.cor.store <- K.cor.store[-c(1:length(amplify)), ]
@@ -2320,8 +2350,8 @@ function(
         top.amplify <- rep(amplify, length(Top.perc))
 		colnames(K.cor.store) <- 1:(sample.num * crv.num)
 		rownames(K.cor.store) <- paste(top.index, top.amplify,sep="_")
-		
-		K.cor.mean <- apply(K.cor.store, 1, mean)
+		# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
+		K.cor.mean <- apply(scale(K.cor.store), 1, mean)
 		#K.cor.mean <- apply(K.cor.store, 1, median)
 		top.index.max <- top.index[which.max(K.cor.mean)]
 		amp.max <- top.amplify[which.max(K.cor.mean)]
@@ -2337,7 +2367,8 @@ function(
 			AMP <- amplify
 			K.COR <- K.cor.store
 			for(loop in 1 : bisection.loop){
-				K.cor.mean <- apply(K.cor.store, 1, mean)
+				# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
+				K.cor.mean <- apply(scale(K.cor.store), 1, mean)
 				top.cor <- K.cor.store[which.max(K.cor.mean), ]
 				K.cor.max.mean <- max(K.cor.mean)
 				if(length(Top.perc) != 1){
@@ -2407,7 +2438,7 @@ function(
 						# KAML.Bar(n=iterationN, type="type2", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")
 						
 						writeBin(0, tmpf)
-						print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
+						print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 				
 						if(r.open)	setMKLthreads(1)
 						mult.res <- parallel::mclapply(1:iterationN, mult.run, mc.cores = cpu)
@@ -2437,7 +2468,8 @@ function(
 				rm(list=c("mult.store", "mult.res")); gc()
 				
 				#test converge
-				K.cor.mean <- apply(K.cor.store, 1, mean)
+				# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
+				K.cor.mean <- apply(scale(K.cor.store), 1, mean)
 				top.index.max <- top.index[which.max(K.cor.mean)]
 				amp.max <- top.amplify[which.max(K.cor.mean)]
 				diff <- (max(K.cor.mean) - K.cor.max.mean)
@@ -2447,9 +2479,11 @@ function(
 				}
 			}
 		}
-		
+		K.cor.store <- rbind(cor_qtn_k, K.cor.store)
+		# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
+		K.cor.mean <- apply(scale(K.cor.store), 1, mean)
         if(
-			(max(K.cor.mean) > mean(cor_qtn_k))
+			((max(K.cor.mean[-1]) - 0.005) > K.cor.mean[1])
 			#& 
 			#sum((K.cor.store[which.max(K.cor.mean), ] - cor_qtn_k) > 0) >= floor((sample.num * crv.num) * count.threshold)
 		)

@@ -46,7 +46,7 @@ class MinimalProgressBar: public ProgressBar{
     private:
     bool _finalized;
     const char *_str;
-    int point_length = 100;
+    int point_length = 10;
     LogicalVector point = rep(true, point_length);
 };
 
