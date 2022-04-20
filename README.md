@@ -3,25 +3,20 @@
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
 ## Contents
-  - [OVERVIEW](#overview)
-  - [CITATION](#citation)
-  - [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML_log.png" height="250" align="right" />
-    - [Installation](#installation)
-    - [Test Datasets](#test-datasets)
-  - [INPUT](#input)
-    - [Phenotype file](#phenotype-file)
-    - [Covariate file](#covariate-file)
-    - [Kinship file](#kinship-file)
-    - [Genotype file](#genotype-file)
-      - [Hapmap](#hapmap)
-      - [VCF](#vcf)
-      - [PLINK Binary](#plink-binary)
-      - [Numeric](#numeric)
-  - [USAGE](#usage)
-    - [Basic](#basic)
-    - [Advanced](#advanced)
-  - [OUTPUT](#output)
-  - [FAQ and Hints](#faq-and-hints)
+* [OVERVIEW](#overview)
+* [CITATION](#citation)
+* [GETTING STARTED](#getting-started)<img src="https://raw.githubusercontent.com/YinLiLin/R-KAML/master/figures/KAML_log.png" height="250" align="right" />
+  - [Installation](#installation)
+  - [Test Datasets](#test-datasets)
+* [INPUT](#input)
+  - [Phenotype file](#phenotype-file)/[Covariate file](#covariate-file)/[Kinship file](#kinship-file) 
+  - [Genotype file](#genotype-file)
+    * [Hapmap](#hapmap)/[VCF](#vcf)/[PLINK Binary](#plink-binary)/[Numeric](#numeric)
+* [USAGE](#usage)
+  - [Basic](#basic)
+  - [Advanced](#advanced)
+* [OUTPUT](#output)
+* [FAQ AND HINTS](#faq-and-hints)
 
 ---
 ## OVERVIEW
