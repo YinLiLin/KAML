@@ -1907,8 +1907,8 @@ function(
 						# print(cor.store.qtn)
 						#-------------------------#
 						
-						cor.store.k_mean <- rowMeans(cor.store.k)
-						cor.store.qtn_mean <- rowMeans(cor.store.qtn)
+						cor.store.k_mean <- rowMeans(cor.store.k, na.rm=T)
+						cor.store.qtn_mean <- rowMeans(cor.store.qtn, na.rm=T)
 						
 						#----------debug----------#
 						# print(pseudo.QTNs)
@@ -1924,11 +1924,11 @@ function(
 						#---------------------------#
 						
 						k.inc.index <- (cor.store.k[2:nrow(cor.store.k), , drop=FALSE] - cor.store.k[1:(nrow(cor.store.k)-1), , drop=FALSE]) > 0
-						k.inc.index <- apply(k.inc.index, 1, sum)
+						k.inc.index <- apply(k.inc.index, 1, sum, na.rm=T)
 						inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num * count.threshold)])
 						# inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num)])
 						qtn.inc.index <- (cor.store.qtn[2:nrow(cor.store.qtn), , drop=FALSE] - cor.store.qtn[1:(nrow(cor.store.qtn)-1), , drop=FALSE]) > 0
-						qtn.inc.index <- apply(qtn.inc.index, 1, sum)
+						qtn.inc.index <- apply(qtn.inc.index, 1, sum, na.rm=T)
 						inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num * count.threshold)])
 						# inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num)])
 					}
@@ -2016,8 +2016,8 @@ function(
 							# print(cor.store.qtn)
 							#-------------------------#
 							
-							cor.store.k_mean <- rowMeans(cor.store.k)
-							cor.store.qtn_mean <- rowMeans(cor.store.qtn)
+							cor.store.k_mean <- rowMeans(cor.store.k, na.rm=T)
+							cor.store.qtn_mean <- rowMeans(cor.store.qtn, na.rm=T)
 							
 							#----------debug----------#
 							# print(pseudo.QTNs)
@@ -2033,11 +2033,11 @@ function(
 							#---------------------------#
 							
 							k.inc.index <- (cor.store.k[2:nrow(cor.store.k), , drop=FALSE] - cor.store.k[1:(nrow(cor.store.k)-1), , drop=FALSE]) > 0
-							k.inc.index <- apply(k.inc.index, 1, sum)
+							k.inc.index <- apply(k.inc.index, 1, sum, na.rm=T)
 							inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num * count.threshold)])
 							# inc.QTN.store.k <- intersect(inc.QTN.store.k, pseudo.QTNs[k.inc.index >= floor(sample.num * crv.num)])
 							qtn.inc.index <- (cor.store.qtn[2:nrow(cor.store.qtn), , drop=FALSE] - cor.store.qtn[1:(nrow(cor.store.qtn)-1), , drop=FALSE]) > 0
-							qtn.inc.index <- apply(qtn.inc.index, 1, sum)
+							qtn.inc.index <- apply(qtn.inc.index, 1, sum, na.rm=T)
 							inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num * count.threshold)])
 							# inc.QTN.store.qtn <- intersect(inc.QTN.store.qtn, pseudo.QTNs[qtn.inc.index >= floor(sample.num * crv.num)])
 						}
@@ -2351,7 +2351,7 @@ function(
 		colnames(K.cor.store) <- 1:(sample.num * crv.num)
 		rownames(K.cor.store) <- paste(top.index, top.amplify,sep="_")
 		# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
-		K.cor.mean <- apply(scale(K.cor.store), 1, mean)
+		K.cor.mean <- apply(scale(K.cor.store), 1, mean, na.rm=T)
 		#K.cor.mean <- apply(K.cor.store, 1, median)
 		top.index.max <- top.index[which.max(K.cor.mean)]
 		amp.max <- top.amplify[which.max(K.cor.mean)]
@@ -2368,7 +2368,7 @@ function(
 			K.COR <- K.cor.store
 			for(loop in 1 : bisection.loop){
 				# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
-				K.cor.mean <- apply(scale(K.cor.store), 1, mean)
+				K.cor.mean <- apply(scale(K.cor.store), 1, mean, na.rm=T)
 				top.cor <- K.cor.store[which.max(K.cor.mean), ]
 				K.cor.max.mean <- max(K.cor.mean)
 				if(length(Top.perc) != 1){
@@ -2469,11 +2469,11 @@ function(
 				
 				#test converge
 				# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
-				K.cor.mean <- apply(scale(K.cor.store), 1, mean)
+				K.cor.mean <- apply(scale(K.cor.store), 1, mean, na.rm=T)
 				top.index.max <- top.index[which.max(K.cor.mean)]
 				amp.max <- top.amplify[which.max(K.cor.mean)]
 				diff <- (max(K.cor.mean) - K.cor.max.mean)
-				if(diff > 0 & diff < 1e-5){
+				if(abs(diff) < 1e-4){
 					cat("\r Loop Stopped at convergence!                          \n")
 					break()
 				}
@@ -2481,7 +2481,7 @@ function(
 		}
 		K.cor.store <- rbind(cor_qtn_k, K.cor.store)
 		# K.cor.mean <- apply(apply(K.cor.store, 2, order), 1, mean)
-		K.cor.mean <- apply(scale(K.cor.store), 1, mean)
+		K.cor.mean <- apply(scale(K.cor.store), 1, mean, na.rm=T)
         if(
 			((max(K.cor.mean[-1]) - 0.005) > K.cor.mean[1])
 			#& 
