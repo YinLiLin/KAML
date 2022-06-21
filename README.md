@@ -48,6 +48,23 @@ If you have any bug reports or questions, please feed back :point_right:[here](h
 Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy of complex traits using machine learning determined parameters. Genome Biol 21, 146 (2020). https://doi.org/10.1186/s13059-020-02052-w
 
 ---
+## :toolbox: SOFTWARE TOOLS FOR GENETIC ANALYSES AND GENOMIC BREEDING
+<table>
+    <tr>
+        <td><g-emoji class="g-emoji" alias="mailbox" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4eb.png">📫</g-emoji> <strong><a href="https://www.hiblup.com/" rel="nofollow">HIBLUP</a></strong>: Versatile and easy-to-use GS toolbox.</td>
+        <td><g-emoji class="g-emoji" alias="four_leaf_clover" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f340.png">🍀</g-emoji> <strong><a href="https://github.com/xiaolei-lab/SIMER">SIMER</a></strong>: data simulation for life science and breeding.</td>
+    </tr>
+    <tr>
+        <td><g-emoji class="g-emoji" alias="postbox" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4ee.png">📮</g-emoji> <strong><a href="https://github.com/xiaolei-lab/rMVP">rMVP</a></strong>: Efficient and easy-to-use GWAS tool.</td>
+        <td><g-emoji class="g-emoji" alias="mountain_snow" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f3d4.png">🏔️</g-emoji> <strong><a href="http://iswine.iomics.pro/pig-iqgs/iqgs/index" rel="nofollow">ISWINE</a></strong>: an omics knowledgebase for swine.</td>
+    </tr>
+    <tr>
+        <td><g-emoji class="g-emoji" alias="swimmer" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f3ca.png">🏊</g-emoji> <strong><a href="https://github.com/YinLiLin/hibayes">hibayes</a></strong>: A Bayesian-based GWAS and GS tool.</td>
+        <td><g-emoji class="g-emoji" alias="bar_chart" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4ca.png">📊</g-emoji> <strong><a href="https://github.com/YinLiLin/CMplot">CMplot</a></strong>: A drawing tool for genetic analyses.</td>
+    </tr>
+</table>
+
+---
 ## GETTING STARTED
 ***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would [reduce the time consumption significantly](https://mran.microsoft.com/documents/rro/multithread/#mt-bench) as many matrix operations could be computed in parallel by using all the available processing power.
 
