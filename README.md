@@ -67,8 +67,7 @@ Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy 
 
 ---
 ## GETTING STARTED
-***`KAML`*** is compatible with both [R](https://www.r-project.org/) and [Microsoft R Open](https://mran.microsoft.com/open/), **WE STRONGLY RECOMMEND TO INSTALL ***`KAML`*** ON Microsoft R Open(https://mran.microsoft.com/download/)**. **MRO** is the enhanced distribution of **R** from Microsoft Corporation, and it includes the state-of-the-art parallel accelerated math libraries. Those libraries would [reduce the time consumption significantly](https://mran.microsoft.com/documents/rro/multithread/#mt-bench) as many matrix operations could be computed in parallel by using all the available processing power.
-
+***`KAML`*** is written in R language, it is recommended to link MKL (Math Kernel Library) with R for fast computing with big data (see [how to link MKL with R](https://www.intel.com/content/www/us/en/developer/articles/technical/quick-linking-intel-mkl-blas-lapack-to-r.html)), because the BLAS/LAPACK library can be accelerated automatically in multi-threads by MKL library, which would significantly reduce computational time. 
 ### Installation
 (1) ***`KAML`*** can be installed with **"devtools"** by using the following R codes:
 ```r
