@@ -460,8 +460,7 @@ function(
 # vc.method: the methods for estimating variance component						 						 #
 # lambda: ve/vg, ve is the variance of residual, vg is the variance of additive effect					 #
 #--------------------------------------------------------------------------------------------------------#
-    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
-	math.cpu <- Math_cpu_check()
+    math.cpu <- Math_cpu_check()
 	inf.index <- is.na(phe)
 	ref.index <- !is.na(phe)
 	refphe <- phe[ref.index]
@@ -482,8 +481,10 @@ function(
 	}else{
 		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
 		try(setMKLthreads(mkl.cpu), silent=TRUE)
+		try(blas_set_num_threads(mkl.cpu), silent=TRUE)
 		eig <- eigen((K[ref.index, ref.index]), symmetric=TRUE)
 		try(setMKLthreads(math.cpu), silent=TRUE)
+		try(blas_set_num_threads(math.cpu), silent=TRUE)
 	}
 	if(is.null(lambda)){
 		if(vc.method == "brent") {
@@ -690,7 +691,7 @@ function(
 		if(sum(weight < 0) != 0)	stop("Negative value is not allowed in weight")
 	}
 	# priority <- match.arg(priority)
-	r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+	r.open <- grepl("mkl", sessionInfo()$LAPACK) | grepl("openblas", sessionInfo()$LAPACK) | !inherits(try(Revo.version, silent=TRUE),"try-error")
 	# if(priority == "speed"){
 	# 	k <- kin_cal_s(M@address, SUM=SUM, scale=scale, wt=weight, mkl=r.open, threads=threads, verbose=verbose)
 	# }else{
@@ -716,7 +717,6 @@ function(
 #--------------------------------------------------------------------------------------------------------#
 	R.ver <- Sys.info()[['sysname']]
 	wind <- R.ver == 'Windows'
-	r.open <- !inherits(try(Revo.version,silent=TRUE),"try-error")
 	
 	if(!is.numeric(y))	y <- as.numeric(as.character(y))
 	emma.delta.REML.LL.wo.Z <- function(logdelta, lambda, etas) 
@@ -745,8 +745,10 @@ function(
 		math.cpu <- Math_cpu_check()
 		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
 		try(setMKLthreads(mkl.cpu), silent=TRUE)
+		try(blas_set_num_threads(mkl.cpu), silent=TRUE)
 		eig <- eigen(S %*% (K + diag(1, n)) %*% S, symmetric=TRUE)#S4 error here
 		try(setMKLthreads(math.cpu), silent=TRUE)
+		try(blas_set_num_threads(math.cpu), silent=TRUE)
 		stopifnot(!is.complex(eig$values))
 		return(list(values=eig$values[1:(n-q)]-1, vectors=eig$vectors[, 1:(n-q)]))
 	}
@@ -1451,9 +1453,9 @@ function(
 	
 	#make sure the type of R(base R, Open R), "checkpoint" package is installed in Open R by default
     #r.open <- "checkpoint" %in% rownames(installed.packages())
-    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+    r.open <- grepl("mkl", sessionInfo()$LAPACK) | grepl("openblas", sessionInfo()$LAPACK) | !inherits(try(Revo.version, silent=TRUE), "try-error")
 	mkl <- Math_cpu_check()
-	if(r.open &  mac & cpu > 1)	Sys.setenv("VECLIB_MAXIMUM_THREADS" = "1")
+	if(r.open & mac & cpu > 1)	Sys.setenv("VECLIB_MAXIMUM_THREADS" = "1")
 	if(wind)	cpu <- 1
 
 	if(is.null(Top.num) & (is.null(Top.perc))) stop("One of 'Top.num' or 'Top.perc' must be setted")
@@ -1492,7 +1494,10 @@ function(
 
 		#change GWAS models at here
 		mult.run.gwas <- function(i){
-			if(r.open)	try(setMKLthreads(mkl), silent=TRUE)
+			if(r.open){
+				try(setMKLthreads(mkl), silent=TRUE)
+				try(blas_set_num_threads(mkl), silent=TRUE)
+			}
 			ref.logic <- (i == sample.num * crv.num + 1)
 			# cat(" GWAS of validations is ongoing ...(", i,"/", gwas.num, ")\r", sep="")
 			if(!ref.logic){
@@ -1755,7 +1760,12 @@ function(
 			
 				#when use microsoft r open, users can set the number of cpu for math calculation at each process
 				#if(cpu>1 & (wind | r.open)) try(setMKLthreads(math.cpu), silent=TRUE)
-				
+				# if(r.open){
+				# 	try(setMKLthreads(1), silent=TRUE)
+				# 	try(blas_set_num_threads(1), silent=TRUE)
+				# 	try(omp_set_num_threads(1), silent=TRUE)
+				# }
+
 				top <- j %% length(Top.index)
 				if(top == 0){
 					top <- length(Top.index)
@@ -1992,7 +2002,11 @@ function(
 						# print.f <- function(i){writeBin(1, tmpf)}
 						# KAML.Bar(n=iterationN, type="type2", tmp.file=tmpf, fixed.points=FALSE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")
 
-						if(r.open)	setMKLthreads(1)
+						if(r.open){
+							try(setMKLthreads(1), silent=TRUE)
+							try(blas_set_num_threads(1), silent=TRUE)
+							try(omp_set_num_threads(1), silent=TRUE)
+						}
 						cpus <- ifelse(loop > cpu, cpu, loop)
 						if(qtn.model == "MR"){
 							tmpf.name <- tempfile()
@@ -2085,7 +2099,11 @@ function(
 							cor.store.qtn <- max(glm.cor.store)
 							cor.store.k <- max(mlm.cor.store)
 						}
-						if(r.open)	setMKLthreads(mkl)
+						if(r.open){
+							try(setMKLthreads(mkl), silent=TRUE)
+							try(blas_set_num_threads(mkl), silent=TRUE)
+							try(omp_set_num_threads(mkl), silent=TRUE)
+						}
 					}
 					gc()
 				}
@@ -2185,9 +2203,10 @@ function(
 		if(!0 %in% Top.perc)	Top.perc <- c(0, Top.perc)
 		
 		mult.run <- function(j, math.cpu=NULL){
-			if(cpu>1 & (wind | r.open)) {
-				try(setMKLthreads(math.cpu), silent=TRUE)
-			}
+			# if(cpu>1 & (wind | r.open)) {
+			# 	try(setMKLthreads(math.cpu), silent=TRUE)
+			# 	try(blas_set_num_threads(math.cpu), silent=TRUE)
+			# }
 			cv <- j %% (length(Top.perc) * length(amplify))
 			if(cv == 0){
 				cv <- j %/% (length(Top.perc) * length(amplify))
@@ -2315,9 +2334,17 @@ function(
 				writeBin(0, tmpf)
 				print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 				
-				if(r.open)	setMKLthreads(1)
+				if(r.open){
+					try(setMKLthreads(1), silent=TRUE)
+					try(blas_set_num_threads(1), silent=TRUE)
+					try(omp_set_num_threads(1), silent=TRUE)
+				}
 				mult.res <- parallel::mclapply(1:iterationN, mult.run, mc.cores = cpu)
-				if(r.open)	setMKLthreads(mkl)
+				if(r.open){
+					try(setMKLthreads(mkl), silent=TRUE)
+					try(blas_set_num_threads(mkl), silent=TRUE)
+					try(omp_set_num_threads(mkl), silent=TRUE)
+				}
 				close(tmpf); unlink(tmpf.name)
 			}
 		}
@@ -2440,9 +2467,17 @@ function(
 						writeBin(0, tmpf)
 						print.f <- function(i){KAML.Bar(n=iterationN, type="type3", tmp.file=tmpf, fixed.points=TRUE, symbol.len=0, symbol.head=" Cross-validation Finished_", symbol.tail="")}
 				
-						if(r.open)	setMKLthreads(1)
+						if(r.open){
+							try(setMKLthreads(1), silent=TRUE)
+							try(blas_set_num_threads(1), silent=TRUE)
+							try(omp_set_num_threads(1), silent=TRUE)
+						}
 						mult.res <- parallel::mclapply(1:iterationN, mult.run, mc.cores = cpu)
-						if(r.open)	setMKLthreads(mkl)
+						if(r.open){
+							try(setMKLthreads(mkl), silent=TRUE)
+							try(blas_set_num_threads(mkl), silent=TRUE)
+							try(omp_set_num_threads(mkl), silent=TRUE)
+						}
 						close(tmpf); unlink(tmpf.name)
 					}
 				}
@@ -2504,7 +2539,10 @@ function(
 			cat(" NULL", "\n")
 		}
 
-		if(r.open & linux & cpu > 1)	try(setMKLthreads(mkl), silent=TRUE)
+		if(r.open & linux & cpu > 1){
+			try(setMKLthreads(mkl), silent=TRUE)
+			try(blas_set_num_threads(mkl), silent=TRUE)
+		}
 		
 		if(K.opt){
 			mytop.order <- order(P.value.ref, decreasing = FALSE)
@@ -2592,7 +2630,7 @@ function(
 # X: The fixed effect(X must contain a column of 1's)													 #
 # qtn.matrix: a  n1 * m1 matrix, n1 is the population size, m1 is the number of selected QTNs			 #
 #--------------------------------------------------------------------------------------------------------#
-	r.open <- !inherits(try(Revo.version,silent=TRUE),"try-error")
+	
 	qtn.matrix <- data.matrix(qtn.matrix)
 	if(!is.numeric(y))	y <- as.numeric(as.character(y))
 	Y<-matrix(y)
@@ -2636,7 +2674,7 @@ function(
 	wind <- R.ver == 'Windows'
 	linux <- R.ver == 'Linux'
 	mac <- (!linux) & (!wind)
-    r.open <- !inherits(try(Revo.version,silent=TRUE), "try-error")
+    r.open <- grepl("mkl", sessionInfo()$LAPACK) | grepl("openblas", sessionInfo()$LAPACK) | !inherits(try(Revo.version,silent=TRUE), "try-error")
 	math.cpu <- Math_cpu_check()
 	if(r.open &  mac & cpu > 1)	Sys.setenv("VECLIB_MAXIMUM_THREADS" = "1")
 	if(wind)	cpu <- 1
@@ -2664,8 +2702,10 @@ function(
 	if(method == "MLM"){
 		mkl.cpu <- ifelse((2^(n %/% 1000)) < math.cpu, 2^(n %/% 1000), math.cpu)
 		try(setMKLthreads(mkl.cpu), silent=TRUE)
+		try(blas_set_num_threads(mkl.cpu), silent=TRUE)
         eig <- eigen(K, symmetric=TRUE)
 		try(setMKLthreads(math.cpu), silent=TRUE)
+		try(blas_set_num_threads(math.cpu), silent=TRUE)
 	}else{
 		eig <- NULL
 	}
@@ -2759,9 +2799,15 @@ function(
 				cpu <- getMKLthreads()
 			}
 		}
-		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
+		if(cpu > 1 & r.open){
+			try(setMKLthreads(1), silent=TRUE)
+			try(blas_set_num_threads(1), silent=TRUE)
+		}
 		results <- glm_c(y=ys, X=X0, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
-		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+		if(cpu > 1 & r.open){
+			try(setMKLthreads(math.cpu), silent=TRUE)
+			try(blas_set_num_threads(math.cpu), silent=TRUE)
+		}
 	}else if(method == "MLM"){
 		if(cpu == 1 & r.open){
 			if(inherits(try(getMKLthreads(), silent=TRUE),"try-error")){
@@ -2770,9 +2816,15 @@ function(
 				cpu <- getMKLthreads()
 			}
 		}
-		if(cpu > 1 & r.open)	try(setMKLthreads(1), silent=TRUE)
+		if(cpu > 1 & r.open){
+			try(setMKLthreads(1), silent=TRUE)
+			try(blas_set_num_threads(1), silent=TRUE)
+		}
 		results <- mlm_c(y=ys, X=X0, U=U, vgs=vgs, geno@address, barhead=bar.head, verbose=bar, threads=cpu)
-		if(cpu > 1 & r.open)	try(setMKLthreads(math.cpu), silent=TRUE)
+		if(cpu > 1 & r.open){
+			try(setMKLthreads(math.cpu), silent=TRUE)
+			try(blas_set_num_threads(math.cpu), silent=TRUE)
+		}
 	}else{
 		stop("Unknown gwas model.")
 	}
@@ -2864,7 +2916,7 @@ function(
     time1 <- as.numeric(Sys.time())
 	
 	R.ver <- Sys.info()[['sysname']]
-	r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+	r.open <- grepl("mkl", sessionInfo()$LAPACK) | grepl("openblas", sessionInfo()$LAPACK) | !inherits(try(Revo.version, silent=TRUE),"try-error")
 	wind <- R.ver == 'Windows'
 	linux <- R.ver == 'Linux'
 	mac <- (!linux) & (!wind)
@@ -2872,7 +2924,8 @@ function(
 	if(wind)	cpu <- 1
 	if(r.open & mac & cpu > 1)	Sys.setenv("VECLIB_MAXIMUM_THREADS" = "1")
 	try(setMKLthreads(getMKLthreads()), silent=TRUE)
-	
+	try(blas_set_num_threads(omp_get_num_procs()), silent=TRUE)
+
     #check the parameters
     GWAS.model <- match.arg(GWAS.model)
 	vc.method <- match.arg(vc.method)
@@ -2953,6 +3006,15 @@ function(
 	cat(" Number of Covariates:", ncol(Cov), "\n")
 	cat(" Number of Total SNPs:", nrow(GENO), "\n")
 	cat(" Number of CPUs:", cpu, "\n")
+	if(!r.open){
+		cat(" (Warning: no high performance math library detected! The computational efficiency would be greatly reduced.)\n")
+	}else{
+		if(grepl("mkl", sessionInfo()$LAPACK) | !inherits(try(Revo.version, silent=TRUE),"try-error")){
+			cat(" Math Kernel Library is detected, nice job!\n")
+		}else{
+			cat(" OpenBLAS Library is detected, nice job!\n")
+		}
+	}
 
 	if(is.null(SNP.weight)){
 		cat(" New seeds generated from:", theSeed, "\n")
@@ -3124,14 +3186,11 @@ function(y, X, eigenK)
 Math_cpu_check <- 
 function()
 {
-    r.open <- !inherits(try(Revo.version, silent=TRUE),"try-error")
+    r.open <- grepl("mkl", sessionInfo()$LAPACK) | grepl("openblas", sessionInfo()$LAPACK) | !inherits(try(Revo.version, silent=TRUE),"try-error")
 	if(r.open){
 		cpu <- try(getMKLthreads(), silent=TRUE)
-		if(class(cpu) == "try-error"){
-			return(2)
-		}else{
-			return(cpu)
-		}
+		if(class(cpu) == "try-error")	cpu <- blas_get_num_procs()
+		return(cpu)
 	}else{
 		return(1)
 	}

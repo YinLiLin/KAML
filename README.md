@@ -1,4 +1,4 @@
-# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.4.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>
+# KAML [![](https://img.shields.io/badge/Issues-%2B-brightgreen.svg)](https://github.com/YinLiLin/R-KAML/issues) [![](https://img.shields.io/badge/Release-v1.5.0-important.svg)](https://github.com/YinLiLin/R-KAML/commits/master) [![](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/YinLiLin/KAML/blob/master/LICENSE) <a href="https://hits.seeyoufarm.com"/><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FYinLiLin%2FKAML"/></a>
 
 ## *[K](https://github.com/YinLiLin/R-KAML)inship [A](https://github.com/YinLiLin/R-KAML)djusted [M](https://github.com/YinLiLin/R-KAML)ultiple [L](https://github.com/YinLiLin/R-KAML)oci Best Linear Unbiased Prediction*
 
@@ -67,7 +67,7 @@ Yin, L., Zhang, H., Zhou, X. et al. KAML: improving genomic prediction accuracy 
 
 ---
 ## GETTING STARTED
-***`KAML`*** is written in R language, it is recommended to link MKL (Math Kernel Library) with R for fast computing with big data (see [how to link MKL with R](https://www.intel.com/content/www/us/en/developer/articles/technical/quick-linking-intel-mkl-blas-lapack-to-r.html)), because the BLAS/LAPACK library can be accelerated automatically in multi-threads by MKL library, which would significantly reduce computational time. 
+***`KAML`*** is written in R language, it is recommended to link MKL (Math Kernel Library) or OpenBLAS with R for fast computing with big data (see [how to link MKL with R](https://www.intel.com/content/www/us/en/developer/articles/technical/quick-linking-intel-mkl-blas-lapack-to-r.html)), because the BLAS/LAPACK library can be accelerated automatically in multi-threads, which would significantly reduce computational time.
 ### Installation
 (1) ***`KAML`*** can be installed with **"devtools"** by using the following R codes:
 ```r
@@ -77,7 +77,7 @@ devtools::install_github("YinLiLin/KAML")
 (2) If you get trouble in installing **"devtools"**, try to install it locally as following:
 ```r
 # install required packages first
-R> pkg <- c("RcppArmadillo", "RcppEigen", "RcppProgress", "bigmemory", "gaston")
+R> pkg <- c("RcppArmadillo", "RcppEigen", "RcppProgress", "bigmemory", "gaston", "RhpcBLASctl")
 R> new.pkg <- pkg[!(pkg %in% installed.packages()[,"Package"])]
 R> if(length(new.pkg)) install.packages(new.pkg)
 ```
